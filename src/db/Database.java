@@ -55,15 +55,21 @@ public class Database {
                                         e.getfName(), e.getlName(), e.getAge(), e.getSalary());
 
             try {
-                getStatement().execute(sql);
+                return getStatement().executeUpdate(sql) != 0;
             } catch (NullPointerException | SQLException e1) {
                 e1.printStackTrace();
-                return false;
             }
-            return true;
+            return false;
         }
 
         public static boolean removeEmployee(int id) {
             String sql = String.format("DELETE FROM %s WHERE %s = %s", TEST_TABLE.name, cols.id, id);
+
+            try {
+                return getStatement().executeUpdate(sql) != 0;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
         }
 }
