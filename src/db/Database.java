@@ -82,7 +82,7 @@ public class Database {
             StringBuilder sb = new StringBuilder(initial);
 
             for (int i = 1; i < fields.length; i++) {
-                 String appendString = String.format(", SET %s = '%s'", fields[i], data[i]);
+                 String appendString = String.format(", %s = '%s'", fields[i], data[i]);
                  sb.append(appendString);
             }
                 String appendString = String.format(" WHERE %s = %s", cols.id, id);
