@@ -4,6 +4,9 @@ import Models.Employee;
 
 import java.lang.annotation.Target;
 import java.sql.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 import static db.DbSchema.TEST_TABLE;
 import static db.DbSchema.TEST_TABLE.cols;
 
@@ -94,5 +97,28 @@ public class Database {
                 e.printStackTrace();
             }
             return false;
+        }
+
+        public static String getEmployeeInfo() {
+            String SQL = String.format("SELECT * FROM %s", TEST_TABLE.name);
+            String header = String.format("%s  %s  %s  %s  %s\n", cols.id, cols.first_name, cols.last_name, cols.age, cols.salary);
+            DecimalFormat format = new DecimalFormat("#,###.00");
+            StringBuilder output = new StringBuilder(header);
+            try {
+                ResultSet results = getScrollableStatement().executeQuery(SQL);
+                while (results.next()) {
+                    String row = String.format("%s   %s    %s    %s    %s\n",
+                                                results.getInt(cols.id),
+                                                results.getString(cols.first_name),
+                                                results.getString(cols.last_name),
+                                                results.getInt(cols.age),
+                                                format.format(results.getDouble(cols.salary)));
+                    output.append(row);
+                }
+                return output.toString();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
 }
