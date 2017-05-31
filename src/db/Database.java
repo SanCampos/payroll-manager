@@ -48,7 +48,7 @@ public class Database {
             return null;
         }
 
-        public static void insertEmployee(Employee e) {
+        public static boolean insertEmployee(Employee e) {
             //FOR MVP ONLY
             String sql = String.format("INSERT INTO %s (%s, %s, %s, %s) VALUES ('%s', '%s', %s, %s)",
                                         TEST_TABLE.name, cols.first_name, cols.last_name, cols.age, cols.salary,
@@ -58,6 +58,12 @@ public class Database {
                 getStatement().execute(sql);
             } catch (NullPointerException | SQLException e1) {
                 e1.printStackTrace();
+                return false;
             }
+            return true;
+        }
+
+        public static boolean removeEmployee(int id) {
+            String sql = String.format("DELETE FROM %s WHERE %s = %s", TEST_TABLE.name, cols.id, id);
         }
 }

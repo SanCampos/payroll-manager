@@ -9,8 +9,17 @@ public class Employee {
     private String lName;
     private int age;
     private double salary;
+    private int id;
 
     private Employee() {}
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getfName() {
         return fName;
@@ -68,6 +77,11 @@ public class Employee {
 
         public Builder addAge(int age) {
             employee.setAge(age);
+            return this;
+        }
+
+        public Builder addId(int id) {
+            employee.setId(id);
             return this;
         }
 

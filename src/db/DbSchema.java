@@ -15,6 +15,7 @@ public class DbSchema {
             public static String last_name = "last_name";
             public static String age       = "age";
             public static String salary = "salary";
+            public static String id        = "id";
         }
     }
 }
