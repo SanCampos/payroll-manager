@@ -2,6 +2,7 @@ package db;
 
 import Models.Employee;
 
+import java.lang.annotation.Target;
 import java.sql.*;
 import static db.DbSchema.TEST_TABLE;
 import static db.DbSchema.TEST_TABLE.cols;
@@ -67,6 +68,28 @@ public class Database {
 
             try {
                 return getStatement().executeUpdate(sql) != 0;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        public static boolean updateEmployee(int id, String[] fields, String[] data) {
+            if (fields.length != data.length)
+                throw new IllegalArgumentException("Each field/data input must have a corresponding data/field input!");
+
+            String initial = String.format("UPDATE %s SET %s = '%s'", TEST_TABLE.name, fields[0], data[0]);
+            StringBuilder sb = new StringBuilder(initial);
+
+            for (int i = 1; i < fields.length; i++) {
+                 String appendString = String.format(", SET %s = '%s'", fields[i], data[i]);
+                 sb.append(appendString);
+            }
+                String appendString = String.format(" WHERE %s = %s", cols.id, id);
+                sb.append(appendString);
+
+            try {
+                return getStatement().executeUpdate(sb.toString()) != 0;
             } catch (SQLException e) {
                 e.printStackTrace();
             }

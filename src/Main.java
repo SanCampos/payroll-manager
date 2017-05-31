@@ -14,6 +14,7 @@ public class Main {
                                     .addAge(34)
                                     .addSalary(8900)
                                     .create();
-        Database.insertEmployee(test);
+        //System.out.println(Database.insertEmployee(test));
+        System.out.println(Database.removeEmployee(7));
     }
 }
