@@ -44,7 +44,7 @@ public class Employee {
         this.salary = salary;
     }
 
-    private static class Builder {
+    public static class Builder { // FOR EDUCATIONAL PURPOSES REMOVE UPON COMPLETION
         private Employee employee;
 
         public Builder() {

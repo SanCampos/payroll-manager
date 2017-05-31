@@ -11,9 +11,9 @@ public class DbSchema {
         public static String name = "test";
 
         public static class cols {
-            public static String id = "id";
             public static String first_name = "first_name";
             public static String last_name = "last_name";
+            public static String age       = "age";
             public static String salary = "salary";
         }
     }
