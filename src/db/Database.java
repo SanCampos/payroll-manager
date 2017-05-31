@@ -1,5 +1,7 @@
 package db;
 
+import Models.Employee;
+
 import java.sql.*;
 
 /**
@@ -29,5 +31,9 @@ public class Database {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        private static void insertEmployee(Employee e) {
+            String sql = String.format("INSERT INTO test ")
         }
 }
