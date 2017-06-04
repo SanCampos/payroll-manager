@@ -15,17 +15,12 @@ public class Database {
     //ALL THIS SHIT SHOULD NOT BE STATIC
     private static Connection con;
 
-        public static void init() {
+        public static void init() throws SQLException {
             String url = "jdbc:mysql://localhost:3306/test?verifyServerCertificate=false&useSSL=true";
             String user = "root";
             String pass = "root";
 
-
-            try {
-                con = DriverManager.getConnection(url, user, pass);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            con = DriverManager.getConnection(url, user, pass);
         }
 
         private static boolean execute(String sql) throws SQLException {
