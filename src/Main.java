@@ -18,9 +18,9 @@ public class Main {
                                     .addAge(34)
                                     .addSalary(8900)
                                     .create();
-        //System.out.println(Database.insertEmployee(test));
+        System.out.println(db.insertEmployee(test));
         //System.out.println(Database.removeEmployee(7));
         //System.out.println(Database.updateEmployee(6, new String[]{"first_name", "salary"}, new String[]{"fsdffuck", "666.54"}));
-        System.out.println(db.getEmployeeInfo());
+        //System.out.println(db.getEmployeeInfo());
     }
 }

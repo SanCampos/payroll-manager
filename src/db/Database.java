@@ -2,8 +2,10 @@ package db;
 
 import Models.Employee;
 
+import java.lang.reflect.Field;
 import java.sql.*;
 import java.text.DecimalFormat;
+import java.util.Map;
 
 import  db.DbSchema.TEST_TABLE;
 import  db.DbSchema.TEST_TABLE.cols;
@@ -30,11 +32,16 @@ public class Database {
 
         public boolean insertEmployee(Employee e) throws SQLException {
             //FOR MVP ONLY
-            String sql = String.format("INSERT INTO %s (%s, %s, %s, %s) VALUES ('%s', '%s', %s, %s)",
-                                        TEST_TABLE.name, cols.first_name, cols.last_name, cols.age, cols.salary,
-                                        e.getfName(), e.getlName(), e.getAge(), e.getSalary());
+            String sql = String.format("INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?, ?, ?)",
+                                        TEST_TABLE.name, cols.first_name, cols.last_name, cols.age, cols.salary);
+            PreparedStatement prepStmnt = con.prepareStatement(sql);
 
-            return execute(sql);
+            prepStmnt.setString(1, e.getfName());
+            prepStmnt.setString(2, e.getlName());
+            prepStmnt.setInt(3, e.getAge());
+            prepStmnt.setDouble(4, e.getSalary());
+
+            return prepStmnt.executeUpdate() != 0;
         }
 
         public boolean removeEmployee(int id) throws SQLException {
