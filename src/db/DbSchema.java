@@ -3,31 +3,31 @@ package db;
 /**
  * Created by thedr on 5/31/2017.
  */
-public class DbSchema {
+class DbSchema {
 
-    public static String name = "test";
+    static String name = "test";
 
-    public static class table_employees {
-        public static String name = "employees";
+     static class table_employees {
+         static final String name = "employees";
 
-        public static class cols {
-            public static String first_name = "first_name";
-            public static String last_name = "last_name";
-            public static String age       = "age";
-            public static String salary = "salary";
-            public static String id        = "id";
+         static class cols {
+             static final String first_name = "first_name";
+             static final String last_name = "last_name";
+             static final String age       = "age";
+             static final String salary = "salary";
+             static final String id        = "id";
         }
     }
 
-    public static class table_users {
-        public static String name = "users";
+     static class table_users {
+         static final String name = "users";
 
-        public static class cols {
-            public static String username = "username";
-            public static String hash_pw = "hash_pw";
-            public static String id = "id";
-            public static String salt = "salt";
-            public static String prvlg_lvl = "prvlg_lvl"; //For application privileges. Will be used later on
+         static class cols {
+             static final String username = "username";
+             static final String hash_pw = "hash_pw";
+             static final String id = "id";
+             static final String salt = "salt";
+             static final String prvlg_lvl = "prvlg_lvl"; //For application privileges. Will be used later on
         }
     }
 }

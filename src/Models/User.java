@@ -9,9 +9,9 @@ import java.security.SecureRandom;
  */
 public class User {
 
-    private String username;
-    private String hash_pw;
-    private String salt;
+    private final String username;
+    private final String hash_pw;
+    private final String salt;
     private int id;
 
     public User(String username, String hash_pw) {

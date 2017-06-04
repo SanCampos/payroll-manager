@@ -54,7 +54,7 @@ public class Employee {
     }
 
     public static class Builder { // FOR EDUCATIONAL PURPOSES REMOVE UPON COMPLETION
-        private Employee employee;
+        private final Employee employee;
 
         public Builder() {
             employee = new Employee();
