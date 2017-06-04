@@ -14,6 +14,7 @@ import  db.DbSchema.table_employees.cols;
 public class Database {
 
     private Connection con;
+    private int userID;
 
         public void init() throws SQLException {
             String url = "jdbc:mysql://localhost:3306/test?verifyServerCertificate=false&useSSL=true";
@@ -63,7 +64,7 @@ public class Database {
             return con.createStatement().executeUpdate(sql.toString()) != 0;
         }
 
-    public String getEmployeeInfo() throws SQLException {
+        public String getEmployeeInfo() throws SQLException {
             String SQL = String.format("SELECT * FROM %s", DbSchema.table_employees.name);
 
             String header = String.format("%s  %s  %s  %s  %s\n", cols.id, cols.first_name, cols.last_name, cols.age, cols.salary);
