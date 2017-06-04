@@ -2,13 +2,11 @@ package db;
 
 import Models.Employee;
 
-import java.lang.reflect.Field;
 import java.sql.*;
 import java.text.DecimalFormat;
-import java.util.Map;
 
-import  db.DbSchema.TEST_TABLE;
-import  db.DbSchema.TEST_TABLE.cols;
+import db.DbSchema.table_employees;
+import  db.DbSchema.table_employees.cols;
 
 /**
  * Created by thedr on 5/31/2017.
@@ -28,7 +26,7 @@ public class Database {
         public boolean insertEmployee(Employee e) throws SQLException {
             //FOR MVP ONLY
             String sql = String.format("INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?, ?, ?)",
-                                        TEST_TABLE.name, cols.first_name, cols.last_name, cols.age, cols.salary);
+                                        DbSchema.table_employees.name, cols.first_name, cols.last_name, cols.age, cols.salary);
             PreparedStatement prepStmnt = con.prepareStatement(sql);
 
             prepStmnt.setString(1, e.getfName());
@@ -40,7 +38,7 @@ public class Database {
         }
 
         public boolean removeEmployee(int id) throws SQLException {
-            String sql = String.format("DELETE FROM %s WHERE %s = ?", TEST_TABLE.name, cols.id);
+            String sql = String.format("DELETE FROM %s WHERE %s = ?", DbSchema.table_employees.name, cols.id);
             PreparedStatement prepStmnt = con.prepareStatement(sql);
             prepStmnt.setInt(1, id);
             return prepStmnt.executeUpdate() != 0 ;
@@ -51,7 +49,7 @@ public class Database {
             if (fields.length != data.length)
                 throw new IllegalArgumentException("Each field/data input must have a corresponding data/field input!");
 
-            String update = String.format("UPDATE %s SET %s = '%s'", TEST_TABLE.name, fields[0], data[0]);
+            String update = String.format("UPDATE %s SET %s = '%s'", table_employees.name, fields[0], data[0]);
             StringBuilder sql = new StringBuilder(update);
 
             for (int i = 1; i < fields.length; i++) {
@@ -66,7 +64,7 @@ public class Database {
         }
 
     public String getEmployeeInfo() throws SQLException {
-            String SQL = String.format("SELECT * FROM %s", TEST_TABLE.name);
+            String SQL = String.format("SELECT * FROM %s", DbSchema.table_employees.name);
 
             String header = String.format("%s  %s  %s  %s  %s\n", cols.id, cols.first_name, cols.last_name, cols.age, cols.salary);
             StringBuilder output = new StringBuilder(header);
