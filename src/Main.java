@@ -1,5 +1,4 @@
 import Models.Employee;
-import Models.User;
 import db.Database;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -22,14 +21,16 @@ public class Main {
                                     .addSalary(8900)
                                     .create();
 
-        String salt = BCrypt.gensalt(15, new SecureRandom());
-        String hash_pw = BCrypt.hashpw("admin", salt); //Nigga we need to speed this shit up
-        User user = new User("admintest", hash_pw, salt);
-
         //System.out.println(db.insertEmployee(test));
         //System.out.println(db.removeEmployee(7));
         //System.out.println(db.updateEmployee(6, new String[]{"first_name", "salary"}, new String[]{"fsdffuck", "666.54"}));
         //System.out.println(db.getEmployeeInfo());
-        db.registerUser(user);
+
+        try{
+            db.loginUser("fuck", "admin");
+        } catch(IllegalArgumentException exception) {
+            exception.printStackTrace();
+            System.out.println("YO YOUR ERROR CHECKING WORKSjkslfajd;fdaklsjf");
+        }
     }
 }
