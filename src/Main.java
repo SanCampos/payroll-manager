@@ -2,13 +2,14 @@ import Models.Employee;
 import db.Database;
 
 import javax.xml.crypto.Data;
+import java.sql.SQLException;
 
 /**
  * Created by thedr on 5/31/2017.
  */
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         Database.init();
         Employee test = new Employee.Builder()
                                     .addfName("Johnlayn")
