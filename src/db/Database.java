@@ -45,8 +45,10 @@ public class Database {
         }
 
         public boolean removeEmployee(int id) throws SQLException {
-            String sql = String.format("DELETE FROM %s WHERE %s = %s", TEST_TABLE.name, cols.id, id);
-            return execute(sql);
+            String sql = String.format("DELETE FROM %s WHERE %s = ?", TEST_TABLE.name, cols.id);
+            PreparedStatement prepStmnt = con.prepareStatement(sql);
+            prepStmnt.setInt(1, id);
+            return prepStmnt.executeUpdate() != 0 ;
         }
 
         public boolean updateEmployee(int id, String[] fields, String[] data) throws SQLException {
