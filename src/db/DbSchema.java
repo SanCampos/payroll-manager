@@ -24,9 +24,10 @@ public class DbSchema {
 
         public static class cols {
             public static String username = "username";
-            public static String password = "password";
+            public static String hash_pw = "hash_pw";
             public static String id = "id";
-            public static String prvlg_lvl = "prvl_lvl"; //For application privileges. Will be used later on
+            public static String salt = "salt";
+            public static String prvlg_lvl = "prvlg_lvl"; //For application privileges. Will be used later on
         }
     }
 }

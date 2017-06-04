@@ -35,24 +35,24 @@ import java.security.SecureRandom;
 
 
 /**
- * BCrypt implements OpenBSD-style Blowfish password hashing using
+ * BCrypt implements OpenBSD-style Blowfish hash_pw hashing using
  * the scheme described in "A Future-Adaptable Password Scheme" by
  * Niels Provos and David Mazieres.
  * <p>
- * This password hashing system tries to thwart off-line password
+ * This hash_pw hashing system tries to thwart off-line hash_pw
  * cracking using a computationally-intensive hashing algorithm,
  * based on Bruce Schneier's Blowfish cipher. The work factor of
  * the algorithm is parameterised, so it can be increased as
  * computers get faster.
  * <p>
- * Usage is really simple. To hash a password for the first time,
+ * Usage is really simple. To hash a hash_pw for the first time,
  * call the hashpw method with a random salt, like this:
  * <p>
  * <code>
  * String pw_hash = BCrypt.hashpw(plain_password, BCrypt.gensalt()); <br />
  * </code>
  * <p>
- * To check whether a plaintext password matches one that has been
+ * To check whether a plaintext hash_pw matches one that has been
  * hashed previously, use the checkpw method:
  * <p>
  * <code>
@@ -585,7 +585,7 @@ public class BCrypt {
 	 * Provos and Mazieres in "A Future-Adaptable Password Scheme"
 	 * http://www.openbsd.org/papers/bcrypt-paper.ps
 	 * @param data	salt information
-	 * @param key	password information
+	 * @param key	hash_pw information
 	 */
 	private void ekskey(byte data[], byte key[]) {
 		int i;
@@ -614,14 +614,14 @@ public class BCrypt {
 	}
 
 	/**
-	 * Perform the central password hashing step in the
+	 * Perform the central hash_pw hashing step in the
 	 * bcrypt scheme
-	 * @param password	the password to hash
-	 * @param salt	the binary salt to hash with the password
+	 * @param password	the hash_pw to hash
+	 * @param salt	the binary salt to hash with the hash_pw
 	 * @param log_rounds	the binary logarithm of the number
 	 * of rounds of hashing to apply
 	 * @param cdata         the plaintext to encrypt
-	 * @return	an array containing the binary hashed password
+	 * @return	an array containing the binary hashed hash_pw
 	 */
 	public byte[] crypt_raw(byte password[], byte salt[], int log_rounds,
 	    int cdata[]) {
@@ -658,11 +658,11 @@ public class BCrypt {
 	}
 
 	/**
-	 * Hash a password using the OpenBSD bcrypt scheme
-	 * @param password	the password to hash
+	 * Hash a hash_pw using the OpenBSD bcrypt scheme
+	 * @param password	the hash_pw to hash
 	 * @param salt	the salt to hash with (perhaps generated
 	 * using BCrypt.gensalt)
-	 * @return	the hashed password
+	 * @return	the hashed hash_pw
 	 */
 	public static String hashpw(String password, String salt) {
 		BCrypt B;
@@ -768,10 +768,10 @@ public class BCrypt {
 	}
 
 	/**
-	 * Check that a plaintext password matches a previously hashed
+	 * Check that a plaintext hash_pw matches a previously hashed
 	 * one
-	 * @param plaintext	the plaintext password to verify
-	 * @param hashed	the previously-hashed password
+	 * @param plaintext	the plaintext hash_pw to verify
+	 * @param hashed	the previously-hashed hash_pw
 	 * @return	true if the passwords match, false otherwise
 	 */
 	public static boolean checkpw(String plaintext, String hashed) {
