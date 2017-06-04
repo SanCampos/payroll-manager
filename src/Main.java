@@ -10,7 +10,8 @@ import java.sql.SQLException;
 public class Main {
 
     public static void main(String[] args) throws SQLException {
-        Database.init();
+        Database db = new Database();
+        db.init();
         Employee test = new Employee.Builder()
                                     .addfName("Johnlayn")
                                     .addlName("Mercado")
@@ -20,6 +21,6 @@ public class Main {
         //System.out.println(Database.insertEmployee(test));
         //System.out.println(Database.removeEmployee(7));
         //System.out.println(Database.updateEmployee(6, new String[]{"first_name", "salary"}, new String[]{"fsdffuck", "666.54"}));
-        System.out.println(Database.getEmployeeInfo());
+        System.out.println(db.getEmployeeInfo());
     }
 }

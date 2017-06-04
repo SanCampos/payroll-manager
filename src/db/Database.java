@@ -5,17 +5,17 @@ import Models.Employee;
 import java.sql.*;
 import java.text.DecimalFormat;
 
-import static db.DbSchema.TEST_TABLE;
-import static db.DbSchema.TEST_TABLE.cols;
+import  db.DbSchema.TEST_TABLE;
+import  db.DbSchema.TEST_TABLE.cols;
 
 /**
  * Created by thedr on 5/31/2017.
  */
 public class Database {
-    //ALL THIS SHIT SHOULD NOT BE STATIC
-    private static Connection con;
 
-        public static void init() throws SQLException {
+    private Connection con;
+
+        public void init() throws SQLException {
             String url = "jdbc:mysql://localhost:3306/test?verifyServerCertificate=false&useSSL=true";
             String user = "root";
             String pass = "root";
@@ -23,12 +23,12 @@ public class Database {
             con = DriverManager.getConnection(url, user, pass);
         }
 
-        private static boolean execute(String sql) throws SQLException {
+        private boolean execute(String sql) throws SQLException {
             //Executes an action manipulating the table and returns if change was successful
             return con.createStatement().executeUpdate(sql) != 0;
         }
 
-        public static boolean insertEmployee(Employee e) throws SQLException {
+        public boolean insertEmployee(Employee e) throws SQLException {
             //FOR MVP ONLY
             String sql = String.format("INSERT INTO %s (%s, %s, %s, %s) VALUES ('%s', '%s', %s, %s)",
                                         TEST_TABLE.name, cols.first_name, cols.last_name, cols.age, cols.salary,
@@ -37,12 +37,12 @@ public class Database {
             return execute(sql);
         }
 
-        public static boolean removeEmployee(int id) throws SQLException {
+        public boolean removeEmployee(int id) throws SQLException {
             String sql = String.format("DELETE FROM %s WHERE %s = %s", TEST_TABLE.name, cols.id, id);
             return execute(sql);
         }
 
-        public static boolean updateEmployee(int id, String[] fields, String[] data) throws SQLException {
+        public boolean updateEmployee(int id, String[] fields, String[] data) throws SQLException {
             if (fields.length != data.length)
                 throw new IllegalArgumentException("Each field/data input must have a corresponding data/field input!");
 
@@ -60,7 +60,7 @@ public class Database {
             return execute(sql.toString());
         }
 
-    public static String getEmployeeInfo() throws SQLException {
+    public String getEmployeeInfo() throws SQLException {
             String SQL = String.format("SELECT * FROM %s", TEST_TABLE.name);
 
             String header = String.format("%s  %s  %s  %s  %s\n", cols.id, cols.first_name, cols.last_name, cols.age, cols.salary);
