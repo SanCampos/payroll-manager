@@ -3,7 +3,7 @@ package Models;
 /**
  * Created by thedr on 5/31/2017.
  */
-public class Employee {
+public class Employee { //NIGGA DO I EVEN NEED TO EXIST
 
     private String fName;
     private String lName;
