@@ -25,11 +25,6 @@ public class Database {
             con = DriverManager.getConnection(url, user, pass);
         }
 
-        private boolean execute(String sql) throws SQLException {
-            //Executes an action manipulating the table and returns if change was successful
-            return con.createStatement().executeUpdate(sql) != 0;
-        }
-
         public boolean insertEmployee(Employee e) throws SQLException {
             //FOR MVP ONLY
             String sql = String.format("INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?, ?, ?)",
@@ -52,6 +47,7 @@ public class Database {
         }
 
         public boolean updateEmployee(int id, String[] fields, String[] data) throws SQLException {
+            //APPARENTLY THIS  IS BAD DESIGN. FOR DEV USE ONLY
             if (fields.length != data.length)
                 throw new IllegalArgumentException("Each field/data input must have a corresponding data/field input!");
 
@@ -66,7 +62,7 @@ public class Database {
             String where = String.format(" WHERE %s = %s", cols.id, id);
             sql.append(where);
 
-            return execute(sql.toString());
+            return con.createStatement().executeUpdate(sql.toString()) != 0;
         }
 
     public String getEmployeeInfo() throws SQLException {
