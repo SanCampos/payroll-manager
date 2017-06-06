@@ -54,7 +54,7 @@ public class Database {
             ResultSet user = prepStmnt.executeQuery();
 
             if (!user.next())
-                throw new IllegalArgumentException("A user with that username cannot be found");
+                return false;
 
             //Fetch needed user info
             String salt = user.getString(table_users.cols.salt);
@@ -138,5 +138,9 @@ public class Database {
                 output.append(row);
             }
             return output.toString();
+        }
+
+        public void closeConnection() throws SQLException {
+            con.close();
         }
 }
