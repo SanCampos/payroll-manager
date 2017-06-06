@@ -20,17 +20,18 @@
 
     <Label text="User name: " GridPane.columnIndex="0" GridPane.rowIndex="1" />
 
-    <TextField GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.rowIndex="1" />
+    <TextField fx:id="inputUser" GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.rowIndex="1" />
 
     <Label text="Password: " GridPane.columnIndex="0" GridPane.rowIndex="2" />
 
-    <PasswordField GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.rowIndex="2" />
+    <PasswordField fx:id="inputPass" GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.rowIndex="2" />
 
-    <Button prefHeight="25.0" prefWidth="145" text="Login" GridPane.columnIndex="1" GridPane.rowIndex="3" onAction="#loginNotif" />
+    <Button prefHeight="25.0" prefWidth="145" text="Login" GridPane.columnIndex="1" GridPane.rowIndex="3" onAction="#login" />
 
-    <Text fx:id="loginNotif"
+    <Text fx:id="loginFailNotif"
           GridPane.rowIndex="5"
           GridPane.columnIndex="0"
-          GridPane.columnSpan="3"/>
+          GridPane.columnSpan="3"
+          fill="red"/>
 
 </GridPane>
