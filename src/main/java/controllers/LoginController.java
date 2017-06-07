@@ -3,7 +3,8 @@ package main.java.controllers;
  * Created by thedr on 6/6/2017.
  */
 
-import db.Database;
+import main.java.Main;
+import main.java.db.Database;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,14 +26,14 @@ public class LoginController {
 
 
     @FXML protected void login(ActionEvent event) {
-        //Get db helper
+        //Get main.java.db helper
         Database db = new Database();
 
         //Fetch user inputs
         String user = inputUser.getText();
         String pass = inputPass.getText();
 
-        //Test for db connection and check if login is successful
+        //Test for main.java.db connection and check if login is successful
         try {
             db.init();
 
@@ -43,7 +44,7 @@ public class LoginController {
             }
 
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/List.fxml"));
-            Scene scene = new Scene(root, 500, 500);
+            Scene scene = new Scene(root, 1000, 800);
             Stage listStage = new Stage();
             listStage.setTitle("List");
             listStage.setScene(scene);

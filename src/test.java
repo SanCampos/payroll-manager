@@ -1,5 +1,5 @@
 import main.java.models.Employee;
-import db.Database;
+import main.java.db.Database;
 
 import java.sql.SQLException;
 
@@ -19,10 +19,10 @@ public class test {
                                     .addSalary(8900)
                                     .create();
 
-        //System.out.println(db.insertEmployee(test));
-        //System.out.println(db.removeEmployee(7));
-        //System.out.println(db.updateEmployee(6, new String[]{"first_name", "salary"}, new String[]{"fsdffuck", "666.54"}));
-        //System.out.println(db.getEmployeeInfo());
+        //System.out.println(main.java.db.insertEmployee(test));
+        //System.out.println(main.java.db.removeEmployee(7));
+        //System.out.println(main.java.db.updateEmployee(6, new String[]{"first_name", "salary"}, new String[]{"fsdffuck", "666.54"}));
+        //System.out.println(main.java.db.getEmployeeInfo());
 
         try{
             db.loginUser("fuck", "admin");

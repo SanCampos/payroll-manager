@@ -3,13 +3,20 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.LoginController">
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.ListController" fx:id="borderPane">
 
-    <Label text="Test table" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-    <TableView GridPane.columnIndex="1" GridPane.rowIndex="1">
+    <top>
+        <HBox>
+            <padding>
+                <Insets left="15" top="15"/>
+            </padding>
+            <ImageView fitWidth="65" fitHeight="65" fx:id="profImg">
+                <Image url="/imgs/test-employee.png"/>
+            </ImageView>
+        </HBox>
+    </top>
 
-    </TableView>
-
-    <Label text="Test table" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-
-</GridPane>
+</BorderPane>

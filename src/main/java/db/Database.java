@@ -1,4 +1,4 @@
-package db;
+package main.java.db;
 
 import main.java.models.Employee;
 
@@ -6,7 +6,7 @@ import java.security.SecureRandom;
 import java.sql.*;
 import java.text.DecimalFormat;
 
-import db.DbSchema.*;
+import main.java.db.DbSchema.*;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**

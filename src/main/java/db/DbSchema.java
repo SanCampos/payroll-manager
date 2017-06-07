@@ -1,4 +1,4 @@
-package db;
+package main.java.db;
 
 /**
  * Created by thedr on 5/31/2017.
