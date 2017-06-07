@@ -1,4 +1,4 @@
-import models.Employee;
+import main.java.models.Employee;
 import db.Database;
 
 import java.sql.SQLException;
@@ -6,7 +6,7 @@ import java.sql.SQLException;
 /**
  * Created by thedr on 5/31/2017.
  */
-public class Main {
+public class test {
 
     public static void main(String[] args) throws SQLException {
         //testing class

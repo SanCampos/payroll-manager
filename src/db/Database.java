@@ -1,6 +1,6 @@
 package db;
 
-import models.Employee;
+import main.java.models.Employee;
 
 import java.security.SecureRandom;
 import java.sql.*;

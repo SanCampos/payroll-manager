@@ -1,4 +1,5 @@
-package ui.controllers; /**
+package main.java.controllers;
+/**
  * Created by thedr on 6/6/2017.
  */
 
@@ -12,7 +13,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import main.Main;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -42,7 +42,7 @@ public class LoginController {
                 return;
             }
 
-            Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/fxml/List.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/List.fxml"));
             Scene scene = new Scene(root, 500, 500);
             Stage listStage = new Stage();
             listStage.setTitle("List");
