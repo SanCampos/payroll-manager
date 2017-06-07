@@ -1,14 +1,19 @@
-package ui.login;/**
+package ui.controllers; /**
  * Created by thedr on 6/6/2017.
  */
 
 import db.Database;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class LoginController {
@@ -19,6 +24,7 @@ public class LoginController {
 
 
     @FXML protected void login(ActionEvent event) {
+        //Get db helper
         Database db = new Database();
 
         //Fetch user inputs
@@ -35,13 +41,21 @@ public class LoginController {
                 return;
             }
 
-        } catch (SQLException e) {
+            Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/fxml/List.fxml"));
+            Scene scene = new Scene(root, 1000, 1000);
+            Stage listStage = new Stage();
+            listStage.setTitle("List");
+            listStage.setScene(scene);
+            listStage.show();
+            
+
+        } catch (SQLException |IOException e) /*Please rework this once we're sure we don't need io exceptions*/ {
             displaySQLError(e);
         }
 
     }
 
-    private void displaySQLError(SQLException e) {
+    private void displaySQLError(Exception e) {
         loginFailNotif.setText("Error connecting to the server, please try again!");
         e.printStackTrace();
     }
