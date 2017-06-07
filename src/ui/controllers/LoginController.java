@@ -12,6 +12,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import main.Main;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -42,11 +43,12 @@ public class LoginController {
             }
 
             Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/fxml/List.fxml"));
-            Scene scene = new Scene(root, 1000, 1000);
+            Scene scene = new Scene(root, 500, 500);
             Stage listStage = new Stage();
             listStage.setTitle("List");
             listStage.setScene(scene);
             listStage.show();
+            Main.loginStage.close();
             
 
         } catch (SQLException |IOException e) /*Please rework this once we're sure we don't need io exceptions*/ {

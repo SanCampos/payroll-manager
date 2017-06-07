@@ -1,8 +1,6 @@
-import Models.Employee;
+import models.Employee;
 import db.Database;
-import org.mindrot.jbcrypt.BCrypt;
 
-import java.security.SecureRandom;
 import java.sql.SQLException;
 
 /**
