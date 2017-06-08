@@ -17,6 +17,8 @@ import main.java.db.Database;
 import javax.xml.transform.Result;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by thedr on 6/6/2017.
@@ -36,11 +38,14 @@ public class ListController {
 
         try {
             db.init();
+
+            for (Map<String, String> row : db.getTableData()) {
+
+            }
+
         } catch (SQLException e) {
             System.out.println("Couldn't  connect");
         }
-
-
 
     }
 

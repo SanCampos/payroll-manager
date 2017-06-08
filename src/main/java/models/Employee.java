@@ -1,92 +1,85 @@
 package main.java.models;
 
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 /**
  * Created by thedr on 5/31/2017.
  */
-public class Employee { //NIGGA DO I EVEN NEED TO EXIST
+public class Employee { //YES  YOU  DO
 
-    private String fName;
-    private String lName;
-    private int age;
-    private double salary;
-    private int id;
+    private SimpleStringProperty fName;
+    private SimpleStringProperty lName;
+    private SimpleIntegerProperty age;
+    private SimpleDoubleProperty salary;
+    private SimpleIntegerProperty id;
 
-    private Employee() {}
+    public Employee(String fName, String lName, int age, double salary, int id) {
+        this.fName = new SimpleStringProperty(fName);
+        this.lName = new SimpleStringProperty((lName));
+        this.age   = new SimpleIntegerProperty(age);
+        this.salary = new SimpleDoubleProperty(salary);
+        this.id    = new SimpleIntegerProperty(id);
+    }
+
+    public String getfName() {
+        return fName.get();
+    }
+
+    public SimpleStringProperty fNameProperty() {
+        return fName;
+    }
+
+    public void setfName(String fName) {
+        this.fName.set(fName);
+    }
+
+    public String getlName() {
+        return lName.get();
+    }
+
+    public SimpleStringProperty lNameProperty() {
+        return lName;
+    }
+
+    public void setlName(String lName) {
+        this.lName.set(lName);
+    }
+
+    public int getAge() {
+        return age.get();
+    }
+
+    public SimpleIntegerProperty ageProperty() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age.set(age);
+    }
+
+    public double getSalary() {
+        return salary.get();
+    }
+
+    public SimpleDoubleProperty salaryProperty() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary.set(salary);
+    }
 
     public int getId() {
+        return id.get();
+    }
+
+    public SimpleIntegerProperty idProperty() {
         return id;
     }
 
     public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getfName() {
-        return fName;
-    }
-
-    private void setfName(String fName) {
-        this.fName = fName;
-    }
-
-    public String getlName() {
-        return lName;
-    }
-
-    private void setlName(String lName) {
-        this.lName = lName;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    private void setAge(int age) {
-        this.age = age;
-    }
-
-    public double getSalary() {
-        return salary;
-    }
-
-    private void setSalary(double salary) {
-        this.salary = salary;
-    }
-
-    public static class Builder { // FOR EDUCATIONAL PURPOSES REMOVE UPON COMPLETION
-        private final Employee employee;
-
-        public Builder() {
-            employee = new Employee();
-        }
-
-        public Builder addfName(String fName) {
-            employee.setfName(fName);
-            return this;
-        }
-
-        public Builder addlName(String lName) {
-            employee.setlName(lName);
-            return this;
-        }
-
-        public Builder addSalary(double salary) {
-            employee.setSalary(salary);
-            return this;
-        }
-
-        public Builder addAge(int age) {
-            employee.setAge(age);
-            return this;
-        }
-
-        public Builder addId(int id) {
-            employee.setId(id);
-            return this;
-        }
-
-        public Employee create() {
-            return employee;
-        }
+        this.id.set(id);
     }
 }
