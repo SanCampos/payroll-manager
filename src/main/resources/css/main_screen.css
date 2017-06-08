@@ -1,0 +1,35 @@
+.hbox {
+    -fx-padding: 15;
+    -fx-spacing: 15;
+    -fx-alignment: center-left;
+}
+
+.divider {
+    -fx-pref-width: 700;
+}
+
+.button {
+    -fx-background-color: white;
+    -fx-border-color: white;
+}
+
+
+#logout_img {
+    -fx-image: url("/imgs/login_clean.png");
+}
+
+#logout {
+    -fx-min-width: 45px;
+    -fx-min-height: 45px;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+#logout:hover {
+    -fx-background-color: rgba(64, 64, 64, 0.2);
+}
+
+#logout:pressed {
+    -fx-background-color: rgba(5, 5, 5, 0.35);
+}
+

@@ -49,8 +49,7 @@ public class LoginController {
             listStage.setTitle("List");
             listStage.setScene(scene);
             listStage.show();
-            Main.loginStage.close();
-            
+            Main.loginStage.hide();
 
         } catch (SQLException |IOException e) /*Please rework this once we're sure we don't need io exceptions*/ {
             displaySQLError(e);

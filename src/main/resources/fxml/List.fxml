@@ -1,22 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <?import javafx.geometry.Insets?>
-<BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.ListController" fx:id="borderPane">
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Text?>
 
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.Button?>
+
+<?import java.net.URL?>
+<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.ListController">
     <top>
-        <HBox>
-            <padding>
-                <Insets left="15" top="15"/>
-            </padding>
-            <ImageView fitWidth="65" fitHeight="65" fx:id="profImg">
-                <Image url="/imgs/test-employee.png"/>
+        <HBox styleClass="hbox">
+
+            <ImageView fx:id="profImg" fitHeight="65" fitWidth="65" >
+                <Image url="/imgs/test-employee.png" />
             </ImageView>
+
+            <Text text="Ligaya Abelarde"/>
+
+            <Region styleClass="divider"/>
+
+            <StackPane>
+                <ImageView fx:id="logout_img"/>
+                <Button fx:id="logout" onAction="#logout"/>
+            </StackPane>
         </HBox>
     </top>
+
+    <stylesheets>
+        <URL value="@/css/main_screen.css"/>
+    </stylesheets>
 
 </BorderPane>
