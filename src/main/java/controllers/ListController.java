@@ -1,23 +1,18 @@
 package main.java.controllers;
 
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import main.java.Main;
 import main.java.db.Database;
 
-import javax.xml.transform.Result;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -39,7 +34,7 @@ public class ListController {
         try {
             db.init();
 
-            for (Map<String, String> row : db.getTableData()) {
+            for (Map<String, String> row : db.getPersonList()) {
 
             }
 

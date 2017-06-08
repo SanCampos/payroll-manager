@@ -1,5 +1,7 @@
 package main.java.db;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import main.java.models.Employee;
 
 import java.security.SecureRandom;
@@ -144,20 +146,20 @@ public class Database {
             return output.toString();
         }
 
-        public List<Map<String, String>> getTableData() throws SQLException {
-            List<Map<String, String>> results =  new ArrayList<>();
+        public ObservableList<Employee> getEmployees() throws SQLException {
+            ObservableList<Employee> results = FXCollections.observableArrayList();
 
             Statement statement = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             ResultSet data = statement.executeQuery("SELECT * FROM employees");
 
             while (data.next()) {
                 Map<String, String> row = new HashMap<>();
-                row.put(table_employees.cols.first_name, data.getString(table_employees.cols.first_name));
-                row.put(table_employees.cols.last_name, data.getString(table_employees.cols.last_name));
-                row.put(table_employees.cols.salary, data.getString(table_employees.cols.salary));
-                row.put(table_employees.cols.age, data.getString(table_employees.cols.age));
-
-                results.add(row);
+                String fName = data.getString(table_employees.cols.first_name);
+                String lName = data.getString(table_employees.cols.last_name);
+                double salary = data.getDouble(table_employees.cols.salary);
+                int    age    = data.getInt(table_employees.cols.age);
+                int    id     =  data.getInt(table_employees.cols.id);
+                results.add(new Employee(fName, lName, age, salary, id));
             }
             return results;
         }
