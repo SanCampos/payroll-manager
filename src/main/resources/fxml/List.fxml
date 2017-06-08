@@ -39,10 +39,10 @@
         <TableView fx:id="table">
             <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
             <columns>
-                <TableColumn text="First Name"/>
-                <TableColumn text="Last Name"/>
-                <TableColumn text="Salary"/>
-                <TableColumn text="Age"/>
+                <TableColumn text="First Name" fx:id="col_fname"/>
+                <TableColumn text="Last Name" fx:id="col_lname"/>
+                <TableColumn text="Salary" fx:id="col_salary"/>
+                <TableColumn text="Age" fx:id="col_age"/>
             </columns>
         </TableView>
     </center>
