@@ -12,6 +12,8 @@
 <?import javafx.scene.control.Button?>
 
 <?import java.net.URL?>
+<?import javafx.scene.control.TableView?>
+<?import com.sun.javafx.scene.control.skin.TableHeaderRow?>
 <BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.ListController">
     <top>
         <HBox styleClass="hbox">
@@ -22,7 +24,7 @@
 
             <Text text="Ligaya Abelarde"/>
 
-            <Region styleClass="divider"/>
+            <Region styleClass="divider" HBox.hgrow="ALWAYS"/>
 
             <StackPane>
                 <ImageView fx:id="logout_img"/>
@@ -30,6 +32,13 @@
             </StackPane>
         </HBox>
     </top>
+
+
+    <center>
+        <TableView>
+
+        </TableView>
+    </center>
 
     <stylesheets>
         <URL value="@/css/main_screen.css"/>
