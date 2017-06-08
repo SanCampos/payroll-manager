@@ -1,4 +1,4 @@
-package main.java;
+package main.java.stage_launchers;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 /**
  * Created by thedr on 6/6/2017.
  */
-public class Main extends Application {
+public class Login extends Application {
 
     public static Stage loginStage;
 

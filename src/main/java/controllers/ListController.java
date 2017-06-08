@@ -6,7 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import main.java.Main;
+import main.java.stage_launchers.Login;
 
 import java.sql.SQLException;
 
@@ -27,7 +27,7 @@ public class ListController {
     public void logout() throws SQLException {
         Stage stage = ((Stage) logout.getScene().getWindow());
         stage.close();
-        Main.loginStage.show();
+        Login.loginStage.show();
     }
 
     private void initAvatar() {
