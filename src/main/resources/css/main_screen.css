@@ -15,7 +15,7 @@
 
 
 #logout_img {
-    -fx-image: url("/imgs/login_clean.png");
+    -fx-image: url("/imgs/logout.png");
 }
 
 #logout {

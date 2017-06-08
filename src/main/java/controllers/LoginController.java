@@ -34,7 +34,7 @@ public class LoginController {
 
     private void checkForEmptyFields(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER &&
-                (!(inputPass.getText().isEmpty() && inputUser.getText().isEmpty())))
+                (((!inputPass.getText().isEmpty()) && (!inputUser.getText().isEmpty()))))
                 login();
     }
 
