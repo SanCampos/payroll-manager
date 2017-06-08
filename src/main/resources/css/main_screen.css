@@ -19,8 +19,8 @@
 }
 
 #logout {
-    -fx-min-width: 45px;
-    -fx-min-height: 45px;
+    -fx-min-width: 65px;
+    -fx-min-height: 65px;
     -fx-background-color: transparent;
     -fx-border-color: transparent;
 }

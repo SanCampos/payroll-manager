@@ -3,9 +3,9 @@ package main.java.controllers;
  * Created by thedr on 6/6/2017.
  */
 
-import main.java.Main;
+import javafx.scene.input.KeyCode;
+import main.java.stage_launchers.Login;
 import main.java.db.Database;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import javafx.scene.input.KeyEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -25,7 +26,20 @@ public class LoginController {
     @FXML private PasswordField inputPass;
 
 
-    @FXML protected void login(ActionEvent event) {
+    @FXML
+    public void initialize() {
+        inputUser.setOnKeyPressed(this::checkForEmptyFields);
+        inputPass.setOnKeyPressed(this::checkForEmptyFields);
+    }
+
+    private void checkForEmptyFields(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER &&
+                (!(inputPass.getText().isEmpty() && inputUser.getText().isEmpty())))
+                login();
+    }
+
+    @FXML
+    protected void login() {
         //Get main.java.db helper
         Database db = new Database();
 
@@ -33,6 +47,7 @@ public class LoginController {
         String user = inputUser.getText();
         String pass = inputPass.getText();
 
+        loginFailNotif.setText("");
         //Test for main.java.db connection and check if login is successful
         try {
             db.init();
@@ -49,7 +64,7 @@ public class LoginController {
             listStage.setTitle("List");
             listStage.setScene(scene);
             listStage.show();
-            Main.loginStage.hide();
+            Login.loginStage.close();
 
         } catch (SQLException |IOException e) /*Please rework this once we're sure we don't need io exceptions*/ {
             displaySQLError(e);
