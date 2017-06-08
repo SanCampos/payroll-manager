@@ -5,6 +5,10 @@ import main.java.models.Employee;
 import java.security.SecureRandom;
 import java.sql.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import main.java.db.DbSchema.*;
 import org.mindrot.jbcrypt.BCrypt;
@@ -138,6 +142,24 @@ public class Database {
                 output.append(row);
             }
             return output.toString();
+        }
+
+        public List<Map<String, String>> getTableData() throws SQLException {
+            List<Map<String, String>> results =  new ArrayList<>();
+
+            Statement statement = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            ResultSet data = statement.executeQuery("SELECT * FROM employees");
+
+            while (data.next()) {
+                Map<String, String> row = new HashMap<>();
+                row.put(table_employees.cols.first_name, data.getString(table_employees.cols.first_name));
+                row.put(table_employees.cols.last_name, data.getString(table_employees.cols.last_name));
+                row.put(table_employees.cols.salary, data.getString(table_employees.cols.salary));
+                row.put(table_employees.cols.age, data.getString(table_employees.cols.age));
+
+                results.add(row);
+            }
+            return results;
         }
 
         public void closeConnection() throws SQLException {
