@@ -1,5 +1,8 @@
 package main.java.controllers;
 
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,7 +28,7 @@ public class ListController {
     @FXML private ImageView profImg;
     @FXML private Button logout;
 
-    @FXML private TableView table;
+    @FXML private TableView<Employee> table;
     @FXML private TableColumn col_fname;
     @FXML private TableColumn col_lname;
     @FXML private TableColumn col_salary;
@@ -56,22 +59,12 @@ public class ListController {
     }
 
     private void disableReorder() {
-        ObservableList columns = table.getColumns();
-
-        table.getColumns().addListener(new ListChangeListener() {
-            private boolean suspended;
-
-            @Override
-            public void onChanged(Change c) {
-                c.next();
-                if (c.wasReplaced() && !this.suspended) {
-                    suspended = true;
-                    table.getColumns().setAll(columns);
-                    suspended = false;
-                }
-            }
+        table.widthProperty().addListener((observable, oldValue, newValue) -> {
+            TableHeaderRow row = ((TableHeaderRow) table.lookup("TableHeaderRow"));
+            row.reorderingProperty().addListener((observable1, oldValue1, newValue1) -> row.setReordering(false));
         });
     }
+
 
     @FXML
     public void logout() throws SQLException {
