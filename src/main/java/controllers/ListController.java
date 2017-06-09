@@ -5,15 +5,19 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import main.java.Main;
 import main.java.db.Database;
 import main.java.models.Employee;
@@ -51,18 +55,25 @@ public class ListController {
         Database db = new Database();
         db.init();
 
+        table.setItems(db.getEmployees());
         col_fname.setCellValueFactory(new PropertyValueFactory<Employee, String>("fName"));
         col_lname.setCellValueFactory(new PropertyValueFactory<Employee, String>("lName"));
         col_salary.setCellValueFactory(new PropertyValueFactory<Employee, String>("salary"));
         col_age.setCellValueFactory(new PropertyValueFactory<Employee, String>("age"));
-        table.setItems(db.getEmployees());
+
+        table.setRowFactory((Callback<TableView<Employee>, TableRow<Employee>>) param -> {
+            TableRow<Employee> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+
+            });
+        });
     }
 
     private void disableReorder() {
         table.widthProperty().addListener((observable, oldValue, newValue) -> {
             TableHeaderRow row = ((TableHeaderRow) table.lookup("TableHeaderRow"));
             row.reorderingProperty().addListener((observable1, oldValue1, newValue1) -> row.setReordering(false));
-        });
+        }); //Fuck you oracle
     }
 
 
