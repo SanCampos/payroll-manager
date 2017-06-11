@@ -1,11 +1,7 @@
 package main.java.controllers;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -13,7 +9,6 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -30,7 +25,7 @@ import java.sql.SQLException;
 public class ListController {
 
     @FXML private ImageView profImg;
-    @FXML private Button logout;
+    @FXML private Button logout_button;
 
     @FXML private TableView<Employee> table;
     @FXML private TableColumn col_fname;
@@ -80,7 +75,7 @@ public class ListController {
 
     @FXML
     public void logout() throws SQLException {
-        Stage stage = ((Stage) logout.getScene().getWindow());
+        Stage stage = ((Stage) logout_button.getScene().getWindow());
         stage.close();
         Main.loginStage.show();
     }
@@ -91,4 +86,6 @@ public class ListController {
         profImg.setClip(circle);
     }
 
+    public void showSettings() {
+    }
 }

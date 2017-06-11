@@ -1,11 +1,16 @@
-.hbox {
+* {
+    -fx-hover: rgba(64, 64, 64, 0.2);
+    -fx-pressed: rgba(5, 5, 5, 0.35);
+}
+
+.box {
     -fx-padding: 15;
     -fx-spacing: 15;
     -fx-alignment: center-left;
 }
 
 .divider {
-    -fx-pref-width: 700;
+    -fx-pref-width: 500;
 }
 
 .button {
@@ -13,23 +18,28 @@
     -fx-border-color: white;
 }
 
+.btn {
+    -fx-min-height: 65px;
+    -fx-min-width: 65px;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.btn:hover {
+    -fx-background-color: -fx-hover;
+    -fx-border-color: -fx-hover;
+}
+
+.btn:pressed {
+    -fx-background-color: -fx-pressed;
+    -fx-border-color: -fx-pressed;
+}
+
 
 #logout_img {
     -fx-image: url("/imgs/logout.png");
 }
 
-#logout {
-    -fx-min-width: 65px;
-    -fx-min-height: 65px;
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
+#settings_img {
+    -fx-image: url("/imgs/settings.png");
 }
-
-#logout:hover {
-    -fx-background-color: rgba(64, 64, 64, 0.2);
-}
-
-#logout:pressed {
-    -fx-background-color: rgba(5, 5, 5, 0.35);
-}
-

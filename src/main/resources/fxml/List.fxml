@@ -15,11 +15,12 @@
 <?import javafx.scene.control.TableView?>
 <?import com.sun.javafx.scene.control.skin.TableHeaderRow?>
 <?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.layout.VBox?>
 <BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.ListController">
     <top>
-        <HBox styleClass="hbox">
-
-            <ImageView fx:id="profImg" fitHeight="65" fitWidth="65" >
+        <HBox styleClass="box">
+            <ImageView fx:id="profImg" fitHeight="65" fitWidth="65">
                 <Image url="/imgs/test-employee.png" />
             </ImageView>
 
@@ -28,12 +29,15 @@
             <Region styleClass="divider" HBox.hgrow="ALWAYS"/>
 
             <StackPane>
+                <ImageView fx:id="settings_img"/>
+                <Button fx:id="settings_button" onAction="#showSettings" styleClass="btn"/>
+            </StackPane>
+            <StackPane>
                 <ImageView fx:id="logout_img"/>
-                <Button fx:id="logout" onAction="#logout"/>
+                <Button fx:id="logout_button" styleClass="btn" onAction="#logout"/>
             </StackPane>
         </HBox>
     </top>
-
 
     <center>
         <TableView fx:id="table">
