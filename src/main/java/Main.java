@@ -1,11 +1,9 @@
 package main.java;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
@@ -22,7 +20,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         loginStage =  primaryStage;
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/List.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/list.fxml"));
         Scene scene = new Scene(root, 1000,  800);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Login");

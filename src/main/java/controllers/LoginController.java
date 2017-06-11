@@ -59,7 +59,7 @@ public class LoginController {
                 return;
             }
 
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/List.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/list.fxml"));
             Scene scene = new Scene(root, 1000, 800);
             Stage listStage = new Stage();
             listStage.setTitle("List");

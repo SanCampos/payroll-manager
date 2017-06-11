@@ -1,6 +1,6 @@
 * {
-    -fx-hover: rgba(64, 64, 64, 0.2);
-    -fx-pressed: rgba(5, 5, 5, 0.35);
+    -fx-btn-hover: rgba(64, 64, 64, 0.2);
+    -fx-btn-pressed: rgba(5, 5, 5, 0.35);
 }
 
 .box {
@@ -26,13 +26,13 @@
 }
 
 .btn:hover {
-    -fx-background-color: -fx-hover;
-    -fx-border-color: -fx-hover;
+    -fx-background-color: -fx-btn-hover;
+    -fx-border-color: -fx-btn-hover;
 }
 
 .btn:pressed {
-    -fx-background-color: -fx-pressed;
-    -fx-border-color: -fx-pressed;
+    -fx-background-color: -fx-btn-pressed;
+    -fx-border-color: -fx-btn-pressed;
 }
 
 

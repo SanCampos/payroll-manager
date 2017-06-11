@@ -3,6 +3,9 @@ package main.java.controllers;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -17,6 +20,7 @@ import main.java.Main;
 import main.java.db.Database;
 import main.java.models.Employee;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 /**
@@ -53,11 +57,12 @@ public class ListController {
         table.setItems(db.getEmployees());
         col_fname.setCellValueFactory(new PropertyValueFactory<Employee, String>("fName"));
         col_lname.setCellValueFactory(new PropertyValueFactory<Employee, String>("lName"));
-        col_salary.setCellValueFactory(new PropertyValueFactory<Employee, Double>("salary"));
+        col_salary.setCellValueFactory(new PropertyValueFactory<Employee, String>("salary"));
         col_age.setCellValueFactory(new PropertyValueFactory<Employee, Integer>("age"));
 
         table.setRowFactory((Callback<TableView<Employee>, TableRow<Employee>>) param -> {
             TableRow<Employee> row =  new TableRow<>();
+
             row.setOnMouseClicked(event -> {
                 int id =  row.getItem().getId();
             });
@@ -86,6 +91,13 @@ public class ListController {
         profImg.setClip(circle);
     }
 
-    public void showSettings() {
+    @FXML
+    public void showSettings() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/settings.fxml"));
+        Scene scene = new Scene(root, 600, 400);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Settings");
+        stage.show();
     }
 }

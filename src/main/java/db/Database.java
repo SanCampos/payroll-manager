@@ -89,7 +89,7 @@ public class Database {
             prepStmnt.setString(1, e.getfName());
             prepStmnt.setString(2, e.getlName());
             prepStmnt.setInt(3, e.getAge());
-            prepStmnt.setDouble(4, e.getSalary());
+            prepStmnt.setString(4, e.getSalary());
 
             return prepStmnt.executeUpdate() != 0;
         }
