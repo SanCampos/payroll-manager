@@ -61,12 +61,12 @@ public class ListController {
         col_salary.setCellValueFactory(new PropertyValueFactory<Employee, String>("salary"));
         col_age.setCellValueFactory(new PropertyValueFactory<Employee, String>("age"));
 
-        table.setRowFactory((Callback<TableView<Employee>, TableRow<Employee>>) param -> {
+        /*table.setRowFactory((Callback<TableView<Employee>, TableRow<Employee>>) param -> {
             TableRow<Employee> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
 
             });
-        });
+        }); */
     }
 
     private void disableReorder() {
