@@ -58,14 +58,15 @@ public class ListController {
         table.setItems(db.getEmployees());
         col_fname.setCellValueFactory(new PropertyValueFactory<Employee, String>("fName"));
         col_lname.setCellValueFactory(new PropertyValueFactory<Employee, String>("lName"));
-        col_salary.setCellValueFactory(new PropertyValueFactory<Employee, String>("salary"));
-        col_age.setCellValueFactory(new PropertyValueFactory<Employee, String>("age"));
+        col_salary.setCellValueFactory(new PropertyValueFactory<Employee, Double>("salary"));
+        col_age.setCellValueFactory(new PropertyValueFactory<Employee, Integer>("age"));
 
         table.setRowFactory((Callback<TableView<Employee>, TableRow<Employee>>) param -> {
-            TableRow<Employee> row = new TableRow<>();
+            TableRow<Employee> row =  new TableRow<>();
             row.setOnMouseClicked(event -> {
-
+                int id =  row.getItem().getId();
             });
+            return row;
         });
     }
 
