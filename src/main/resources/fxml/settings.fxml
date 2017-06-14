@@ -17,9 +17,7 @@
     </HBox>
 
     <HBox styleClass="setting_row">
-        <ImageView fx:id="prof_img" fitHeight="65" fitWidth="65">
-            <Image url="/imgs/test-employee.png" />
-        </ImageView>
+        <ImageView fx:id="prof_img" fitHeight="65" fitWidth="65"/>
 
         <Button text="Change picture" onAction="#getPicFile"/>
     </HBox>

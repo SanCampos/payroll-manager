@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import main.java.IO.FilePaths;
@@ -12,17 +13,20 @@ import main.java.IO.FilePaths;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static main.java.controllers.ControllerUtils.getAvatarCircle;
+import static main.java.controllers.ListController.db;
 
 /**
  * Created by thedr on 6/14/2017.
  */
 public class SettingsController {
 
-    @FXML ImageView prof_img;
+    @FXML private ImageView prof_img;
+
 
     @FXML
     public void initialize() {
@@ -30,6 +34,7 @@ public class SettingsController {
     }
 
     private void initAvatar() {
+        prof_img.setImage(new Image(ListController.path));
         prof_img.setClip(getAvatarCircle());
     }
 
@@ -45,6 +50,10 @@ public class SettingsController {
         try {
             //Create file objects for chosen and created file and load stream
             File master = chooser.showOpenDialog(prof_img.getScene().getWindow());
+
+            if (master == null)
+                return;
+
             File created = new File(FilePaths.localImgPath + "\\" + master.getName());
             FileInputStream stream = new FileInputStream(master);
 
@@ -65,6 +74,9 @@ public class SettingsController {
             }
             //Finally copies the bytes of chosen file to the created one, overwriting if necessary
             Files.copy(stream, Paths.get(created.getPath()), REPLACE_EXISTING);
+            db.updateImageOf(db.currentID, created.getAbsolutePath());
+            ListController.path = created.getAbsolutePath();
+            prof_img.setImage(new Image(ListController.path)); //REFACTOR VARIABLE PLACEMENT TOMORROW
 
         } catch (Exception e) {
             e.printStackTrace();

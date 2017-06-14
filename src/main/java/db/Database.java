@@ -37,12 +37,14 @@ public class Database {
             String sql = String.format("SELECT * FROM %s WHERE %s = ?", table_avatars.name, table_avatars.cols.id);
 
             PreparedStatement statement = con.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-            statement.setInt(id, 1);
+            statement.setInt(1, id);
 
             ResultSet row = statement.executeQuery();
-            row.next();
 
-            return row.getString(table_avatars.cols.path);
+            if (row.next()) {
+                return row.getString(table_avatars.cols.path);
+            }
+            return null;
         }
         
         public boolean registerUser(String username, String password) throws SQLException {
@@ -177,11 +179,11 @@ public class Database {
             return results;
         }
 
-        public boolean updateImageOf(int id) throws SQLException {
+        public boolean updateImageOf(int id, String path) throws SQLException {
             String sql = String.format("UPDATE %s SET %s WHERE %s = ?", table_avatars.name, table_avatars.cols.path, table_avatars.cols.id);
 
             PreparedStatement statement = con.prepareStatement(sql);
-            statement.setInt(1, id);
+            statement.setString(1, path);
             return statement.executeUpdate() != 0;
         }
 

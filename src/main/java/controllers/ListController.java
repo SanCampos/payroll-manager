@@ -11,6 +11,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -39,7 +40,9 @@ public class ListController {
     @FXML private TableColumn col_salary;
     @FXML private TableColumn col_age;
 
-    private Database db;
+    //TO BE MOVED TO EXTERNAL CLASS
+    public static Database db;
+    public static String path;
 
     @FXML
     public void initialize() {
@@ -90,11 +93,15 @@ public class ListController {
     }
 
     private void initAvatar() {
-        String path = "/imgs/default-avatar.png";
+        path = null;
 
         try {
-            path = db.
+            path = db.getAvatarOf(db.currentID);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        if (path == null) path = "/imgs/default-avatar.png";
+        profImg.setImage(new Image(path));
         profImg.setClip(getAvatarCircle());
     }
 

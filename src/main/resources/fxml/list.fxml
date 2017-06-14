@@ -20,9 +20,7 @@
 <BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.ListController">
     <top>
         <HBox styleClass="box">
-            <ImageView fx:id="profImg" fitHeight="65" fitWidth="65">
-                <Image url="/imgs/test-employee.png" />
-            </ImageView>
+            <ImageView fx:id="profImg" fitHeight="65" fitWidth="65"/>
 
             <Text text="Ligaya Abelarde"/>
 
