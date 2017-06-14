@@ -16,7 +16,8 @@ class DbSchema {
              static final String age       = "age";
              static final String salary = "salary";
              static final String id        = "id";
-        }
+             public static String img_path = "img_path";
+         }
     }
 
      static class table_users {
