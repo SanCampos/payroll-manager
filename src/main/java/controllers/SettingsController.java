@@ -1,6 +1,10 @@
 package main.java.controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import main.java.IO.FilePaths;
@@ -8,10 +12,7 @@ import main.java.IO.FilePaths;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
-import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
-import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static main.java.controllers.ControllerUtils.getAvatarCircle;
 
@@ -43,7 +44,7 @@ public class SettingsController {
             //Create file objects for chosen and created file and load stream
             File master = chooser.showOpenDialog(prof_img.getScene().getWindow());
             File created = new File(FilePaths.localImgPath + "\\" + master.getName());
-            InputStream stream = new FileInputStream(master);
+            FileInputStream stream = new FileInputStream(master);
 
             //Creates img and respective dir if !exists
             if (!(created.exists() && created.isFile())) {
@@ -53,8 +54,14 @@ public class SettingsController {
 
             //Finally copies the bytes of chosen file to the created one, overwriting if necessary
             Files.copy(stream, Paths.get(created.getPath()), REPLACE_EXISTING);
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
 
+            Alert errorDialog = new Alert(Alert.AlertType.ERROR);
+            errorDialog.setTitle("Error");
+            errorDialog.setHeaderText(null);
+            errorDialog.setContentText("There was an error retrieving your chosen file. Please verify that your file exists and try again.");
+            errorDialog.showAndWait();
         }
     }
 }
