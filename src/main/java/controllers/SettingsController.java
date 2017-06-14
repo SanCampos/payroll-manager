@@ -33,7 +33,8 @@ public class SettingsController {
         prof_img.setClip(getAvatarCircle());
     }
 
-    public void getPicFile() {
+    @FXML
+    public void getPicFile() { //please refactor this, this is huge
         //Makes user choose a picture file and copies that file to local picture directory
 
         //Init fileChooser (what kind of name is that)

@@ -164,6 +164,14 @@ public class Database {
             return results;
         }
 
+        public boolean updateImageOf(int id) throws SQLException {
+            String sql = "UPDATE employees SET img_path WHERE id = ?";
+
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setInt(1, id);
+            return statement.executeUpdate() != 0;
+        }
+
         public void closeConnection() throws SQLException {
             con.close();
         }
