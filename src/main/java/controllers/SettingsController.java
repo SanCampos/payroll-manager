@@ -12,6 +12,7 @@ import main.java.IO.FilePaths;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static main.java.controllers.ControllerUtils.getAvatarCircle;
@@ -50,10 +51,20 @@ public class SettingsController {
             if (!(created.exists() && created.isFile())) {
                 created.getParentFile().mkdirs();
                 created.createNewFile();
-            }
+            } else {
+                Alert confirmOverwrite = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmOverwrite.setTitle("Confirm picture overwrite");
+                confirmOverwrite.setHeaderText(null);
+                confirmOverwrite.setContentText("A picture with the same file name has already been saved, would you like to overwrite it?");
 
+                Optional<ButtonType> result = confirmOverwrite.showAndWait();
+                if (result.get() != ButtonType.OK) {
+                    return;
+                }
+            }
             //Finally copies the bytes of chosen file to the created one, overwriting if necessary
             Files.copy(stream, Paths.get(created.getPath()), REPLACE_EXISTING);
+
         } catch (Exception e) {
             e.printStackTrace();
 
