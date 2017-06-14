@@ -39,9 +39,11 @@ public class ListController {
     @FXML private TableColumn col_salary;
     @FXML private TableColumn col_age;
 
+    private Database db;
 
     @FXML
     public void initialize() {
+        db = new Database();
         try {
             loadTableData();
         } catch (SQLException e){
@@ -53,7 +55,7 @@ public class ListController {
     }
 
     private void loadTableData() throws SQLException {
-        Database db = new Database();
+
         db.init();
 
         table.setItems(db.getEmployees());
@@ -88,6 +90,11 @@ public class ListController {
     }
 
     private void initAvatar() {
+        String path = "/imgs/default-avatar.png";
+
+        try {
+            path = db.
+        }
         profImg.setClip(getAvatarCircle());
     }
 

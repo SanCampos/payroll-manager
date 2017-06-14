@@ -16,7 +16,6 @@ class DbSchema {
              static final String age       = "age";
              static final String salary = "salary";
              static final String id        = "id";
-             public static String img_path = "img_path";
          }
     }
 
@@ -30,5 +29,14 @@ class DbSchema {
              static final String salt = "salt";
              static final String prvlg_lvl = "prvlg_lvl"; //For application privileges. Will be used later on
         }
+    }
+
+    static class table_avatars {
+         static final String name = "user_avatars";
+
+         static class cols {
+             static final String id = "id";
+             static final String path = "path";
+         }
     }
 }

@@ -34,7 +34,7 @@ public class Database {
         }
 
         public String getAvatarOf(int id) throws SQLException {
-            String sql = "SELECT * FROM employees WHERE id = ?";
+            String sql = String.format("SELECT * FROM %s WHERE %s = ?", table_avatars.name, table_avatars.cols.id);
 
             PreparedStatement statement = con.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             statement.setInt(id, 1);
@@ -42,7 +42,7 @@ public class Database {
             ResultSet row = statement.executeQuery();
             row.next();
 
-            return row.getString(table_employees.cols.img_path);
+            return row.getString(table_avatars.cols.path);
         }
         
         public boolean registerUser(String username, String password) throws SQLException {
@@ -178,7 +178,7 @@ public class Database {
         }
 
         public boolean updateImageOf(int id) throws SQLException {
-            String sql = "UPDATE employees SET img_path WHERE id = ?";
+            String sql = String.format("UPDATE %s SET %s WHERE %s = ?", table_avatars.name, table_avatars.cols.path, table_avatars.cols.id);
 
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setInt(1, id);
