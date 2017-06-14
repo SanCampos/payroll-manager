@@ -30,10 +30,11 @@ public class LoginController {
     public void initialize() {
         inputUser.setOnKeyPressed(this::checkForEmptyFields);
         inputPass.setOnKeyPressed(this::checkForEmptyFields);
+
+        //Set listeners for login on pressing enter
     }
 
     private void checkForEmptyFields(KeyEvent event) {
-        boolean tets  = inputPass.getText().isEmpty();
         if (event.getCode() == KeyCode.ENTER &&
                 (((!inputPass.getText().isEmpty()) && (!inputUser.getText().isEmpty()))))
                 login();

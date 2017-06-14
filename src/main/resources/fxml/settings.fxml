@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 
-<?import javafx.scene.text.Text?>
-<VBox xmlns: = "http://javafx.com/javafx"
-      xmlns:fx = "https://javafx.com/fxml">
+<?import javafx.scene.control.Button?>
+<VBox styleClass="box" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.SettingsController">
 
-    <Text text="YO I  EXIST"/>
+    <HBox styleClass="group">
+        <Label styleClass="group" text="User Picture" />
+        <Line endX="500" endY="8.0" startX="10" startY="8.0" styleClass="group_divider" />
+    </HBox>
+
+    <HBox styleClass="setting_row">
+        <ImageView fx:id="prof_img" fitHeight="65" fitWidth="65">
+            <Image url="/imgs/test-employee.png" />
+        </ImageView>
+
+        <Button text="Change picture"/>
+    </HBox>
+
+
+
+    <stylesheets>
+        <URL value="@/css/settings.css" />
+    </stylesheets>
 </VBox>

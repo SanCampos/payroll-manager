@@ -1,0 +1,23 @@
+.box {
+    -fx-padding: 15;
+    -fx-spacing: 15;
+}
+
+.group_title {
+    -fx-font-weight: bolder;
+}
+
+.group {
+    -fx-alignment: center-left;
+    -fx-spacing: 3px;
+}
+
+.setting_row {
+    -fx-padding: 0 0 0 10;
+    -fx-alignment: center-left;
+    -fx-spacing: 20px;
+}
+
+.group_divider {
+    -fx-stroke: rgb(195, 195, 162);
+}

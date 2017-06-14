@@ -23,6 +23,8 @@ import main.java.models.Employee;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import static main.java.controllers.ControllerUtils.getAvatarCircle;
+
 /**
  * Created by thedr on 6/6/2017.
  */
@@ -60,7 +62,7 @@ public class ListController {
         col_salary.setCellValueFactory(new PropertyValueFactory<Employee, String>("salary"));
         col_age.setCellValueFactory(new PropertyValueFactory<Employee, Integer>("age"));
 
-        table.setRowFactory((Callback<TableView<Employee>, TableRow<Employee>>) param -> {
+        table.setRowFactory(param -> {
             TableRow<Employee> row =  new TableRow<>();
 
             row.setOnMouseClicked(event -> {
@@ -86,9 +88,7 @@ public class ListController {
     }
 
     private void initAvatar() {
-        Circle circle = new Circle(32.5, 32.5, 32.5); //DONT FUCKIN CHANGE THIS
-        circle.setFill(Paint.valueOf("RED"));
-        profImg.setClip(circle);
+        profImg.setClip(getAvatarCircle());
     }
 
     @FXML

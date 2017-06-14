@@ -52,7 +52,7 @@
     </center>
 
     <stylesheets>
-        <URL value="@/css/main_screen.css"/>
+        <URL value="@/css/list.css"/>
     </stylesheets>
 
 </BorderPane>
