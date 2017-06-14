@@ -15,6 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import main.java.Main;
@@ -112,6 +113,8 @@ public class ListController {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.setTitle("Settings");
-        stage.show();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+
     }
 }

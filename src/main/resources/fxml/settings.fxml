@@ -9,7 +9,12 @@
 <?import javafx.scene.shape.Line?>
 
 <?import javafx.scene.control.Button?>
-<VBox styleClass="box" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.SettingsController">
+
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.SettingsController">
+
+    <center>
+    <VBox styleClass="box">
 
     <HBox styleClass="group">
         <Label styleClass="group_title" text="User Picture" />
@@ -22,9 +27,18 @@
         <Button text="Change picture" onAction="#getPicFile"/>
     </HBox>
 
+    </VBox>
 
+    </center>
 
+    <bottom>
+        <HBox styleClass="confirmBtns">
+            <Button text="Apply"/>
+            <Button text="OK"/>
+            <Button text="Cancel"/>
+        </HBox>
+    </bottom>
     <stylesheets>
-        <URL value="@/css/settings.css" />
+        <URL value="@/css/settings.css"/>
     </stylesheets>
-</VBox>
+</BorderPane>
