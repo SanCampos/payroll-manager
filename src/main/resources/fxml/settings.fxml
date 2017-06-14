@@ -12,7 +12,7 @@
 <VBox styleClass="box" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.SettingsController">
 
     <HBox styleClass="group">
-        <Label styleClass="group" text="User Picture" />
+        <Label styleClass="group_title" text="User Picture" />
         <Line endX="500" endY="8.0" startX="10" startY="8.0" styleClass="group_divider" />
     </HBox>
 
@@ -21,7 +21,7 @@
             <Image url="/imgs/test-employee.png" />
         </ImageView>
 
-        <Button text="Change picture"/>
+        <Button text="Change picture" onAction="#getPicFile"/>
     </HBox>
 
 
