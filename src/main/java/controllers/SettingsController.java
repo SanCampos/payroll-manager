@@ -69,10 +69,10 @@ public class SettingsController {
             //For copying and reading selected image
             slctdImgStrm = new FileInputStream(selected);
 
-            //For comparison to current profile picture
+            //For comparison of selected image to current profile picture
             Image slctdImg =  new Image(slctdImgStrm);
 
-            //Reference to storage location for selected picture
+            //Reference to planned storage location for selected picture
             strgRef = new File(FilePaths.employeesImgDir + "\\" + UserInfo.userID + "\\" + selected.getName());
 
             //Flags no image change if user selects his current profile picture
