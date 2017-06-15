@@ -1,17 +1,14 @@
 package main.java.db;
 
-import com.sun.org.apache.regexp.internal.RE;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import main.java.GlobalInfo.UserInfo;
+import main.java.globalInfo.UserInfo;
 import main.java.models.Employee;
 
 import java.security.SecureRandom;
 import java.sql.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import main.java.db.DbSchema.*;
