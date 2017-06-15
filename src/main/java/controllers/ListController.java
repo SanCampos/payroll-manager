@@ -40,7 +40,7 @@ public class ListController {
     @FXML private TableColumn col_age;
 
     //TO BE MOVED TO EXTERNAL CLASS
-    public static Database db;
+    private static Database db;
 
     @FXML
     public void initialize() {
