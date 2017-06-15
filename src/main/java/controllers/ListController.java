@@ -1,7 +1,6 @@
 package main.java.controllers;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,19 +12,19 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
+import main.java.GlobalInfo.FilePaths;
+import main.java.GlobalInfo.UserInfo;
 import main.java.Main;
 import main.java.db.Database;
 import main.java.models.Employee;
+import sun.rmi.server.UnicastServerRef;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static main.java.controllers.ControllerUtils.getAvatarCircle;
+import static main.java.utils.ShapeUtils.getAvatarCircle;
 
 /**
  * Created by thedr on 6/6/2017.
@@ -43,7 +42,6 @@ public class ListController {
 
     //TO BE MOVED TO EXTERNAL CLASS
     public static Database db;
-    public static String path;
 
     @FXML
     public void initialize() {
@@ -94,15 +92,15 @@ public class ListController {
     }
 
     private void initAvatar() {
-        path = null;
+        FilePaths.currProfImgPath = null;
 
         try {
-            path = db.getAvatarOf(db.currentID);
+            FilePaths.currProfImgPath = db.getAvatarOf(UserInfo.userID);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if (path == null) path = "/imgs/default-avatar.png";
-        profImg.setImage(new Image(path));
+        if (FilePaths.currProfImgPath == null) FilePaths.currProfImgPath = "/imgs/default-avatar.png";
+        profImg.setImage(new Image(FilePaths.currProfImgPath));
         profImg.setClip(getAvatarCircle());
     }
 
