@@ -69,11 +69,11 @@ public class SettingsController {
             //For copying and reading selected image
             slctdImgStrm = new FileInputStream(selected);
 
-            //For comparison of selected image to current profile picture
-            Image slctdImg =  new Image(slctdImgStrm);
-
             //Reference to planned storage location for selected picture
             strgRef = new File(FilePaths.employeesImgDir + "\\" + UserInfo.userID + "\\" + selected.getName());
+
+            //For comparison of selected image to current profile picture, also for its preview
+            Image slctdImg =  new Image(slctdImgStrm);
 
             //Flags no image change if user selects his current profile picture
             if (getFileName(currProfImgPath).equals(getFileName(strgRef.getAbsolutePath())) && ImageUtils.equals(currImg, slctdImg)) {
@@ -82,13 +82,12 @@ public class SettingsController {
                 return;
             }
 
-            //Show confirmation dialog for user changing profile picture
+            //Let user confirm that he/she wants to change profile picture
             Alert confirmOverwrite = new Alert(Alert.AlertType.CONFIRMATION);
             confirmOverwrite.setTitle("Confirm picture change");
             confirmOverwrite.setHeaderText(null);
             confirmOverwrite.setContentText("Are you sure you want to change your profile picture?");
 
-            //Cancel entire process if user clicks 'NO'
             Optional<ButtonType> result = confirmOverwrite.showAndWait();
             if (result.get() != ButtonType.OK) {
                 return;
@@ -100,7 +99,7 @@ public class SettingsController {
         } catch (IOException e) {
             e.printStackTrace();
 
-            //Show error dialog if selected picture failed to be read
+            //Inform user that selected picture failed to be read
             Alert errorDialog = new Alert(Alert.AlertType.ERROR);
             errorDialog.setTitle("Error");
             errorDialog.setHeaderText(null);
