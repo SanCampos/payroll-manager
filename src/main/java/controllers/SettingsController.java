@@ -6,12 +6,17 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-import main.java.IO.FilePaths;
+import main.java.GlobalInfo.FilePaths;
+import main.java.GlobalInfo.UserInfo;
+import main.java.db.Database;
+import main.java.utils.ImageUtils;
 
 import java.io.*;
 import java.util.Optional;
 
-import static main.java.controllers.ControllerUtils.getAvatarCircle;
+import static main.java.GlobalInfo.FilePaths.currProfImgPath;
+import static main.java.utils.ShapeUtils.getAvatarCircle;
+import static main.java.utils.FileUtils.getFileName;
 
 /**
  * Created by thedr on 6/14/2017.
@@ -20,19 +25,27 @@ public class SettingsController {
 
     @FXML private ImageView prof_img;
 
+    //Boolean to detect for settings changes
+    private boolean changed = false;
+
     //Reference to strg dir of profile image
     private File strgRef;
 
     //Stream for slctd img data
     private InputStream slctdImgStrm;
 
+    //Reference to current user profile
+    private Image currImg;
+
     @FXML
     public void initialize() {
+        //Init avatar preview with curr prof img
+        currImg = new Image(currProfImgPath);
         initAvatar();
     }
 
     private void initAvatar() {
-        prof_img.setImage(new Image(ListController.path));
+        prof_img.setImage(currImg);
         prof_img.setClip(getAvatarCircle());
     }
 
@@ -48,30 +61,40 @@ public class SettingsController {
             //Selected picture reference
             File selected = chooser.showOpenDialog(prof_img.getScene().getWindow());
 
+
             //Return if user closes dialog w/o selection
             if (selected == null)
                 return;
 
-            //For retrieval of selected image data
+            //For copying and reading selected image
             slctdImgStrm = new FileInputStream(selected);
 
+            //For comparison to current profile picture
+            Image slctdImg =  new Image(slctdImgStrm);
+
             //Reference to storage location for selected picture
-            strgRef = new File(FilePaths.employeesImgDir + "\\" + selected.getName());
+            strgRef = new File(FilePaths.employeesImgDir + "\\" + UserInfo.userID + "\\" + selected.getName());
 
-            //Asks to overwrite if a picture w/ the same name exists in the same dir
-            if (strgRef.exists() && strgRef.isFile()) {
-                Alert confirmOverwrite = new Alert(Alert.AlertType.CONFIRMATION);
-                confirmOverwrite.setTitle("Confirm picture overwrite");
-                confirmOverwrite.setHeaderText(null);
-                confirmOverwrite.setContentText("A picture with the same file name has already been saved, would you like to overwrite it?");
-
-                Optional<ButtonType> result = confirmOverwrite.showAndWait();
-                if (result.get() != ButtonType.OK) {
-                    return;
-                }
-                //Show preview of new avatar
-                prof_img.setImage(new Image(slctdImgStrm));
+            //Makes no change if user selects his current profile picture
+            if (getFileName(currProfImgPath).equals(getFileName(strgRef.getAbsolutePath())) && ImageUtils.equals(currImg, slctdImg)) {
+                prof_img.setImage(slctdImg);
+                changed = false;
+                return;
             }
+
+            Alert confirmOverwrite = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmOverwrite.setTitle("Confirm picture change");
+            confirmOverwrite.setHeaderText(null);
+            confirmOverwrite.setContentText("Are you sure you want to permanently change your profile picture?");
+
+            Optional<ButtonType> result = confirmOverwrite.showAndWait();
+            if (result.get() != ButtonType.OK) {
+                return;
+            }
+
+            //Show preview of new avatar
+            prof_img.setImage(slctdImg);
+            changed = true;
         } catch (Exception e) {
             e.printStackTrace();
 

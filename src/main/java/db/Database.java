@@ -3,6 +3,7 @@ package main.java.db;
 import com.sun.org.apache.regexp.internal.RE;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import main.java.GlobalInfo.UserInfo;
 import main.java.models.Employee;
 
 import java.security.SecureRandom;
@@ -22,7 +23,6 @@ import org.mindrot.jbcrypt.BCrypt;
 public class Database {
 
     private Connection con;
-    public int currentID;
     private int prvlg_lvl;
 
         public void init() throws SQLException {
@@ -87,7 +87,7 @@ public class Database {
             String hashed_pw = BCrypt.hashpw(password, salt);
 
             if (hashed_pw.equals(user_pw)) {
-                currentID = userID;
+                UserInfo.userID = userID;
                 prvlg_lvl = user_prvlg;
                 return true;
             }
