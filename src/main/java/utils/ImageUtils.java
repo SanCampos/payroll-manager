@@ -9,6 +9,8 @@ import javafx.scene.image.PixelReader;
 public class ImageUtils {
 
     public static boolean equals(Image first, Image second) {
+        //Checks if two images are identical pixel-for-pixel
+
         double height = first.getHeight();
         double width = second.getWidth();
 
