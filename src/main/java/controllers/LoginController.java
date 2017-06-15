@@ -68,10 +68,11 @@ public class LoginController {
             listStage.show();
             Main.loginStage.close();
 
-        } catch (SQLException e) /*Please rework this once we're sure we don't need io exceptions*/ {
+        } catch (SQLException e) {
             loginFailNotif.setText("Error connecting to the server, please try again!");
             e.printStackTrace();
         } catch (IOException e) {
+            loginFailNotif.setText("An error has occurred, please try again!");
             e.printStackTrace();
         }
 
