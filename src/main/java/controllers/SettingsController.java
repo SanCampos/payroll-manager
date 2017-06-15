@@ -9,13 +9,9 @@ import javafx.stage.FileChooser;
 import main.java.IO.FilePaths;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Optional;
 
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static main.java.controllers.ControllerUtils.getAvatarCircle;
-import static main.java.controllers.ListController.db;
 
 /**
  * Created by thedr on 6/14/2017.
@@ -24,6 +20,11 @@ public class SettingsController {
 
     @FXML private ImageView prof_img;
 
+    //Reference to strg dir of profile image
+    private File strgRef;
+
+    //Stream for slctd img data
+    private InputStream slctdImgStrm;
 
     @FXML
     public void initialize() {
@@ -45,20 +46,20 @@ public class SettingsController {
                                                                          "*.png", "*.jpg", "*.gif")); // possible refactor?
         try {
             //Selected picture reference
-            File master = chooser.showOpenDialog(prof_img.getScene().getWindow());
+            File selected = chooser.showOpenDialog(prof_img.getScene().getWindow());
 
             //Return if user closes dialog w/o selection
-            if (master == null)
+            if (selected == null)
                 return;
 
             //For retrieval of selected image data
-            FileInputStream stream = new FileInputStream(master);
+            slctdImgStrm = new FileInputStream(selected);
 
             //Reference to storage location for selected picture
-            File created = new File(FilePaths.employeesImgDir + "\\" + master.getName());
+            strgRef = new File(FilePaths.employeesImgDir + "\\" + selected.getName());
 
             //Asks to overwrite if a picture w/ the same name exists in the same dir
-            if (created.exists() && created.isFile()) {
+            if (strgRef.exists() && strgRef.isFile()) {
                 Alert confirmOverwrite = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmOverwrite.setTitle("Confirm picture overwrite");
                 confirmOverwrite.setHeaderText(null);
@@ -68,9 +69,8 @@ public class SettingsController {
                 if (result.get() != ButtonType.OK) {
                     return;
                 }
-
                 //Show preview of new avatar
-                prof_img.setImage(new Image(stream));
+                prof_img.setImage(new Image(slctdImgStrm));
             }
         } catch (Exception e) {
             e.printStackTrace();
