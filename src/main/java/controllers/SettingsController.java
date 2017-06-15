@@ -36,14 +36,13 @@ public class SettingsController {
     }
 
     @FXML
-    public void getPicFile() { //please refactor this, this is huge
-        //Makes user choose a picture file and copies that file to local picture directory
+    public void getPicFile() {
+        //Makes user choose a picture file and copies that file to local storage directory
 
-        //Init fileChooser (what kind of name is that)
+        //Init dialog for user to select a new image
         FileChooser chooser = new FileChooser();
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image files (*.jpg, *.gif, *.png)",
                                                                          "*.png", "*.jpg", "*.gif")); // possible refactor?
-
         try {
             //Selected picture reference
             File master = chooser.showOpenDialog(prof_img.getScene().getWindow());
@@ -58,7 +57,7 @@ public class SettingsController {
             //Reference to storage location for selected picture
             File created = new File(FilePaths.employeesImgDir + "\\" + master.getName());
 
-            //Creates img and respective dir if !exists
+            //Asks to overwrite if a picture w/ the same name exists in the same dir
             if (created.exists() && created.isFile()) {
                 Alert confirmOverwrite = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmOverwrite.setTitle("Confirm picture overwrite");
@@ -69,6 +68,8 @@ public class SettingsController {
                 if (result.get() != ButtonType.OK) {
                     return;
                 }
+
+                //Show preview of new avatar
                 prof_img.setImage(new Image(stream));
             }
         } catch (Exception e) {
