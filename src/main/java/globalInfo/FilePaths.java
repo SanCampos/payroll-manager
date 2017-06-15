@@ -1,4 +1,4 @@
-package main.java.GlobalInfo;
+package main.java.globalInfo;
 
 /**
  * Created by thedr on 6/14/2017.

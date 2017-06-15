@@ -14,12 +14,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import main.java.GlobalInfo.FilePaths;
-import main.java.GlobalInfo.UserInfo;
+import main.java.globalInfo.FilePaths;
+import main.java.globalInfo.UserInfo;
 import main.java.Main;
 import main.java.db.Database;
 import main.java.models.Employee;
-import sun.rmi.server.UnicastServerRef;
 
 import java.io.IOException;
 import java.sql.SQLException;

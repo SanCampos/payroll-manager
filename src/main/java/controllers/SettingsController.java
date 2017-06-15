@@ -6,15 +6,14 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-import main.java.GlobalInfo.FilePaths;
-import main.java.GlobalInfo.UserInfo;
-import main.java.db.Database;
+import main.java.globalInfo.FilePaths;
+import main.java.globalInfo.UserInfo;
 import main.java.utils.ImageUtils;
 
 import java.io.*;
 import java.util.Optional;
 
-import static main.java.GlobalInfo.FilePaths.currProfImgPath;
+import static main.java.globalInfo.FilePaths.currProfImgPath;
 import static main.java.utils.ShapeUtils.getAvatarCircle;
 import static main.java.utils.FileUtils.getFileName;
 
