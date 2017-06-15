@@ -68,14 +68,12 @@ public class LoginController {
             listStage.show();
             Main.loginStage.close();
 
-        } catch (SQLException |IOException e) /*Please rework this once we're sure we don't need io exceptions*/ {
-            displaySQLError(e);
+        } catch (SQLException e) /*Please rework this once we're sure we don't need io exceptions*/ {
+            loginFailNotif.setText("Error connecting to the server, please try again!");
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-    }
-
-    private void displaySQLError(Exception e) {
-        loginFailNotif.setText("Error connecting to the server, please try again!");
-        e.printStackTrace();
     }
 }
