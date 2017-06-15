@@ -115,6 +115,5 @@ public class ListController {
         stage.setTitle("Settings");
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
-
     }
 }
