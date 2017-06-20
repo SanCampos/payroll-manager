@@ -17,12 +17,15 @@
     <VBox styleClass="box">
 
     <HBox styleClass="group">
-        <Label styleClass="group_title" text="User Picture" />
+        <Label styleClass="emphasize" text="User Picture" />
         <Line endX="500" endY="8.0" startX="10" startY="8.0" styleClass="group_divider" />
     </HBox>
 
     <HBox styleClass="setting_row">
-        <ImageView fx:id="prof_img" fitHeight="65" fitWidth="65"/>
+        <VBox styleClass="setting_column">
+            <ImageView fx:id="prof_img" fitHeight="65" fitWidth="65"/>
+            <Label fx:id="img_name" styleClass="avatar_desc" onMouseClicked="#getPicFile"/>
+        </VBox>
 
         <Button text="Change picture" onAction="#getPicFile"/>
     </HBox>
@@ -33,9 +36,9 @@
 
     <bottom>
         <HBox styleClass="confirmBtns">
-            <Button text="Apply"/>
-            <Button text="OK"/>
-            <Button text="Cancel"/>
+            <Button text="OK" fx:id="ok_btn"/>
+            <Button text="Apply" fx:id="apply_btn" styleClass="apply"/>
+            <Button text="Cancel" fx:id="cancel_btn"/>
         </HBox>
     </bottom>
     <stylesheets>

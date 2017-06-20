@@ -1,8 +1,11 @@
 package main.java.controllers;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
@@ -23,6 +26,11 @@ import static main.java.utils.FileUtils.getFileName;
 public class SettingsController {
 
     @FXML private ImageView prof_img;
+    @FXML private Label img_name;
+
+    @FXML private Button ok_btn;
+    @FXML private Button apply_btn;
+    @FXML private Button cancel_btn;
 
     //Booleans for detecting for settings changes
 
@@ -41,8 +49,14 @@ public class SettingsController {
     @FXML
     public void initialize() {
         //Init avatar preview with curr prof img
-        currImg = new Image(currProfImgPath);
+        //currImg = new Image(currProfImgPath);
         initAvatar();
+       // initImgLabel();
+        Platform.runLater(() ->  ok_btn.requestFocus());
+    }
+
+    private void initImgLabel() {
+        img_name.setText(getFileName(currProfImgPath));
     }
 
     private void initAvatar() {

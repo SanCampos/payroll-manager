@@ -3,7 +3,7 @@
     -fx-spacing: 15;
 }
 
-.group_title {
+.emphasize {
     -fx-font-weight: bolder;
 }
 
@@ -18,6 +18,11 @@
     -fx-spacing: 20px;
 }
 
+.setting_column {
+    -fx-spacing: 5px;
+    -fx-alignment: center;
+}
+
 .group_divider {
     -fx-stroke: rgb(195, 195, 162);
 }
@@ -26,4 +31,18 @@
     -fx-padding: 0 10 10 0;
     -fx-spacing: 10px;
     -fx-alignment: center-right;
+}
+
+.button {
+    -fx-cursor: hand;
+}
+
+.apply {
+    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, rgb(49, 191, 234);
+}
+
+.apply:focused {
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: rgb(66, 134, 244);
 }
