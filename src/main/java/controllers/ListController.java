@@ -14,19 +14,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import main.java.globalInfo.GlobalFiles;
-import main.java.globalInfo.UserInfo;
 import main.java.Main;
 import main.java.db.Database;
+import main.java.globalInfo.GlobalInfo;
 import main.java.models.Employee;
+import main.java.utils.ShapeUtils;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.sql.SQLException;
-
-import static main.java.globalInfo.GlobalFiles.currProfImg;
-import static main.java.utils.ShapeUtils.getAvatarCircle;
 
 /**
  * Created by thedr on 6/6/2017.
@@ -53,13 +48,16 @@ public class ListController {
         } catch (SQLException e){
             System.out.println("loading  failed");
         }
-
         initAvatar();
         disableReorder();
     }
 
-    private void loadTableData() throws SQLException {
+    private void initAvatar() {
+        profImg.setClip(ShapeUtils.getAvatarCircle());
+        profImg.setImage(new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath()));
+    }
 
+    private void loadTableData() throws SQLException {
         db.init();
 
         table.setItems(db.getEmployees());
@@ -91,22 +89,6 @@ public class ListController {
         Stage stage = ((Stage) logout_button.getScene().getWindow());
         stage.close();
         Main.loginStage.show();
-    }
-
-    private void initAvatar() {
-        currProfImg = null;
-
-        try {
-            currProfImg = new File(db.getAvatarOf(UserInfo.userID));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            currProfImg = new File("C:\\Users\\thedr\\IdeaProjects\\database\\src\\main\\resources\\imgs\\default-avatar.png");
-        } finally {
-            System.out.println(currProfImg.getAbsolutePath());
-            profImg.setImage(new Image("file:///" + currProfImg.getAbsolutePath()));
-            profImg.setClip(getAvatarCircle());
-        }
     }
 
     @FXML
