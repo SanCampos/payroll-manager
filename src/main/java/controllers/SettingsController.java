@@ -1,7 +1,12 @@
 package main.java.controllers;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Binding;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -34,6 +39,8 @@ public class SettingsController {
     @FXML private Button cancel_btn;
 
     private SimpleBooleanProperty pictureChanged;
+    private SimpleBooleanProperty testBooleanChanged;
+    private BooleanBinding changeMade;
 
     //Reference to strg dir of profile image
     private File strgRef;
@@ -46,24 +53,34 @@ public class SettingsController {
 
     @FXML
     public void initialize() {
-        //Init avatar preview with curr prof img
-        //currImg = new Image(currProfImgPath);
         initAvatar();
         initImgLabel();
+        initChangeDetectors();
         initButtons();
     }
 
-    private void initButtons() {
-        Platform.runLater(() ->  ok_btn.requestFocus());
+    private void initAvatar() {
+        currImg = new Image(currProfImgPath);
+        prof_img.setImage(currImg);
+        prof_img.setClip(getAvatarCircle());
     }
 
     private void initImgLabel() {
         img_name.setText(getFileName(currProfImgPath));
     }
 
-    private void initAvatar() {
-        prof_img.setImage(currImg);
-        prof_img.setClip(getAvatarCircle());
+    private void initChangeDetectors() {
+        pictureChanged = new SimpleBooleanProperty(false);
+        testBooleanChanged = new SimpleBooleanProperty(false);
+        changeMade = pictureChanged.or(testBooleanChanged);
+        changeMade.addListener(((observable, oldValue, newValue) ->
+            apply_btn.setDisable(!observable.getValue())
+        ));
+    }
+
+    private void initButtons() {
+        Platform.runLater(() ->  ok_btn.requestFocus());
+        apply_btn.setDisable(!changeMade.getValue());
     }
 
     @FXML
