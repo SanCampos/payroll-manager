@@ -33,6 +33,11 @@
     -fx-alignment: center-right;
 }
 
+.avatar_desc {
+    -fx-font-weight: bolder;
+    -fx-cursor: hand;
+}
+
 .button {
     -fx-cursor: hand;
 }

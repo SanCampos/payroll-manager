@@ -11,16 +11,15 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-import main.java.globalInfo.FilePaths;
+import main.java.globalInfo.GlobalFiles;
 import main.java.globalInfo.UserInfo;
 import main.java.utils.ImageUtils;
 
 import java.io.*;
 import java.util.Optional;
 
-import static main.java.globalInfo.FilePaths.currProfImgPath;
+import static main.java.globalInfo.GlobalFiles.currProfImg;
 import static main.java.utils.ShapeUtils.getAvatarCircle;
-import static main.java.utils.FileUtils.getFileName;
 
 /**
  * Created by thedr on 6/14/2017.
@@ -50,19 +49,15 @@ public class SettingsController {
     @FXML
     public void initialize() {
         initAvatar();
-        initImgLabel();
         initChangeDetectors();
         initButtons();
     }
 
     private void initAvatar() {
-        currImg = new Image(currProfImgPath);
+        currImg = new Image("file:///" + currProfImg.getAbsolutePath());
         prof_img.setImage(currImg);
         prof_img.setClip(getAvatarCircle());
-    }
-
-    private void initImgLabel() {
-        img_name.setText(getFileName(currProfImgPath));
+        img_name.setText(currProfImg.getName());
     }
 
     private void initChangeDetectors() {
@@ -109,14 +104,14 @@ public class SettingsController {
             slctdImgStrm = new FileInputStream(selected);
 
             //Reference to planned storage location for selected picture
-            strgRef = new File(FilePaths.employeesImgDir + "\\" + UserInfo.userID + "\\" + selected.getName());
+            strgRef = new File(GlobalFiles.employeesImgDir + "\\" + UserInfo.userID + "\\" + selected.getName());
 
             //For comparison of selected image to current profile picture, also for its preview
             Image slctdImg =  new Image(slctdImgStrm);
 
             //Flags no image change if user selects his current profile picture
-            if (getFileName(currProfImgPath).equals(getFileName(strgRef.getAbsolutePath())) && ImageUtils.equals(currImg, slctdImg)) {
-                prof_img.setImage(slctdImg);
+            if (currProfImg.getName().equals(strgRef.getName()) && ImageUtils.equals(currImg, slctdImg)) {
+                updateAvatar(selected.getName(), slctdImg);
                 pictureChanged.set(false);
                 return;
             }
@@ -133,7 +128,7 @@ public class SettingsController {
             }
 
             //Show preview of new avatar
-            prof_img.setImage(slctdImg);
+            updateAvatar(selected.getName(), slctdImg);
             pictureChanged.set(true);
         } catch (IOException e) {
             e.printStackTrace();
@@ -145,5 +140,10 @@ public class SettingsController {
             errorDialog.setContentText("There was an error retrieving your chosen file. Please verify that your file exists and try again.");
             errorDialog.showAndWait();
         }
+    }
+
+    private void updateAvatar(String fileName, Image slctdImg) {
+        prof_img.setImage(slctdImg);
+        img_name.setText(fileName);
     }
 }

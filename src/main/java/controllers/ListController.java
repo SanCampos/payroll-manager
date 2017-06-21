@@ -14,15 +14,18 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import main.java.globalInfo.FilePaths;
+import main.java.globalInfo.GlobalFiles;
 import main.java.globalInfo.UserInfo;
 import main.java.Main;
 import main.java.db.Database;
 import main.java.models.Employee;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 
+import static main.java.globalInfo.GlobalFiles.currProfImg;
 import static main.java.utils.ShapeUtils.getAvatarCircle;
 
 /**
@@ -91,16 +94,19 @@ public class ListController {
     }
 
     private void initAvatar() {
-        FilePaths.currProfImgPath = null;
+        currProfImg = null;
 
         try {
-            FilePaths.currProfImgPath = db.getAvatarOf(UserInfo.userID);
+            currProfImg = new File(db.getAvatarOf(UserInfo.userID));
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            currProfImg = new File("C:\\Users\\thedr\\IdeaProjects\\database\\src\\main\\resources\\imgs\\default-avatar.png");
+        } finally {
+            System.out.println(currProfImg.getAbsolutePath());
+            profImg.setImage(new Image("file:///" + currProfImg.getAbsolutePath()));
+            profImg.setClip(getAvatarCircle());
         }
-        if (FilePaths.currProfImgPath == null) FilePaths.currProfImgPath = "/imgs/default-avatar.png";
-        profImg.setImage(new Image(FilePaths.currProfImgPath));
-        profImg.setClip(getAvatarCircle());
     }
 
     @FXML
