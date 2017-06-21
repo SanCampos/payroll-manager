@@ -5,5 +5,4 @@ package main.java.globalInfo;
  */
 public class UserInfo {
 
-    public static int userID;
 }

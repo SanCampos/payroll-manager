@@ -11,14 +11,13 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-import main.java.globalInfo.GlobalFiles;
-import main.java.globalInfo.UserInfo;
+import jdk.nashorn.internal.objects.Global;
+import main.java.globalInfo.GlobalInfo;
 import main.java.utils.ImageUtils;
 
 import java.io.*;
 import java.util.Optional;
 
-import static main.java.globalInfo.GlobalFiles.currProfImg;
 import static main.java.utils.ShapeUtils.getAvatarCircle;
 
 /**
@@ -54,10 +53,10 @@ public class SettingsController {
     }
 
     private void initAvatar() {
-        currImg = new Image("file:///" + currProfImg.getAbsolutePath());
+        currImg = new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath());
         prof_img.setImage(currImg);
         prof_img.setClip(getAvatarCircle());
-        img_name.setText(currProfImg.getName());
+        img_name.setText(GlobalInfo.getCurrProfImg().getName());
     }
 
     private void initChangeDetectors() {
@@ -104,13 +103,13 @@ public class SettingsController {
             slctdImgStrm = new FileInputStream(selected);
 
             //Reference to planned storage location for selected picture
-            strgRef = new File(GlobalFiles.employeesImgDir + "\\" + UserInfo.userID + "\\" + selected.getName());
+            strgRef = new File(GlobalInfo.getEmployeesImgDir() + "\\" + GlobalInfo.getUserID() + "\\" + selected.getName());
 
             //For comparison of selected image to current profile picture, also for its preview
             Image slctdImg =  new Image(slctdImgStrm);
 
             //Flags no image change if user selects his current profile picture
-            if (currProfImg.getName().equals(strgRef.getName()) && ImageUtils.equals(currImg, slctdImg)) {
+            if (GlobalInfo.getCurrProfImg().getName().equals(strgRef.getName()) && ImageUtils.equals(currImg, slctdImg)) {
                 updateAvatar(selected.getName(), slctdImg);
                 pictureChanged.set(false);
                 return;

@@ -16,6 +16,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import javafx.scene.input.KeyEvent;
+import main.java.globalInfo.GlobalInfo;
+
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -53,12 +56,14 @@ public class LoginController {
         try {
             db.init();
 
+            //Notify login failure
             if (!db.loginUser(user, pass)) {
                 loginFailNotif.setText("Your username/password is invalid");
                 db.closeConnection();
                 return;
             }
 
+            //Initiate list window
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/list.fxml"));
             Scene scene = new Scene(root, 1000, 800);
             Stage listStage = new Stage();

@@ -2,9 +2,10 @@ package main.java.db;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import main.java.globalInfo.UserInfo;
+import main.java.globalInfo.GlobalInfo;
 import main.java.models.Employee;
 
+import java.io.File;
 import java.security.SecureRandom;
 import java.sql.*;
 import java.text.DecimalFormat;
@@ -24,7 +25,6 @@ public class Database {
     private static final int FHALF_LENGTH = 15;
     
     private Connection con;
-    private int prvlg_lvl;
 
     public void init() throws SQLException {
             String url = "jdbc:mysql://localhost:3306/test?verifyServerCertificate=false&useSSL=true";
@@ -112,8 +112,21 @@ public class Database {
             hashed_input.append(lHalf);
 
             if (hashed_input.toString().equals(hashed_pw)) {
-                UserInfo.userID = userID;
-                prvlg_lvl = user_prvlg;
+                //Set globally needed user info
+
+                //Attempt to retrieve user avatar as a File, assign default value if failure
+                File profImg;
+                try {
+                    profImg = new File(getAvatarOf(GlobalInfo.getUserID()));
+                } catch (NullPointerException e) {
+                    profImg = new File("C:\\Users\\thedr\\IdeaProjects\\database\\src\\main\\resources\\imgs\\default-avatar.png");
+                }
+
+                //Set dat shit
+                GlobalInfo.setUserID(userID);
+                GlobalInfo.setPrvlg_lvl(user_prvlg);
+                GlobalInfo.setCurrProfImg(profImg);
+
                 return true;
             }
             return false;
