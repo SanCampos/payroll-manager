@@ -1,12 +1,8 @@
 package main.java.controllers;
 
 import javafx.application.Platform;
-import javafx.beans.binding.Binding;
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -72,7 +68,17 @@ public class SettingsController {
     private void initChangeDetectors() {
         pictureChanged = new SimpleBooleanProperty(false);
         testBooleanChanged = new SimpleBooleanProperty(false);
-        changeMade = pictureChanged.or(testBooleanChanged);
+
+        changeMade = new BooleanBinding() { //just add more bool properties  for each setting
+            {
+                super.bind(pictureChanged, testBooleanChanged);
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return pictureChanged.get() || testBooleanChanged.get();
+            }
+        };
         changeMade.addListener(((observable, oldValue, newValue) ->
             apply_btn.setDisable(!observable.getValue())
         ));
