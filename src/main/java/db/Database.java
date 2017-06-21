@@ -19,10 +19,14 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 public class Database {
 
+    //Length of salt and first half for encryption algorithm
+    private static final int SALT_LENGTH = 29;
+    private static final int FHALF_LENGTH = 15;
+    
     private Connection con;
     private int prvlg_lvl;
 
-        public void init() throws SQLException {
+    public void init() throws SQLException {
             String url = "jdbc:mysql://localhost:3306/test?verifyServerCertificate=false&useSSL=true";
             String user = "root";
             String pass = "root";
@@ -45,18 +49,29 @@ public class Database {
         }
         
         public boolean registerUser(String username, String password) throws SQLException {
-            String sql = String.format("INSERT INTO %s (%s, %s, %s) VALUES (?, ?, ?)",
-                                        table_users.name, table_users.cols.username, table_users.cols.hash_pw, table_users.cols.salt);
+            //Insert new user values to table
+            String sql = String.format("INSERT INTO %s (%s, %s) VALUES (?, ?)",
+                                        table_users.name, table_users.cols.username, table_users.cols.hash_pw);
+
+            // Hashed user password is stored by (roughly) halving the salt and placing the first
+            // half in front of the hashed pw and the second half after the hashed pw
+            // EXAMPLE: salt = SALT, hash_pw  =  HASH
+            //          password in database = SAHASHLT
+            //Salt retrieval for verification is also done through this salt and password mix
 
             //Encrypt password
-            String salt = BCrypt.gensalt(15, new SecureRandom());
-            String hash_pw = BCrypt.hashpw(password, salt);
+            String salt = BCrypt.gensalt(FHALF_LENGTH, new SecureRandom());
+            StringBuilder hash_pw = new StringBuilder(BCrypt.hashpw(password, salt));
+
+            //Move second half of salt to end of string
+            String lHalf =  hash_pw.substring(FHALF_LENGTH, SALT_LENGTH);
+            hash_pw.replace(FHALF_LENGTH, SALT_LENGTH, "");
+            hash_pw.append(lHalf);
 
             //Set parameters
             PreparedStatement prepStmnt = con.prepareStatement(sql);
             prepStmnt.setString(1, username);
-            prepStmnt.setString(2, hash_pw);
-            prepStmnt.setString(3, salt);
+            prepStmnt.setString(2, hash_pw.toString());
 
             return prepStmnt.executeUpdate() != 0;
         }
@@ -64,6 +79,12 @@ public class Database {
         public boolean loginUser(String username, String password) throws SQLException /*REDUNDANT?*/ {
             //Basically fetch the user (if there is one)
             String sql = String.format("SELECT * FROM %s WHERE %s = ?", table_users.name, table_users.cols.username);
+
+            // Hashed user password is stored by (roughly) halving the salt and placing the first
+            // half in front of the hashed pw and the second half after the hashed pw
+            // EXAMPLE: salt = SALT, hash_pw  =  HASH
+            //          password in database = SAHASHLT
+            //Salt retrieval for verification is also done through this salt and password mix
 
             //Prep the prepared statement
             PreparedStatement prepStmnt = con.prepareStatement(sql);
@@ -74,16 +95,23 @@ public class Database {
             if (!user.next())
                 return false;
 
-            //Fetch needed user info
-            String salt = user.getString(table_users.cols.salt);
-            String user_pw = user.getString(table_users.cols.hash_pw);
+            //Fetch stored hash
+            String hashed_pw = user.getString(table_users.cols.hash_pw);
+
+            //Assemble salt from stored hash
+            String salt = hashed_pw.substring(0, FHALF_LENGTH) + hashed_pw.substring(hashed_pw.length()-(FHALF_LENGTH-1), hashed_pw.length());
+
+            //Fetch misc user info
             int user_prvlg  = user.getInt(table_users.cols.prvlg_lvl);
             int userID  = user.getInt(table_users.cols.id);
 
-            //Hash input pw for testing
-            String hashed_pw = BCrypt.hashpw(password, salt);
+            //Hash input pw for verification
+            StringBuilder hashed_input = new StringBuilder(BCrypt.hashpw(password, salt));
+            String lHalf = hashed_input.substring(FHALF_LENGTH, SALT_LENGTH);
+            hashed_input.replace(FHALF_LENGTH, SALT_LENGTH, "");
+            hashed_input.append(lHalf);
 
-            if (hashed_pw.equals(user_pw)) {
+            if (hashed_input.toString().equals(hashed_pw)) {
                 UserInfo.userID = userID;
                 prvlg_lvl = user_prvlg;
                 return true;

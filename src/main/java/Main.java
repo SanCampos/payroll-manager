@@ -5,6 +5,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import main.java.db.Database;
+
+import java.sql.SQLException;
 
 /**
  * Created by thedr on 6/6/2017.
@@ -13,7 +16,8 @@ public class Main extends Application {
 
     public static Stage loginStage;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
+
         launch(args);
     }
 

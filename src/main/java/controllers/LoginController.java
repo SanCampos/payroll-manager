@@ -28,13 +28,12 @@ public class LoginController {
 
     @FXML
     public void initialize() {
-        inputUser.setOnKeyPressed(this::checkForEmptyFields);
-        inputPass.setOnKeyPressed(this::checkForEmptyFields);
-
         //Set listeners for login on pressing enter
+        inputUser.setOnKeyPressed(this::loginIfNoEmptyFields);
+        inputPass.setOnKeyPressed(this::loginIfNoEmptyFields);
     }
 
-    private void checkForEmptyFields(KeyEvent event) {
+    private void loginIfNoEmptyFields(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER &&
                 (((!inputPass.getText().isEmpty()) && (!inputUser.getText().isEmpty()))))
                 login();

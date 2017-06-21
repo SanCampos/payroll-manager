@@ -1,3 +1,5 @@
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.sql.SQLException;
 
 /**
@@ -6,6 +8,5 @@ import java.sql.SQLException;
 public class test {
 
     public static void main(String[] args) throws SQLException {
-        //testing class
     }
 }
