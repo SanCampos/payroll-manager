@@ -1,6 +1,7 @@
 package main.java.controllers;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -32,10 +33,7 @@ public class SettingsController {
     @FXML private Button apply_btn;
     @FXML private Button cancel_btn;
 
-    //Booleans for detecting for settings changes
-
-        //for change in profile picture
-        private boolean imageChanged = false;
+    private SimpleBooleanProperty pictureChanged;
 
     //Reference to strg dir of profile image
     private File strgRef;
@@ -51,7 +49,11 @@ public class SettingsController {
         //Init avatar preview with curr prof img
         //currImg = new Image(currProfImgPath);
         initAvatar();
-       // initImgLabel();
+        initImgLabel();
+        initButtons();
+    }
+
+    private void initButtons() {
         Platform.runLater(() ->  ok_btn.requestFocus());
     }
 
@@ -92,7 +94,7 @@ public class SettingsController {
             //Flags no image change if user selects his current profile picture
             if (getFileName(currProfImgPath).equals(getFileName(strgRef.getAbsolutePath())) && ImageUtils.equals(currImg, slctdImg)) {
                 prof_img.setImage(slctdImg);
-                imageChanged = false;
+                pictureChanged.set(false);
                 return;
             }
 
@@ -109,7 +111,7 @@ public class SettingsController {
 
             //Show preview of new avatar
             prof_img.setImage(slctdImg);
-            imageChanged = true;
+            pictureChanged.set(true);
         } catch (IOException e) {
             e.printStackTrace();
 
