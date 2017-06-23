@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import main.java.db.Database;
 
+import javax.xml.crypto.Data;
 import java.sql.SQLException;
 
 /**
@@ -17,7 +18,9 @@ public class Main extends Application {
     public static Stage loginStage;
 
     public static void main(String[] args) throws SQLException {
-
+        //Database db =  new Database();
+        //db.init();
+        //db.registerUser("admin", "admin");
         launch(args);
     }
 
