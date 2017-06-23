@@ -11,7 +11,7 @@
 <?import javafx.scene.control.Button?>
 
 <?import javafx.scene.layout.BorderPane?>
-<BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.SettingsController">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.Settings.SettingsController">
 
     <center>
     <VBox styleClass="box">
@@ -37,7 +37,7 @@
     <bottom>
         <HBox styleClass="confirmBtns">
             <Button text="OK" fx:id="ok_btn"/>
-            <Button text="Apply" fx:id="apply_btn" styleClass="apply"/>
+            <Button text="Apply" fx:id="apply_btn" styleClass="apply" onAction="#applyChanges"/>
             <Button text="Cancel" fx:id="cancel_btn"/>
         </HBox>
     </bottom>

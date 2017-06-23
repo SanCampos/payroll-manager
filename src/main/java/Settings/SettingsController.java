@@ -1,8 +1,9 @@
-package main.java.controllers;
+package main.java.Settings;
 
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -12,10 +13,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import jdk.nashorn.internal.objects.Global;
+import main.java.db.Database;
 import main.java.globalInfo.GlobalInfo;
+import main.java.utils.DialogUtils;
 import main.java.utils.ImageUtils;
 
 import java.io.*;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.sql.SQLException;
 import java.util.Optional;
 
 import static main.java.utils.ShapeUtils.getAvatarCircle;
@@ -32,8 +40,14 @@ public class SettingsController {
     @FXML private Button apply_btn;
     @FXML private Button cancel_btn;
 
-    private SimpleBooleanProperty pictureChanged;
-    private SimpleBooleanProperty testBooleanChanged;
+    //Change states for each setting
+    private SimpleBooleanProperty  pictureChanged = new SimpleBooleanProperty(false);
+    private SimpleBooleanProperty testBooleanChanged = new SimpleBooleanProperty(false);
+    
+    //For ease  of use  when affecting all changed
+    private SimpleBooleanProperty[] changeList = new SimpleBooleanProperty[] {pictureChanged, testBooleanChanged};
+    
+
     private BooleanBinding changeMade;
 
     //Reference to strg dir of profile image
@@ -50,27 +64,28 @@ public class SettingsController {
         initAvatar();
         initChangeDetectors();
         initButtons();
+        
     }
 
     private void initAvatar() {
         currImg = new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath());
-        prof_img.setImage(currImg);
         prof_img.setClip(getAvatarCircle());
-        img_name.setText(GlobalInfo.getCurrProfImg().getName());
+        updateAvatar(GlobalInfo.getCurrProfImg().getName(), currImg);
     }
 
     private void initChangeDetectors() {
-        pictureChanged = new SimpleBooleanProperty(false);
-        testBooleanChanged = new SimpleBooleanProperty(false);
-
         changeMade = new BooleanBinding() { //just add more bool properties  for each setting
             {
-                super.bind(pictureChanged, testBooleanChanged);
+                  super.bind(changeList);
             }
 
             @Override
             protected boolean computeValue() {
-                return pictureChanged.get() || testBooleanChanged.get();
+                for (SimpleBooleanProperty s : changeList)
+                    if (s.getValue())
+                        return true;
+                
+                return false;
             }
         };
         changeMade.addListener(((observable, oldValue, newValue) ->
@@ -79,7 +94,7 @@ public class SettingsController {
     }
 
     private void initButtons() {
-        Platform.runLater(() ->  ok_btn.requestFocus());
+        ok_btn.requestFocus();
         apply_btn.setDisable(!changeMade.getValue());
     }
 
@@ -133,16 +148,46 @@ public class SettingsController {
             e.printStackTrace();
 
             //Inform user that selected picture failed to be read
-            Alert errorDialog = new Alert(Alert.AlertType.ERROR);
-            errorDialog.setTitle("Error");
-            errorDialog.setHeaderText(null);
-            errorDialog.setContentText("There was an error retrieving your chosen file. Please verify that your file exists and try again.");
-            errorDialog.showAndWait();
+            DialogUtils.showError("Picture retrieval error", "There was an error retrieving your chosen file. Please verify that your file exists and try again.");
         }
     }
 
     private void updateAvatar(String fileName, Image slctdImg) {
         prof_img.setImage(slctdImg);
         img_name.setText(fileName);
+    }
+    
+    @FXML
+    public void applyChanges() {
+        try {
+            if (!(strgRef.exists() && strgRef.isFile())) {
+                strgRef.getParentFile().mkdirs();
+                strgRef.createNewFile();
+            }
+            
+            Files.copy(slctdImgStrm, Paths.get(strgRef.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
+    
+            Database database = new Database();
+            database.init();
+            database.updateImageOf(GlobalInfo.getUserID(), strgRef.getAbsolutePath());
+            
+            GlobalInfo.setCurrProfImg(strgRef);
+        } catch (IOException e) {
+            DialogUtils.showError("Settings error", "There was an error moving your image file, please try again!");
+            e.printStackTrace();
+        } catch (SQLException e) {
+            DialogUtils.showError("Database error", "There was an error uploading your changes to the server, please try again!");
+            e.printStackTrace();
+        } finally {
+            Image setImage = new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath());
+            String name = GlobalInfo.getCurrProfImg().getName();
+            updateAvatar(name, setImage);
+            resetChanges();
+        }
+    }
+    
+    private void resetChanges() {
+        for (SimpleBooleanProperty s : changeList)
+            s.set(false);
     }
 }
