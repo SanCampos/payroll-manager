@@ -122,6 +122,9 @@ public class SettingsController {
 
             //For comparison of selected image to current profile picture, also for its preview
             Image slctdImg =  new Image(slctdImgStrm);
+            
+            //"Refill img stream for later use
+            slctdImgStrm = new FileInputStream(selected);
 
             //Flags no image change if user selects his current profile picture
             if (GlobalInfo.getCurrProfImg().getName().equals(strgRef.getName()) && ImageUtils.equals(currImg, slctdImg)) {
@@ -165,11 +168,12 @@ public class SettingsController {
                 strgRef.createNewFile();
             }
             
-            Files.copy(slctdImgStrm, Paths.get(strgRef.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
+            
+            Files.copy(slctdImgStrm, Paths.get(strgRef.getPath()), StandardCopyOption.REPLACE_EXISTING);
     
             Database database = new Database();
             database.init();
-            database.updateImageOf(GlobalInfo.getUserID(), strgRef.getAbsolutePath());
+            database.updateImageOf(GlobalInfo.getUserID(), strgRef.getAbsolutePath().replace("\\", "\\\\"));
             
             GlobalInfo.setCurrProfImg(strgRef);
         } catch (IOException e) {

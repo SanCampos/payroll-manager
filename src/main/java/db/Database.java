@@ -49,16 +49,15 @@ public class Database {
     }
         
         public boolean registerUser(String username, String password) throws SQLException {
-            //Insert new user values to table
-            String sql = String.format("INSERT INTO %s (%s, %s) VALUES (?, ?)",
-                                        table_users.name, table_users.cols.username, table_users.cols.hash_pw);
-
             // Hashed user password is stored by (roughly) halving the salt and placing the first
             // half in front of the hashed pw and the second half after the hashed pw
             // EXAMPLE: salt = SALT, hash_pw  =  HASH
             //          password in database = SAHASHLT
             //Salt retrieval for verification is also done through this salt and password mix
-
+            
+            //Insert row for user info
+            String user_row = String.format("INSERT INTO %s (%s, %s) VALUES (?, ?)",
+                                        table_users.name, table_users.cols.username, table_users.cols.hash_pw);
             //Encrypt password
             String salt = BCrypt.gensalt(FHALF_LENGTH, new SecureRandom());
             StringBuilder hash_pw = new StringBuilder(BCrypt.hashpw(password, salt));
@@ -69,11 +68,26 @@ public class Database {
             hash_pw.append(lHalf);
 
             //Set parameters
-            PreparedStatement prepStmnt = con.prepareStatement(sql);
+            PreparedStatement prepStmnt = con.prepareStatement(user_row);
             prepStmnt.setString(1, username);
             prepStmnt.setString(2, hash_pw.toString());
-
-            return prepStmnt.executeUpdate() != 0;
+            int user_cols_changed = prepStmnt.executeUpdate();
+            
+            //Retrieve user id (FUCK)
+            String retrieve = String.format("SELECT * FROM %s WHERE %s = ?", table_users.name, table_users.cols.username);
+            PreparedStatement stmnt =  con.prepareStatement(retrieve);
+            stmnt.setString(1, username);
+            ResultSet curr_user = stmnt.executeQuery();
+            curr_user.next();
+            int id = curr_user.getInt(table_users.cols.id);
+    
+            //Insert row for user avatar info
+            String avatar_row = String.format("INSERT INTO %s (%s) VALUES (?)", table_avatars.name, table_avatars.cols.id);
+            PreparedStatement avatar = con.prepareStatement(avatar_row);
+            avatar.setInt(1, id);
+            int avatar_cols_changed = avatar.executeUpdate();
+            
+            return user_cols_changed != 0 && avatar_cols_changed != 0;
         }
 
         public boolean loginUser(String username, String password) throws SQLException /*REDUNDANT?*/ {
@@ -113,7 +127,9 @@ public class Database {
 
             if (hashed_input.toString().equals(hashed_pw)) {
                 //Set globally needed user info
-
+                GlobalInfo.setUserID(userID);
+                GlobalInfo.setPrvlg_lvl(user_prvlg);
+                
                 //Attempt to retrieve user avatar as a File, assign default value if failure
                 File profImg;
                 try {
@@ -121,10 +137,6 @@ public class Database {
                 } catch (NullPointerException e) {
                     profImg = new File("C:\\Users\\thedr\\IdeaProjects\\database\\src\\main\\resources\\imgs\\default-avatar.png");
                 }
-
-                //Set dat shit
-                GlobalInfo.setUserID(userID);
-                GlobalInfo.setPrvlg_lvl(user_prvlg);
                 GlobalInfo.setCurrProfImg(profImg);
 
                 return true;
