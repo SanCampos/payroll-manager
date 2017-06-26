@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import main.java.Main;
+import main.java.Settings.SettingsStage;
 import main.java.db.Database;
 import main.java.globalInfo.GlobalInfo;
 import main.java.models.Employee;
@@ -94,8 +95,9 @@ public class ListController {
     @FXML
     public void showSettings() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/settings.fxml"));
+        SettingsStage stage = new SettingsStage();
+        stage.setOnHidden((event) -> initialize());
         Scene scene = new Scene(root, 600, 400);
-        Stage stage = new Stage();
         stage.setScene(scene);
         stage.setTitle("Settings");
         stage.initModality(Modality.APPLICATION_MODAL);

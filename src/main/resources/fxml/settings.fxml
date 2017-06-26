@@ -36,9 +36,9 @@
 
     <bottom>
         <HBox styleClass="confirmBtns">
-            <Button text="OK" fx:id="ok_btn"/>
+            <Button text="OK" fx:id="ok_btn" onAction="#confirmChange"/>
             <Button text="Apply" fx:id="apply_btn" styleClass="apply" onAction="#applyChanges"/>
-            <Button text="Cancel" fx:id="cancel_btn"/>
+            <Button text="Cancel" fx:id="cancel_btn" onAction="#closeWindow"/>
         </HBox>
     </bottom>
     <stylesheets>

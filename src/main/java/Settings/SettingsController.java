@@ -3,28 +3,22 @@ package main.java.Settings;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-import jdk.nashorn.internal.objects.Global;
 import main.java.db.Database;
 import main.java.globalInfo.GlobalInfo;
 import main.java.utils.DialogUtils;
 import main.java.utils.ImageUtils;
 
 import java.io.*;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
-import java.util.Optional;
 
 import static main.java.utils.ShapeUtils.getAvatarCircle;
 
@@ -56,7 +50,8 @@ public class SettingsController {
     //Stream for slctd img data
     private InputStream slctdImgStrm;
 
-    //Reference to current user profile
+    //Reference to stage
+    private SettingsStage stage;
    
 
     @FXML
@@ -64,9 +59,13 @@ public class SettingsController {
         initAvatar();
         initChangeDetectors();
         initButtons();
-        
+        initStageRef();
     }
-
+    
+    private void initStageRef() {
+        Platform.runLater(() -> stage = ((SettingsStage) prof_img.getScene().getWindow()));
+    }
+    
     private void initAvatar() {
         Image get = new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath());
         prof_img.setClip(getAvatarCircle());
@@ -88,9 +87,9 @@ public class SettingsController {
                 return false;
             }
         };
-        changeMade.addListener(((observable, oldValue, newValue) ->
-            apply_btn.setDisable(!observable.getValue())
-        ));
+        changeMade.addListener((observable, oldValue, newValue) -> {
+            apply_btn.setDisable(!observable.getValue());
+        });
     }
 
     private void initButtons() {
@@ -132,15 +131,10 @@ public class SettingsController {
                 pictureChanged.set(false);
                 return;
             }
-
-            //Let user confirm that he/she wants to change profile picture
-            Alert confirmOverwrite = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmOverwrite.setTitle("Confirm picture change");
-            confirmOverwrite.setHeaderText(null);
-            confirmOverwrite.setContentText("Are you sure you want to change your profile picture?");
-
-            Optional<ButtonType> result = confirmOverwrite.showAndWait();
-            if (result.get() != ButtonType.OK) {
+            
+            boolean confirm = DialogUtils.getConfirm("Confirm picture change", "Are you sure you want to change your profile picture?");
+           
+            if (!confirm) {
                 return;
             }
 
@@ -162,6 +156,11 @@ public class SettingsController {
     
     @FXML
     public void applyChanges() {
+        applyImgChange();
+        stage.setChange(true);
+    }
+    
+    private void applyImgChange() {
         try {
             if (!(strgRef.exists() && strgRef.isFile())) {
                 strgRef.getParentFile().mkdirs();
@@ -187,11 +186,28 @@ public class SettingsController {
             String name = GlobalInfo.getCurrProfImg().getName();
             updateAvatar(name, setImage);
             resetChanges();
+            ok_btn.requestFocus();
         }
     }
     
     private void resetChanges() {
         for (SimpleBooleanProperty s : changeList)
             s.set(false);
+    }
+    
+    @FXML
+    public void confirmChange() {
+        if (changeMade.getValue()) {
+            boolean confirm = DialogUtils.getConfirm("Settings", "Your settings have changed, would you like to save them?");
+            if (confirm) {
+                applyChanges();
+            }
+        }
+        closeWindow();
+    }
+    
+    @FXML
+    private void closeWindow() {
+        stage.close();
     }
 }
