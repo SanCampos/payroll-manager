@@ -17,6 +17,8 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Label?>
 <BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.ListController">
     <top>
         <HBox styleClass="box">
@@ -28,11 +30,11 @@
 
             <StackPane>
                 <ImageView fx:id="settings_img"/>
-                <Button fx:id="settings_button" onAction="#showSettings" styleClass="btn"/>
+                <Button fx:id="settings_button" onAction="#showSettings" styleClass="btn_overlay"/>
             </StackPane>
             <StackPane>
                 <ImageView fx:id="logout_img"/>
-                <Button fx:id="logout_button" styleClass="btn" onAction="#logout"/>
+                <Button fx:id="logout_button" styleClass="btn_overlay" onAction="#logout"/>
             </StackPane>
         </HBox>
     </top>
@@ -49,6 +51,12 @@
         </TableView>
     </center>
 
+    <bottom>
+        <StackPane>
+            <Label fx:id="addBtn" alignment="CENTER" text="Add student" minWidth="1000" minHeight="30"/>
+            <Button styleClass="wide" minWidth="1000" minHeight="30"/>
+        </StackPane>
+    </bottom>
     <stylesheets>
         <URL value="@/css/list.css"/>
     </stylesheets>

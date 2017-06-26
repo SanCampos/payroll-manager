@@ -12,6 +12,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import main.java.Main;
@@ -107,5 +108,8 @@ public class ListController {
         stage.setTitle("Settings");
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
+    }
+    
+    public void add(MouseEvent mouseEvent) {
     }
 }
