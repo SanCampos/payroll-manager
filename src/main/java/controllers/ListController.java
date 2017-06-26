@@ -96,7 +96,12 @@ public class ListController {
     public void showSettings() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/settings.fxml"));
         SettingsStage stage = new SettingsStage();
-        stage.setOnHidden((event) -> initialize());
+        stage.setOnHidden((event) -> {
+            SettingsStage settingsStage = ((SettingsStage) event.getSource());
+            if (settingsStage.getChange()) {
+                initialize();
+            }
+        });
         Scene scene = new Scene(root, 600, 400);
         stage.setScene(scene);
         stage.setTitle("Settings");

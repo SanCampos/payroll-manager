@@ -70,6 +70,7 @@ public class LoginController {
             listStage.setTitle("List");
             listStage.setScene(scene);
             listStage.show();
+            inputPass.clear();
             Main.loginStage.close();
 
         } catch (SQLException e) {
