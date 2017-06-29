@@ -46,7 +46,7 @@ public class ListController {
     public void initialize() {
         db = new Database();
         try {
-            loadTableData();
+            initTable();
         } catch (SQLException e){
             System.out.println("loading  failed");
         }
@@ -59,7 +59,7 @@ public class ListController {
         profImg.setImage(new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath()));
     }
 
-    private void loadTableData() throws SQLException {
+    private void initTable() throws SQLException {
         db.init();
 
         table.setItems(db.getEmployees());
@@ -110,6 +110,6 @@ public class ListController {
         stage.showAndWait();
     }
     
-    public void add(MouseEvent mouseEvent) {
+    public void add() {
     }
 }
