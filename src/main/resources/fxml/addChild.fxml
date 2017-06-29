@@ -7,15 +7,23 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<GridPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.AddChildController">
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextArea?>
+<GridPane hgap="10" vgap="5" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.AddChildController">
 
 
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
     <!-- Input for image avatar -->
-    <ImageView fx:id="childImage" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4">
+    <ImageView fx:id="childImage" fitHeight="97.0" fitWidth="88.0" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4">
         <image>
-            <Image url="/imgs/default-avatar.png" />
+            <Image url="@/imgs/default-avatar.png" />
         </image>
     </ImageView>
 
@@ -50,6 +58,9 @@
 
     <!-- Input for child description -->
     <Label text="Descriptions" GridPane.columnIndex="0" GridPane.rowIndex="8" />
-    <TextField prefHeight="195.0" prefWidth="396.0" GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="9" />
+    <TextArea wrapText="true" prefHeight="195.0" prefWidth="396.0" GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="9" />
 
+    <stylesheets>
+        <URL value="@/css/addChild.css"/>
+    </stylesheets>
 </GridPane>
