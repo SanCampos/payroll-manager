@@ -1,5 +1,6 @@
 package main.java.controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
@@ -8,7 +9,7 @@ import main.java.customNodes.PersistentPromptTextField;
 /**
  * Created by Santi on 6/29/2017.
  */
-public class AddChildController {
+public class childFormController {
 
     @FXML private PersistentPromptTextField firstNameInput;
     @FXML private PersistentPromptTextField lastNameInput;
@@ -23,17 +24,14 @@ public class AddChildController {
 
     @FXML
     public void initialize() {
-        //Set prompt texts for all inputs
-        firstNameInput.setPromptText("Juan");
-        lastNameInput.setPromptText("dela Cruz");
-        nickNameInput.setPromptText("\"John\"");
-        birthPlaceInput.setPromptText("Negros Occ. Baco...");
-
-        datePicker.setPromptText("Format - 06/12/2000");
-
         //Init gender choice buttons
         //OMG MY PATRIARCHY
         maleButton.setSelected(true);
     }
 
+    public void cancel(ActionEvent actionEvent) {
+    }
+
+    public void submit(ActionEvent actionEvent) {
+    }
 }

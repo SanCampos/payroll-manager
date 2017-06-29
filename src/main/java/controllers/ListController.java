@@ -1,6 +1,7 @@
 package main.java.controllers;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -109,7 +110,19 @@ public class ListController {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
     }
-    
-    public void add() {
+
+    @FXML
+    public void showChildForm(ActionEvent actionEvent) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/childForm.fxml"));
+
+        Scene scene = new Scene(root, 575, 675);
+        scene.getStylesheets().add(getClass().getResource("/css/persistent-prompt.css").toExternalForm());
+
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Add child");
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        stage.showAndWait();
     }
 }
