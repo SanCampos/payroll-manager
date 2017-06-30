@@ -1,0 +1,8 @@
+.label {
+    -fx-font-weight: bolder;
+}
+
+.notify-empty {
+    -fx-text-fill: red;
+}
+
