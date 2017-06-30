@@ -45,6 +45,9 @@ public class childFormController {
     private DatePicker birthDateInput;
     
     @FXML
+    private Label warnEmptyLabel;
+    
+    @FXML
     private ImageView childImage;
     @FXML
     private Label imageName;
@@ -62,7 +65,10 @@ public class childFormController {
     
     @FXML
     public void submit(ActionEvent actionEvent) throws ClassNotFoundException {
+        //Indicates that form is incomplete
         boolean incomplete = false;
+        
+        //Fetches textfield nodes from root
         List<Node> textFields = NodeUtils.getAllNodesOf(childImage.getParent(), new ArrayList<>(),
                 "javafx.scene.control.TextInputControl");
     
@@ -70,6 +76,7 @@ public class childFormController {
             TextInputControl text = ((TextInputControl) n);
             String labelID = text.getId() == null ? "#birthDateWarning" : "#" + text.getId().replace("Input", "Warning");
             
+            //Manipulate warning label if current node is NOT nickname textfield
             if (!labelID.contains("nick")) {
                 Label warning = ((Label) childImage.getParent().lookup(labelID));
                 if (text.getText().isEmpty()) {
@@ -80,6 +87,12 @@ public class childFormController {
                 }
             }
         }
+        
+        if (incomplete) {
+            warnEmptyLabel.setStyle("-fx-text-fill: red");
+            return;
+        }
+        
     }
     
     private void setWarningsForEmpty(TextInputControl n, Label warning) {
