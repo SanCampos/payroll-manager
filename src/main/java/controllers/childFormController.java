@@ -64,22 +64,20 @@ public class childFormController {
     public void submit(ActionEvent actionEvent) throws ClassNotFoundException {
         boolean incomplete = false;
         List<Node> textFields = NodeUtils.getAllNodesOf(childImage.getParent(), new ArrayList<>(),
-                "javafx.scene.control.TextField", "javafx.scene.control.TextArea");
+                "javafx.scene.control.TextInputControl");
     
-        for (Node n : textFields) {
-            if (n.getId() == null) {
-                Label warning = ((Label) childImage.getParent().lookup("#birthDateWarning"));
-                setWarningsForEmpty((TextInputControl) n, warning);
-                continue;
-            }
+        for (Node n: textFields) {
+            TextInputControl text = ((TextInputControl) n);
+            String labelID = text.getId() == null ? "#birthDateWarning" : "#" + text.getId().replace("Input", "Warning");
             
-            if (n.getId().contains("nick")) {
-                continue;
-            }
-        
-            if (n instanceof TextInputControl) {
-                Label warning = ((Label) childImage.getParent().lookup("#" + n.getId().replace("Input", "Warning")));
-                setWarningsForEmpty((TextInputControl) n, warning);
+            if (!labelID.contains("nick")) {
+                Label warning = ((Label) childImage.getParent().lookup(labelID));
+                if (text.getText().isEmpty()) {
+                    warning.setStyle("-fx-text-fill: red");
+                    incomplete = true;
+                } else {
+                    warning.setStyle("-fx-text-fill: transparent ");
+                }
             }
         }
     }
