@@ -33,7 +33,7 @@ public class childFormController {
     @FXML private RadioButton maleButton;
     @FXML private RadioButton femaleButton;
 
-    @FXML private DatePicker datePicker;
+    @FXML private DatePicker birthDateInput;
     
     @FXML private ImageView childImage;
     @FXML private Label imageName;
