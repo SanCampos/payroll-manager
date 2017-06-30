@@ -3,6 +3,6 @@
 }
 
 .notify-empty {
-    -fx-text-fill: red;
+    -fx-text-fill: transparent;
 }
 

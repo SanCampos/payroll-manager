@@ -52,28 +52,28 @@
     <Label text="Gender" GridPane.columnIndex="3" GridPane.rowIndex="4" />
     <fx:define>
         <ToggleGroup fx:id="genderToggleGroup" />
-    </fx:define>
-    <RadioButton fx:id="maleButton" text="Male" toggleGroup="$genderToggleGroup" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
-    <RadioButton fx:id="femaleButton" text="Female" toggleGroup="$genderToggleGroup" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+</fx:define>
+<RadioButton fx:id="maleButton" text="Male" toggleGroup="$genderToggleGroup" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+<RadioButton fx:id="femaleButton" text="Female" toggleGroup="$genderToggleGroup" GridPane.columnIndex="4" GridPane.rowIndex="5" />
 
-    <!-- Input for birth date of child -->
-    <Label text="Birthdate" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-    <Label text="This form is empty!" fx:id="birthDateWarning" styleClass="notify-empty" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-    <DatePicker fx:id="birthDateInput" prefHeight="25.0" prefWidth="231.0" promptText="Format - 06/12/2000" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+        <!-- Input for birth date of child -->
+<Label text="Birthdate" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+<Label text="This form is empty!" fx:id="birthDateWarning" styleClass="notify-empty" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+<DatePicker fx:id="birthDateInput" prefHeight="25.0" prefWidth="231.0" promptText="Format - 06/12/2000" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
 
-    <!-- Input for place of birth of child -->
-    <Label text="Place of birth" GridPane.columnIndex="3" GridPane.rowIndex="6" />
-    <Label text="This form is empty!" fx:id="birthPlaceWarning" styleClass="notify-empty" GridPane.columnIndex="4" GridPane.rowIndex="6" />
-    <PersistentPromptTextField fx:id="birthPlaceInput" promptText="Negros Occ. Baco..." GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+        <!-- Input for place of birth of child -->
+<Label text="Place of birth" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+<Label text="This form is empty!" fx:id="birthPlaceWarning" styleClass="notify-empty" GridPane.columnIndex="4" GridPane.rowIndex="6" />
+<PersistentPromptTextField fx:id="birthPlaceInput" promptText="Negros Occ. Baco..." GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="7" />
 
-    <!-- Divider region for spacing between child desc and rest of form -->
-    <Region prefHeight="0.0" prefWidth="522.0" GridPane.columnIndex="0" GridPane.columnSpan="5" GridPane.rowIndex="8" />
-    <!-- Input for child description -->
-    <Label prefWidth="66.0" text="Description" GridPane.columnIndex="0" GridPane.rowIndex="9" />
-    <Label text="This form is empty!" fx:id="childDescWarning" styleClass="notify-empty" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9" />
-    <TextArea prefHeight="391.0" fx:id="childDescInput" prefWidth="432.0" wrapText="true" GridPane.columnIndex="0" GridPane.columnSpan="5" GridPane.rowIndex="10" />
+        <!-- Divider region for spacing between child desc and rest of form -->
+<Region prefHeight="0.0" prefWidth="522.0" GridPane.columnIndex="0" GridPane.columnSpan="5" GridPane.rowIndex="8" />
+        <!-- Input for child description -->
+<Label prefWidth="66.0" text="Description" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+<Label text="This form is empty!" fx:id="childDescWarning" styleClass="notify-empty" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9" />
+<TextArea prefHeight="391.0" fx:id="childDescInput" prefWidth="432.0" wrapText="true" GridPane.columnIndex="0" GridPane.columnSpan="5" GridPane.rowIndex="10" />
 
-    <!-- Submit and cancel buttons -->
+        <!-- Submit and cancel buttons -->
     <Button fx:id="submitBtn" onAction="#submit" prefHeight="25.0" prefWidth="75.0" text="Submit" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
     <Button fx:id="cancelBtn" onAction="#cancel" prefHeight="25.0" prefWidth="76.0" text="Cancel" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
 

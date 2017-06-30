@@ -2,13 +2,13 @@ package main.java;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import main.java.db.Database;
 
-import javax.xml.crypto.Data;
-import java.io.File;
 import java.sql.SQLException;
 
 /**
@@ -18,7 +18,7 @@ public class Main extends Application {
 
     public static Stage loginStage;
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
         //Database db =  new Database();
         //db.init();
         //db.registerUser("admin", "admin");
