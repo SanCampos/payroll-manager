@@ -45,12 +45,15 @@ public class childFormController {
         maleButton.setSelected(true);
     }
 
+    @FXML
     public void cancel(ActionEvent actionEvent) {
     }
 
+    @FXML
     public void submit(ActionEvent actionEvent) {
     }
     
+    @FXML
     public void changeChildImg(ActionEvent actionEvent) {
         FileChooser chooser = new FileChooser();
         File chosen = chooser.showOpenDialog(maleButton.getScene().getWindow());
