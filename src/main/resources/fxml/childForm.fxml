@@ -12,10 +12,11 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import main.java.customNodes.PersistentPromptTextField?>
 
-<GridPane alignment="TOP_CENTER" hgap="10" prefHeight="400.0" prefWidth="600.0" vgap="8" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.childFormController">
+<GridPane alignment="TOP_CENTER" hgap="6" prefHeight="400.0" prefWidth="600.0" vgap="8" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.childFormController">
 
 
     <padding>
@@ -28,48 +29,63 @@
         </image>
     </ImageView>
 
-    <Label fx:id="imageName" text="FUCK.JPG" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+    <Label fx:id="imageName" alignment="CENTER" prefWidth="88.0" text="FUCK.JPG" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.rowSpan="2" GridPane.valignment="TOP" />
 
-    <Button fx:id="changeImgBtn" prefHeight="57.0" prefWidth="93.0" text="Change image" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.rowSpan="3" />
+    <Button onAction="#changeChildImg" prefHeight="57.0" prefWidth="93.0" text="Change image" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.rowSpan="2" />
 
     <!-- Input for first name of child -->
     <Label text="First name" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-    <PersistentPromptTextField fx:id="firstNameInput" promptText="Juan" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+    <Label text="This form is empty!" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+    <PersistentPromptTextField fx:id="firstNameInput" promptText="Juan" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" />
 
     <!-- Input for last name of child -->
-    <Label text="Last name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-    <PersistentPromptTextField fx:id="lastNameInput" promptText="dela Cruz" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+    <Label text="Last name" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+    <Label text="This form is empty!" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+    <PersistentPromptTextField fx:id="lastNameInput" promptText="dela Cruz" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" />
 
     <!-- Input for nickname of child -->
-    <Label text="Nickname*" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-    <PersistentPromptTextField fx:id="nickNameInput" promptText="&quot;John&quot;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+    <Label text="Nickname" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+    <Label text="(optional)" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+    <PersistentPromptTextField fx:id="nickNameInput" promptText="&quot;John&quot;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
 
     <!-- Input for gender of child -->
-    <Label text="Gender" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-    <RadioButton fx:id="maleButton" text="Male" GridPane.columnIndex="2" GridPane.rowIndex="5">
-      <toggleGroup>
-         <ToggleGroup fx:id="genderToggleGroup" />
-      </toggleGroup></RadioButton>
-    <RadioButton fx:id="femaleButton" text="Female" toggleGroup="$genderToggleGroup" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+    <Label text="Gender" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+    <fx:define>
+        <ToggleGroup fx:id="genderToggleGroup" />
+    </fx:define>
+    <RadioButton fx:id="maleButton" text="Male" toggleGroup="$genderToggleGroup" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+    <RadioButton fx:id="femaleButton" text="Female" toggleGroup="$genderToggleGroup" GridPane.columnIndex="4" GridPane.rowIndex="5" />
 
     <!-- Input for birth date of child -->
     <Label text="Birthdate" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-    <DatePicker fx:id="datePicker" promptText="Format - 06/12/2000" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+    <Label text="This form is empty!" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+    <DatePicker fx:id="datePicker" prefHeight="25.0" prefWidth="231.0" promptText="Format - 06/12/2000" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
 
     <!-- Input for place of birth of child -->
-    <Label text="Place of birth" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-    <PersistentPromptTextField fx:id="birthPlaceInput" promptText="Negros Occ. Baco..." GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+    <Label text="Place of birth" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+    <Label text="This form is empty!" GridPane.columnIndex="4" GridPane.rowIndex="6" />
+    <PersistentPromptTextField fx:id="birthPlaceInput" promptText="Negros Occ. Baco..." GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="7" />
 
+    <!-- Divider region for spacing between child desc and rest of form -->
+    <Region prefHeight="0.0" prefWidth="522.0" GridPane.columnIndex="0" GridPane.columnSpan="5" GridPane.rowIndex="8" />
     <!-- Input for child description -->
-    <Label text="Description" GridPane.columnIndex="0" GridPane.rowIndex="8" />
-    <TextArea prefHeight="391.0" prefWidth="432.0" wrapText="true" GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="9" />
+    <Label prefWidth="66.0" text="Description" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+    <Label text="This form is empty!" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9" />
+    <TextArea prefHeight="391.0" prefWidth="432.0" wrapText="true" GridPane.columnIndex="0" GridPane.columnSpan="5" GridPane.rowIndex="10" />
 
     <!-- Submit and cancel buttons -->
-    <Button fx:id="submitBtn" onAction="#submit" prefHeight="25.0" prefWidth="75.0" text="Submit" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="10" />
-    <Button fx:id="cancelBtn" onAction="#cancel" prefHeight="25.0" prefWidth="76.0" text="Cancel" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="10" />
+    <Button fx:id="submitBtn" onAction="#submit" prefHeight="25.0" prefWidth="75.0" text="Submit" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
+    <Button fx:id="cancelBtn" onAction="#cancel" prefHeight="25.0" prefWidth="76.0" text="Cancel" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
 
     <stylesheets>
         <URL value="@/css/addChild.css" />
     </stylesheets>
+   <columnConstraints>
+      <ColumnConstraints maxWidth="101.0" minWidth="70.0" prefWidth="87.0" />
+      <ColumnConstraints maxWidth="82.0" minWidth="51.0" prefWidth="61.0" />
+      <ColumnConstraints maxWidth="165.0" minWidth="147.0" prefWidth="160.0" />
+      <ColumnConstraints />
+      <ColumnConstraints />
+   </columnConstraints>
 
 </GridPane>
