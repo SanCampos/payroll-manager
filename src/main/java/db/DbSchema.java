@@ -39,4 +39,37 @@ class DbSchema {
              static final String path = "path";
          }
     }
+    
+    static class table_children {
+        static final String name = "children";
+        
+        static class cols {
+            static final String fname = "fname";
+            static final String lname = "lname";
+            static final String nickname = "nickname";
+            static final String age = "age";
+            static final String place_of_birth = "place_of_birth";
+            static final String id = "id";
+            static final String description = "description";
+            static final String gender = "gender";
+        }
+    }
+    
+    static class table_places_of_birth {
+        static final String name = "places_of_birth";
+        
+        static class cols {
+            static final String location = "location";
+            static final String id = "id";
+        }
+    }
+    
+    static class table_genders {
+        static final String name = "genders";
+        
+        static class cols {
+            static final String gender = "gender";
+            static final String id =  "id";
+        }
+    }
 }

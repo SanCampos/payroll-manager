@@ -33,7 +33,66 @@ public class Database {
 
             con = DriverManager.getConnection(url, user, pass);
         }
-
+        
+        
+    public boolean addNewChild(String fName, String lName, String nickname, String placeOfBirth, int age, String description, String gender) throws SQLException {
+        //Add new location record if doesn't  exist
+        addNewLocation(placeOfBirth);
+        
+        //Retrieve normalized ids
+        int locationID = getLocationID(placeOfBirth);
+        int genderID = getGenderID(gender);
+        
+        String insertChild = String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                                    table_children.name, table_children.cols.fname, table_children.cols.lname, table_children.cols.nickname, table_children.cols.place_of_birth, table_children.cols.age,
+                                    table_children.cols.description, table_children.cols.gender);
+    
+        PreparedStatement statement = con.prepareStatement(insertChild);
+        statement.setString(1, fName);
+        statement.setString(2, lName);
+        statement.setString(3, nickname);
+        statement.setInt(4, locationID);
+        statement.setInt(5, age);
+        statement.setString(6, description);
+        statement.setInt(7, genderID);
+        
+        return statement.executeUpdate() != 0;
+    }
+    
+    private int getGenderID(String gender) throws SQLException {
+        String sql  =  String.format("SELECT * FROM %s WHERE %s = ?", table_genders.name, table_genders.cols.gender);
+        
+        PreparedStatement statement =  con.prepareStatement(sql);
+        statement.setString(1,  gender);
+        
+        ResultSet chosenGender =  statement.executeQuery();
+        chosenGender.next();
+        
+        return chosenGender.getInt(table_genders.cols.id);
+    }
+    
+    private int getLocationID(String placeOfBirth) throws SQLException {
+        String getLocation = String.format("SELECT * FROM %s WHERE %s = ?", table_places_of_birth.name, table_places_of_birth.cols.location);
+        
+        PreparedStatement statement  =  con.prepareStatement(getLocation);
+        statement.setString(1, placeOfBirth);
+        
+        ResultSet location = statement.executeQuery();
+        
+        location.next();
+        
+        return location.getInt(table_places_of_birth.cols.id);
+    }
+    
+    private void addNewLocation(String placeOfBirth) throws SQLException {
+        String addLocation = String.format("INSERT INTO %s (%s) VALUES (?)", table_places_of_birth.name, table_places_of_birth.cols.location);
+        
+        PreparedStatement statement =  con.prepareStatement(addLocation);
+        statement.setString(1, placeOfBirth);
+        
+        statement.execute();
+    }
+    
     public String getAvatarOf(int id) throws SQLException {
         String sql = String.format("SELECT * FROM %s WHERE %s = ?", table_avatars.name, table_avatars.cols.id);
 
