@@ -59,8 +59,12 @@ public class Database {
         return statement.executeUpdate() != 0;
     }
     
+    private String getSingleRowWith(String tableName, String columnName) {
+        return String.format("SELECT * FROM  %s WHERE %s = ?", tableName, columnName);
+    }
+    
     private int getGenderID(String gender) throws SQLException {
-        String sql  =  String.format("SELECT * FROM %s WHERE %s = ?", table_genders.name, table_genders.cols.gender);
+        String sql = getSingleRowWith(table_genders.name, table_genders.cols.gender);
         
         PreparedStatement statement =  con.prepareStatement(sql);
         statement.setString(1,  gender);
@@ -72,7 +76,7 @@ public class Database {
     }
     
     private int getLocationID(String placeOfBirth) throws SQLException {
-        String getLocation = String.format("SELECT * FROM %s WHERE %s = ?", table_places_of_birth.name, table_places_of_birth.cols.location);
+        String getLocation = getSingleRowWith(table_places_of_birth.name, table_places_of_birth.cols.location);
         
         PreparedStatement statement  =  con.prepareStatement(getLocation);
         statement.setString(1, placeOfBirth);
@@ -94,7 +98,7 @@ public class Database {
     }
     
     public String getAvatarOf(int id) throws SQLException {
-        String sql = String.format("SELECT * FROM %s WHERE %s = ?", table_avatars.name, table_avatars.cols.id);
+        String sql = getSingleRowWith(table_avatars.name, table_avatars.cols.id);
 
         PreparedStatement statement = con.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
         statement.setInt(1, id);
@@ -133,7 +137,7 @@ public class Database {
             int user_cols_changed = prepStmnt.executeUpdate();
             
             //Retrieve user id (FUCK)
-            String retrieve = String.format("SELECT * FROM %s WHERE %s = ?", table_users.name, table_users.cols.username);
+            String retrieve = getSingleRowWith(table_users.name, table_users.cols.username);
             PreparedStatement stmnt =  con.prepareStatement(retrieve);
             stmnt.setString(1, username);
             ResultSet curr_user = stmnt.executeQuery();
@@ -151,7 +155,7 @@ public class Database {
 
         public boolean loginUser(String username, String password) throws SQLException /*REDUNDANT?*/ {
             //Basically fetch the user (if there is one)
-            String sql = String.format("SELECT * FROM %s WHERE %s = ?", table_users.name, table_users.cols.username);
+            String sql = getSingleRowWith(table_users.name, table_users.cols.username);
 
             // Hashed user password is stored by (roughly) halving the salt and placing the first
             // half in front of the hashed pw and the second half after the hashed pw

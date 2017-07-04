@@ -154,6 +154,7 @@ public class ChildFormController {
             childImage.setImage(new Image(slctdImgStrm));
             imageName.setText(chosen.getName());
             
+            
         } catch (IOException e) {
             DialogUtils.showError("File error", "There was an error selecting your chosen file, please try again");
             e.printStackTrace();
