@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Created by Santi on 6/29/2017.
  */
-public class childFormController {
+public class ChildFormController {
     
     @FXML
     private PersistentPromptTextField firstNameInput;
@@ -128,6 +128,8 @@ public class childFormController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        
+        firstNameInput.getScene().getWindow().hide();
     }
     
     private void setWarningsForEmpty(TextInputControl n, Label warning) {
