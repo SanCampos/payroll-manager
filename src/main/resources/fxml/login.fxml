@@ -26,10 +26,10 @@
 
     <Button prefHeight="25.0" prefWidth="145" text="Login" GridPane.columnIndex="1" GridPane.rowIndex="3" onAction="#login" />
 
-    <Text fx:id="loginFailNotif"
+    <Label fx:id="loginFailNotif"
+          text="Your username/password is invalid"
           GridPane.rowIndex="5"
           GridPane.columnIndex="0"
-          GridPane.columnSpan="3"
-          fill="red"/>
+          GridPane.columnSpan="3"/>
 
 </GridPane>

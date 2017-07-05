@@ -134,16 +134,6 @@ public class ChildFormController {
         firstNameInput.getScene().getWindow().hide();
     }
     
-    private void setWarningsForEmpty(TextInputControl n, Label warning) {
-        boolean incomplete;
-        if (n.getText().isEmpty()) {
-            warning.setStyle("-fx-text-fill: red");
-            incomplete = true;
-        } else {
-            warning.setStyle("-fx-text-fill: transparent ");
-        }
-    }
-    
     @FXML
     public void changeChildImg(ActionEvent actionEvent) {
         FileChooser chooser = new FileChooser();

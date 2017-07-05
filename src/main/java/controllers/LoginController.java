@@ -3,6 +3,7 @@ package main.java.controllers;
  * Created by thedr on 6/6/2017.
  */
 
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import main.java.Main;
 import main.java.db.Database;
@@ -24,7 +25,7 @@ import java.sql.SQLException;
 
 public class LoginController {
 
-    @FXML private Text loginFailNotif;
+    @FXML private Label loginFailNotif;
     @FXML private TextField inputUser;
     @FXML private PasswordField inputPass;
 
@@ -34,6 +35,7 @@ public class LoginController {
         //Set listeners for login on pressing enter
         inputUser.setOnKeyPressed(this::loginIfNoEmptyFields);
         inputPass.setOnKeyPressed(this::loginIfNoEmptyFields);
+        loginFailNotif.setStyle("-fx-text-fill: transparent");
     }
 
     private void loginIfNoEmptyFields(KeyEvent event) {
@@ -51,14 +53,16 @@ public class LoginController {
         String user = inputUser.getText();
         String pass = inputPass.getText();
 
-        loginFailNotif.setText("");
+        loginFailNotif.setStyle("-fx-text-fill: transparent");
+
         //Test for main.java.db connection and check if login is successful
         try {
             db.init();
 
             //Notify login failure
             if (!db.loginUser(user, pass)) {
-                loginFailNotif.setText("Your username/password is invalid");
+                loginFailNotif.setStyle("-fx-text-fill: red");
+                inputPass.clear();
                 db.closeConnection();
                 return;
             }
@@ -76,10 +80,10 @@ public class LoginController {
         } catch (SQLException e) {
             loginFailNotif.setText("Error connecting to the server, please try again!");
             e.printStackTrace();
+
         } catch (IOException e) {
             loginFailNotif.setText("An error has occurred, please try again!");
             e.printStackTrace();
         }
-
     }
 }
