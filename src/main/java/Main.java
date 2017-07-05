@@ -22,9 +22,9 @@ public class Main extends Application {
     public static Stage loginStage;
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        //Database db =  new Database();
-        //db.init();
-        //db.registerUser("admin", "admin");
+        /*Database db =  new Database();
+        db.init();
+        db.registerUser("shit", "shitty"); */
         launch(args);
     }
 
