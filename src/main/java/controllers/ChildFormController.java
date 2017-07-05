@@ -60,6 +60,7 @@ public class ChildFormController {
     @FXML
     private Label imageName;
     
+    private InputStream slctdImgStrm;
     @FXML
     public void initialize() {
         //Init gender choice buttons and scene ref
@@ -150,9 +151,11 @@ public class ChildFormController {
         if (chosen == null) return;
     
         try {
-            InputStream slctdImgStrm = new FileInputStream(chosen);
+            slctdImgStrm = new FileInputStream(chosen);
             childImage.setImage(new Image(slctdImgStrm));
             imageName.setText(chosen.getName());
+            
+            slctdImgStrm = new FileInputStream(chosen);
             
         } catch (IOException e) {
             DialogUtils.showError("File error", "There was an error selecting your chosen file, please try again");
