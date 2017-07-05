@@ -58,16 +58,28 @@ public class Database {
         
         return statement.executeUpdate() != 0;
     }
-    
-    private String getSingleRowWith(String tableName, String columnName) {
-        return String.format("SELECT * FROM  %s WHERE %s = ?", tableName, columnName);
+
+    /**
+     * Fetches a SINGLE table row which matches the column criteria
+     * @param tableName name of table
+     * @param criteriaColumn column to be used in WHERE clause
+     * @param columnData data to be compared to each row's criteria column
+     * @return A result set representing that single row
+     */
+    private ResultSet getSingleRow(String tableName, String criteriaColumn, Object columnData) throws SQLException {
+        String sql = String.format("SELECT * FROM  %s WHERE %s = ?", tableName, criteriaColumn);
+
+        PreparedStatement statement = con.prepareStatement(sql);
+        statement.setObject(1, columnData);
+
+        return statement.executeQuery();
     }
     
     private int getGenderID(String gender) throws SQLException {
         String sql = getSingleRowWith(table_genders.name, table_genders.cols.gender);
         
         PreparedStatement statement =  con.prepareStatement(sql);
-        statement.setString(1,  gender);
+        statement.setObject(1,  gender);
         
         ResultSet chosenGender =  statement.executeQuery();
         chosenGender.next();
@@ -79,8 +91,8 @@ public class Database {
         String getLocation = getSingleRowWith(table_places_of_birth.name, table_places_of_birth.cols.location);
         
         PreparedStatement statement  =  con.prepareStatement(getLocation);
-        statement.setString(1, placeOfBirth);
-        
+        statement.setObject(1, placeOfBirth);
+
         ResultSet location = statement.executeQuery();
         
         location.next();
@@ -92,7 +104,7 @@ public class Database {
         String addLocation = String.format("INSERT INTO %s (%s) VALUES (?)", table_places_of_birth.name, table_places_of_birth.cols.location);
         
         PreparedStatement statement =  con.prepareStatement(addLocation);
-        statement.setString(1, placeOfBirth);
+        statement.setObject(1, placeOfBirth);
         
         statement.execute();
     }
@@ -101,7 +113,7 @@ public class Database {
         String sql = getSingleRowWith(table_avatars.name, table_avatars.cols.id);
 
         PreparedStatement statement = con.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-        statement.setInt(1, id);
+        statement.setObject(1, id);
 
         ResultSet row = statement.executeQuery();
 
@@ -139,7 +151,7 @@ public class Database {
             //Retrieve user id (FUCK)
             String retrieve = getSingleRowWith(table_users.name, table_users.cols.username);
             PreparedStatement stmnt =  con.prepareStatement(retrieve);
-            stmnt.setString(1, username);
+            stmnt.setObject(1, username);
             ResultSet curr_user = stmnt.executeQuery();
             curr_user.next();
             int id = curr_user.getInt(table_users.cols.id);
@@ -154,9 +166,6 @@ public class Database {
         }
 
         public boolean loginUser(String username, String password) throws SQLException /*REDUNDANT?*/ {
-            //Basically fetch the user (if there is one)
-            String sql = getSingleRowWith(table_users.name, table_users.cols.username);
-
             // Hashed user password is stored by (roughly) halving the salt and placing the first
             // half in front of the hashed pw and the second half after the hashed pw
             // EXAMPLE: salt = SALT, hash_pw  =  HASH
@@ -164,8 +173,13 @@ public class Database {
             //Salt retrieval for verification is also done through this salt and password mix
 
             //Prep the prepared statement
+
+            //Basically fetch the user (if there is one)
+            String sql = getSingleRowWith(table_users.name, table_users.cols.username);
+
+
             PreparedStatement prepStmnt = con.prepareStatement(sql);
-            prepStmnt.setString(1, username);
+            prepStmnt.setObject(1, username);
 
             ResultSet user = prepStmnt.executeQuery();
 
