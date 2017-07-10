@@ -12,6 +12,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import main.java.customNodes.PersistentPromptTextField;
 import main.java.db.Database;
+import main.java.globalInfo.GlobalInfo;
 import main.java.utils.DialogUtils;
 import main.java.utils.NodeUtils;
 
@@ -19,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -61,6 +63,8 @@ public class ChildFormController {
     private Label imageName;
 
     private FileInputStream slctdImgStrm;
+
+    private String strgRef;
     
     @FXML
     public void initialize() {
@@ -120,8 +124,7 @@ public class ChildFormController {
         LocalDate birthDate = birthDateInput.getValue();
         LocalDate currentDate = LocalDate.now();
         int age = Period.between(birthDate, currentDate).getYears();
-    
-    
+
         Database db = new Database();
     
         try {
@@ -130,7 +133,10 @@ public class ChildFormController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
+        Files.copy(slctdImgStrm, new File(strgRef.replace("id", )))
+
+
         firstNameInput.getScene().getWindow().hide();
     }
     
@@ -145,7 +151,10 @@ public class ChildFormController {
             slctdImgStrm = new FileInputStream(chosen);
             childImage.setImage(new Image(slctdImgStrm));
             imageName.setText(chosen.getName());
-            
+
+            slctdImgStrm = new FileInputStream(chosen);
+
+            strgRef = GlobalInfo.getChildrenImgDir() + "\\id\\" + chosen.getName();
             
         } catch (IOException e) {
             DialogUtils.showError("File error", "There was an error selecting your chosen file, please try again");

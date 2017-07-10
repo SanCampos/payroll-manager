@@ -14,6 +14,8 @@ public class GlobalInfo {
     private static String employeesImgDir = "C:\\imgs\\employees";
     private static File currProfImg;
 
+    private static String childrenImgDir = "C:\\imgs\\children";
+
     private static int userID;
     private static int prvlg_lvl;
 
@@ -47,5 +49,9 @@ public class GlobalInfo {
 
     public static void setCurrProfImg(File currProfImg) {
         GlobalInfo.currProfImg = currProfImg;
+    }
+
+    public static String getChildrenImgDir() {
+        return childrenImgDir;
     }
 }
