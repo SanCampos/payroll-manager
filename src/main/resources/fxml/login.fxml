@@ -16,7 +16,7 @@
 
     <Text text="Please enter your username and password" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="0" />
 
-    <Label text="User name: " GridPane.columnIndex="0" GridPane.rowIndex="1" />
+    <Label text="Username: " GridPane.columnIndex="0" GridPane.rowIndex="1" />
 
     <TextField fx:id="inputUser" GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.rowIndex="1" />
 

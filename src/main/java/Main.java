@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import main.java.db.Database;
+import main.java.models.Child;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -22,12 +23,12 @@ public class Main extends Application {
     public static Stage loginStage;
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        /*Database db =  new Database();
+       /* Database db =  new Database();
         db.init();
-        db.registerUser("shit", "shitty"); */
+        db.registerUser("root", "root");  */
         launch(args);
     }
-
+    
     @Override
     public void start(Stage primaryStage) throws Exception {
         loginStage =  primaryStage;

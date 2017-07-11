@@ -28,7 +28,8 @@ class DbSchema {
              static final String id = "id";
              static final String salt = "salt";
              static final String prvlg_lvl = "prvlg_lvl"; //For application privileges. Will be used later on
-        }
+             public static String avatar_id = "avatar_id";
+         }
     }
 
     static class table_avatars {
@@ -59,7 +60,7 @@ class DbSchema {
         static final String name = "places_of_birth";
         
         static class cols {
-            static final String location = "location";
+            static final String birthPlace = "birthPlace";
             static final String id = "id";
         }
     }

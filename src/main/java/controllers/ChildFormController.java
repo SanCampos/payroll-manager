@@ -1,15 +1,12 @@
 package main.java.controllers;
 
-import com.sun.javafx.scene.control.skin.ComboBoxPopupControl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-import javafx.stage.Window;
 import main.java.customNodes.PersistentPromptTextField;
 import main.java.db.Database;
 import main.java.globalInfo.GlobalInfo;
@@ -19,15 +16,13 @@ import main.java.utils.NodeUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -64,7 +59,7 @@ public class ChildFormController {
 
     private FileInputStream slctdImgStrm;
 
-    private String strgRef;
+    private String pathRef;
     
     @FXML
     public void initialize() {
@@ -125,19 +120,37 @@ public class ChildFormController {
         LocalDate currentDate = LocalDate.now();
         int age = Period.between(birthDate, currentDate).getYears();
 
+        
+        //Fire up db helper and insert new child record
         Database db = new Database();
+        
+        //Retrieve record's ID for later use
+        int id;
     
         try {
             db.init();
             db.addNewChild(firstName, lastName, nickName, place_of_birth, age, childDesc, gender);
+            id = db.getIDof(firstName, lastName, nickName, place_of_birth, age, childDesc, gender);
+            if (id == -89) throw new SQLException();
+            File strgReg = new File(pathRef.replace("id", String.valueOf(id)));
+            
+            if (!(strgReg.exists() && strgReg.isFile())) {
+                strgReg.getParentFile().mkdirs();
+                strgReg.createNewFile();
+            }
+            
+            Files.copy(slctdImgStrm, Paths.get(strgReg.getPath()), StandardCopyOption.REPLACE_EXISTING);
         } catch (SQLException e) {
             e.printStackTrace();
+            DialogUtils.displayError("Error saving child data", "There was an error in saving all child data. Please try again!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            DialogUtils.displayError("Error saving image", "There was an error saving the image of the child. " +
+                    "All other data besides the image has been saved. Please attempt to add the child image in its own page.");
+        } finally {
+            firstNameInput.getScene().getWindow().hide();
         }
-
-        Files.copy(slctdImgStrm, new File(strgRef.replace("id", )))
-
-
-        firstNameInput.getScene().getWindow().hide();
+        
     }
     
     @FXML
@@ -154,10 +167,10 @@ public class ChildFormController {
 
             slctdImgStrm = new FileInputStream(chosen);
 
-            strgRef = GlobalInfo.getChildrenImgDir() + "\\id\\" + chosen.getName();
+            pathRef = GlobalInfo.getChildrenImgDir() + "\\" + chosen.getName();
             
         } catch (IOException e) {
-            DialogUtils.showError("File error", "There was an error selecting your chosen file, please try again");
+            DialogUtils.displayError("File error", "There was an error selecting your chosen file, please try again");
             e.printStackTrace();
         }
     }

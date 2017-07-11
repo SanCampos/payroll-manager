@@ -38,7 +38,7 @@ public class DialogUtils {
      * @param title refer to 'makeDialog()'
      * @param message refer to 'makeDialog()'
      */
-    public static void showError(String title, String message) {
+    public static void displayError(String title, String message) {
         Alert errorDialog = makeDialog(Alert.AlertType.ERROR, title, message);
         errorDialog.showAndWait();
     }

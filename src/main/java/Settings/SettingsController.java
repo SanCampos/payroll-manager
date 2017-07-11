@@ -117,7 +117,7 @@ public class SettingsController {
             slctdImgStrm = new FileInputStream(selected);
 
             //Reference to planned storage location for selected picture
-            strgRef = new File(GlobalInfo.getEmployeesImgDir() + "\\" + GlobalInfo.getUserID() + "\\" + selected.getName());
+            strgRef = new File(GlobalInfo.getEmployeesImgDir() + "\\" + selected.getName());
 
             //For comparison of selected image to current profile picture, also for its preview
             Image slctdImg =  new Image(slctdImgStrm);
@@ -145,7 +145,7 @@ public class SettingsController {
             e.printStackTrace();
 
             //Inform user that selected picture failed to be read
-            DialogUtils.showError("Picture retrieval error", "There was an error retrieving your chosen file. Please verify that your file exists and try again.");
+            DialogUtils.displayError("Picture retrieval error", "There was an error retrieving your chosen file. Please verify that your file exists and try again.");
         }
     }
 
@@ -176,10 +176,10 @@ public class SettingsController {
             
             GlobalInfo.setCurrProfImg(strgRef);
         } catch (IOException e) {
-            DialogUtils.showError("Settings error", "There was an error moving your image file, please try again!");
+            DialogUtils.displayError("Settings error", "There was an error moving your image file, please try again!");
             e.printStackTrace();
         } catch (SQLException e) {
-            DialogUtils.showError("Database error", "There was an error uploading your changes to the server, please try again!");
+            DialogUtils.displayError("Database error", "There was an error uploading your changes to the server, please try again!");
             e.printStackTrace();
         } finally {
             Image setImage = new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath());

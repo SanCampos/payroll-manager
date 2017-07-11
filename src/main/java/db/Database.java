@@ -61,16 +61,7 @@ public class Database {
         prepStmnt.setString(2, hash_pw.toString());
         int user_cols_changed = prepStmnt.executeUpdate();
 
-        //Retrieve user id (FUCK)
-        int id = toIntExact((long) getSingleRowData(table_users.name, table_users.cols.username, username, table_users.cols.id));
-
-        //Insert row for user avatar info
-        String avatar_row = String.format("INSERT INTO %s (%s) VALUES (?)", table_avatars.name, table_avatars.cols.id);
-        PreparedStatement avatar = con.prepareStatement(avatar_row);
-        avatar.setInt(1, id);
-        int avatar_cols_changed = avatar.executeUpdate();
-
-        return user_cols_changed != 0 && avatar_cols_changed != 0;
+        return user_cols_changed != 0;
     }
 
     public boolean loginUser(String username, String password) throws SQLException /*REDUNDANT?*/ {
@@ -110,40 +101,53 @@ public class Database {
             GlobalInfo.setPrvlg_lvl(user_prvlg);
 
             //Attempt to retrieve user avatar as a File, assign default value if failure
-            File profImg;
-            try {
-                profImg = new File(getAvatarOf(GlobalInfo.getUserID()));
-            } catch (NullPointerException e) {
-                profImg = new File("src\\main\\resources\\imgs\\default-avatar.png");
-            }
+            File profImg= new File(getAvatarPathOf(GlobalInfo.getUserID()));
             GlobalInfo.setCurrProfImg(profImg);
-
+            
             return true;
         }
         return false;
     }
-
-    public boolean addNewChild(String fName, String lName, String nickname, String placeOfBirth, int age, String description, String gender) throws SQLException {
-        //Add new location record if doesn't  exist
-        addNewLocation(placeOfBirth);
-
-        //Retrieve normalized ids
-        int locationID = getLocationID(placeOfBirth);
+    
+    public int getIDof(String fName, String lName, String nickname, String birthPlace, int age, String description, String gender) throws SQLException {
+        String insertChild = String.format("SELECT * FROM %s WHERE %s = ? AND %s = ? AND %s = ? AND %s = ? AND %s = ? AND %s = ? AND %s = ?",
+                table_children.name, table_children.cols.fname, table_children.cols.lname, table_children.cols.nickname, table_children.cols.place_of_birth, table_children.cols.age,
+                table_children.cols.description, table_children.cols.gender);
+        
+        PreparedStatement statement = stmntWithAllChildProperties(insertChild, fName, lName, nickname, birthPlace, age, description, gender);
+        ResultSet child = statement.executeQuery();
+        
+        if (!child.next()) {
+            return -89; //Arbitrary  negative number to indicate retrieval failure
+        }
+        
+        return child.getInt(table_children.cols.id);
+    }
+    
+    private PreparedStatement stmntWithAllChildProperties(String sql, String fName, String lName, String nickname, String birthPlace, int age, String description, String gender) throws SQLException {
+        int birthPlaceID = getBirthPlaceID(birthPlace);
         int genderID = getGenderID(gender);
+        
+        PreparedStatement statement = con.prepareStatement(sql);
+        statement.setString(1, fName);
+        statement.setString(2, lName);
+        statement.setString(3, nickname);
+        statement.setInt(4, birthPlaceID);
+        statement.setInt(5, age);
+        statement.setString(6, description);
+        statement.setInt(7, genderID);
+        
+        return statement;
+    }
 
+    public boolean addNewChild(String fName, String lName, String nickname, String birthPlace, int age, String description, String gender) throws SQLException {
+        //Add new birthPlace record if doesn't  exist
+        addNewBirthPlace(birthPlace);
         String insertChild = String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 table_children.name, table_children.cols.fname, table_children.cols.lname, table_children.cols.nickname, table_children.cols.place_of_birth, table_children.cols.age,
                 table_children.cols.description, table_children.cols.gender);
 
-        PreparedStatement statement = con.prepareStatement(insertChild);
-        statement.setString(1, fName);
-        statement.setString(2, lName);
-        statement.setString(3, nickname);
-        statement.setInt(4, locationID);
-        statement.setInt(5, age);
-        statement.setString(6, description);
-        statement.setInt(7, genderID);
-
+        PreparedStatement statement = stmntWithAllChildProperties(insertChild, fName, lName, nickname, birthPlace, age, description, gender);
         return statement.executeUpdate() != 0;
     }
 
@@ -151,12 +155,13 @@ public class Database {
         return (int) getSingleRowData(table_genders.name, table_genders.cols.gender, gender, table_genders.cols.id);
     }
 
-    private int getLocationID(String placeOfBirth) throws SQLException {
-        return toIntExact((long) getSingleRowData(table_places_of_birth.name, table_places_of_birth.cols.location, placeOfBirth, table_places_of_birth.cols.id));
+    private int getBirthPlaceID(String birthPlace) throws SQLException {
+        return toIntExact((long) getSingleRowData(table_places_of_birth.name, table_places_of_birth.cols.birthPlace, birthPlace, table_places_of_birth.cols.id));
     }
 
-    public String getAvatarOf(int id) throws SQLException {
-        return (String) getSingleRowData(table_avatars.name, table_avatars.cols.id, id, table_avatars.cols.path);
+    public String getAvatarPathOf(int id) throws SQLException {
+        int avatarID = (int) getSingleRowData(table_users.name, table_users.cols.id, id, table_users.cols.avatar_id);
+        return (String) getSingleRowData(table_avatars.name, table_avatars.cols.id, avatarID, table_avatars.cols.path);
     }
 
     /**
@@ -187,11 +192,11 @@ public class Database {
         return statement.executeQuery();
     }
 
-    private void addNewLocation(String placeOfBirth) throws SQLException {
-        String addLocation = String.format("INSERT INTO %s (%s) VALUES (?)", table_places_of_birth.name, table_places_of_birth.cols.location);
+    private void addNewBirthPlace(String birthPlace) throws SQLException {
+        String addBirthPlace = String.format("INSERT INTO %s (%s) VALUES (?)", table_places_of_birth.name, table_places_of_birth.cols.birthPlace);
 
-        PreparedStatement statement = con.prepareStatement(addLocation);
-        statement.setString(1, placeOfBirth);
+        PreparedStatement statement = con.prepareStatement(addBirthPlace);
+        statement.setString(1, birthPlace);
 
         statement.execute();
     }
@@ -214,12 +219,49 @@ public class Database {
         return results;
     }
 
-    public boolean updateImageOf(int id, String path) throws SQLException {
-        String sql = String.format("UPDATE %s SET %s = '%s' WHERE %s = ?", table_avatars.name, table_avatars.cols.path, path, table_avatars.cols.id);
-
-        PreparedStatement statement = con.prepareStatement(sql);
-        statement.setInt(1, id);
-        return statement.executeUpdate() != 0;
+    public boolean updateImageOf(int userID, String path) throws SQLException {
+        //Insert new  row for image path to avatar  table
+        String insertAvatarRow = String.format("INSERT IGNORE INTO %s (%s) VALUES (?)", table_avatars.name, table_avatars.cols.path);
+        PreparedStatement insertNewAvatar = con.prepareStatement(insertAvatarRow);
+        insertNewAvatar.setString(1, path);
+        insertNewAvatar.execute();
+        
+        //Check if old avatar is still used by other users
+        
+        //Retrieve oldAvatarId and fetch rows of users who still use it
+        int oldAvatarID = (int) getSingleRowData(table_users.name, table_users.cols.id, userID, table_users.cols.avatar_id);
+        System.out.println("Old Avatar ID = " + oldAvatarID);
+        String getUsersOfOldAvatar = String.format("SELECT * FROM %s WHERE %s = ?", table_users.name, table_users.cols.avatar_id);
+        System.out.println(getUsersOfOldAvatar);
+        PreparedStatement getUsersOfID = con.prepareStatement(getUsersOfOldAvatar);
+        getUsersOfID.setInt(1, oldAvatarID);
+        
+        //Delete old avatar if no other users use it
+        
+        //Retrieve id from avatar table and set user column to this id
+        int avatarID = toIntExact((long)getSingleRowData(table_avatars.name, table_avatars.cols.path, path, table_avatars.cols.id));
+        String sql = String.format("UPDATE %s SET %s = ? WHERE %s = ?", table_users.name, table_users.cols.avatar_id, table_users.cols.id);
+        PreparedStatement updateAvatarIDS =  con.prepareStatement(sql);
+        updateAvatarIDS.setInt(1, avatarID);
+        updateAvatarIDS.setInt(2, userID);
+        boolean updatedIDs = updateAvatarIDS.executeUpdate() != 0;
+        
+        
+        ResultSet users = getUsersOfID.executeQuery();
+        boolean isEmpty = !users.next();
+        
+        System.out.println(isEmpty);
+        if (isEmpty) {
+            String oldAvatarPath = (String) getSingleRowData(table_avatars.name, table_avatars.cols.id, oldAvatarID, table_avatars.cols.path);
+            System.out.println(oldAvatarPath);
+            System.out.println(new File(oldAvatarPath).delete());
+        } else {
+            do {
+                System.out.println(users.getString(table_users.cols.username));
+                System.out.println(users.getInt(table_users.cols.id));
+            } while (users.next());
+        }
+        return updatedIDs;
     }
 
     public void closeConnection() throws SQLException {
