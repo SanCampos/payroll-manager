@@ -255,11 +255,11 @@ public class Database {
             String oldAvatarPath = (String) getSingleRowData(table_avatars.name, table_avatars.cols.id, oldAvatarID, table_avatars.cols.path);
             System.out.println(oldAvatarPath);
             System.out.println(new File(oldAvatarPath).delete());
-        } else {
-            do {
-                System.out.println(users.getString(table_users.cols.username));
-                System.out.println(users.getInt(table_users.cols.id));
-            } while (users.next());
+            
+            String deleteOldAvatarRow = String.format("DELETE FROM %s WHERE %s = ?", table_avatars.name, table_avatars.cols.path);
+            PreparedStatement statement = con.prepareStatement(deleteOldAvatarRow);
+            statement.setString(1, oldAvatarPath);
+            statement.execute();
         }
         return updatedIDs;
     }

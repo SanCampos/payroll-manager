@@ -15,6 +15,7 @@ import main.java.utils.NodeUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -66,10 +67,14 @@ public class ChildFormController {
         //Init gender choice buttons and scene ref
         //OMG MY PATRIARCHY
         genderToggleGroup.getToggles().get(0).setSelected(true);
+        
+        //Init default image for child
+       
     }
     
     @FXML
     public void cancel(ActionEvent actionEvent) {
+        firstNameInput.getScene().getWindow().hide();
     }
     
     @FXML
@@ -161,18 +166,22 @@ public class ChildFormController {
         if (chosen == null) return;
     
         try {
-            slctdImgStrm = new FileInputStream(chosen);
-            childImage.setImage(new Image(slctdImgStrm));
-            imageName.setText(chosen.getName());
+            updateChosenImage(chosen);
 
             slctdImgStrm = new FileInputStream(chosen);
 
-            pathRef = GlobalInfo.getChildrenImgDir() + "\\" + chosen.getName();
+            pathRef = GlobalInfo.getChildrenImgDir() + "\\id\\"+ chosen.getName();
             
         } catch (IOException e) {
             DialogUtils.displayError("File error", "There was an error selecting your chosen file, please try again");
             e.printStackTrace();
         }
+    }
+    
+    private void updateChosenImage(File chosen) throws FileNotFoundException {
+        slctdImgStrm = new FileInputStream(chosen);
+        childImage.setImage(new Image(slctdImgStrm));
+        imageName.setText(chosen.getName());
     }
 }
 
