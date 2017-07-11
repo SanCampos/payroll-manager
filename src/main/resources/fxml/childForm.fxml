@@ -8,7 +8,6 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -23,13 +22,9 @@
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
     <!-- Input for image avatar -->
-    <ImageView fx:id="childImage" fitHeight="97.0" fitWidth="88.0" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4">
-        <image>
-            <Image url="@/imgs/default-avatar.png" />
-        </image>
-    </ImageView>
+    <ImageView fx:id="childImage" fitHeight="97.0" fitWidth="88.0" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4" />
 
-    <Label fx:id="imageName" alignment="CENTER" prefWidth="88.0" text="FUCK.JPG" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.rowSpan="2" GridPane.valignment="TOP" />
+    <Label fx:id="imageName" alignment="CENTER" prefWidth="88.0" text="FUCK.JPG" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.rowSpan="2" GridPane.valignment="TOP" />
 
     <Button onAction="#changeChildImg" prefHeight="57.0" prefWidth="93.0" text="Change image" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.rowSpan="2" />
 
@@ -50,11 +45,11 @@
 
     <!-- Input for gender of child -->
     <Label text="Gender" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-    <fx:define>
-        <ToggleGroup fx:id="genderToggleGroup" />
-    </fx:define>
-    <RadioButton fx:id="maleButton" text="Male" userData="male" toggleGroup="$genderToggleGroup" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
-    <RadioButton fx:id="femaleButton" text="Female" userData="female" toggleGroup="$genderToggleGroup" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+    <RadioButton fx:id="maleButton" text="Male" userData="male" GridPane.columnIndex="3" GridPane.rowIndex="5">
+      <toggleGroup>
+         <ToggleGroup fx:id="genderToggleGroup" />
+      </toggleGroup></RadioButton>
+    <RadioButton fx:id="femaleButton" text="Female" toggleGroup="$genderToggleGroup" userData="female" GridPane.columnIndex="4" GridPane.rowIndex="5" />
 
         <!-- Input for birth date of child -->
     <Label text="Birthdate" GridPane.columnIndex="1" GridPane.rowIndex="6" />
@@ -78,7 +73,10 @@
     <Button fx:id="cancelBtn" onAction="#cancel" prefHeight="25.0" prefWidth="76.0" text="Cancel" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
 
     <!-- Warning text for incomplete form  -->
-    <Label fx:id="warnEmptyLabel" text="You have incomplete fields!" GridPane.columnIndex="2" GridPane.rowIndex="11" styleClass="notify-empty"/>
+    <Label fx:id="warnEmptyLabel" styleClass="notify-empty" text="You have incomplete fields!" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+    <fx:define>
+        <ToggleGroup fx:id="genderToggleGroup" />
+    </fx:define>
     <stylesheets>
         <URL value="@/css/childForm.css" />
     </stylesheets>
@@ -89,5 +87,19 @@
       <ColumnConstraints />
       <ColumnConstraints />
    </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
 
 </GridPane>

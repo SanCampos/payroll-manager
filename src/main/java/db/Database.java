@@ -161,7 +161,7 @@ public class Database {
 
     public String getAvatarPathOf(int id) throws SQLException {
         int avatarID = (int) getSingleRowData(table_users.name, table_users.cols.id, id, table_users.cols.avatar_id);
-        return (String) getSingleRowData(table_avatars.name, table_avatars.cols.id, avatarID, table_avatars.cols.path);
+        return (String) getSingleRowData(table_userAvatars.name, table_userAvatars.cols.id, avatarID, table_userAvatars.cols.path);
     }
 
     /**
@@ -221,7 +221,7 @@ public class Database {
 
     public boolean updateImageOf(int userID, String path) throws SQLException {
         //Insert new  row for image path to avatar  table
-        String insertAvatarRow = String.format("INSERT IGNORE INTO %s (%s) VALUES (?)", table_avatars.name, table_avatars.cols.path);
+        String insertAvatarRow = String.format("INSERT IGNORE INTO %s (%s) VALUES (?)", table_userAvatars.name, table_userAvatars.cols.path);
         PreparedStatement insertNewAvatar = con.prepareStatement(insertAvatarRow);
         insertNewAvatar.setString(1, path);
         insertNewAvatar.execute();
@@ -239,7 +239,7 @@ public class Database {
         //Delete old avatar if no other users use it
         
         //Retrieve id from avatar table and set user column to this id
-        int avatarID = toIntExact((long)getSingleRowData(table_avatars.name, table_avatars.cols.path, path, table_avatars.cols.id));
+        int avatarID = toIntExact((long)getSingleRowData(table_userAvatars.name, table_userAvatars.cols.path, path, table_userAvatars.cols.id));
         String sql = String.format("UPDATE %s SET %s = ? WHERE %s = ?", table_users.name, table_users.cols.avatar_id, table_users.cols.id);
         PreparedStatement updateAvatarIDS =  con.prepareStatement(sql);
         updateAvatarIDS.setInt(1, avatarID);
@@ -252,11 +252,11 @@ public class Database {
         
         System.out.println(isEmpty);
         if (isEmpty) {
-            String oldAvatarPath = (String) getSingleRowData(table_avatars.name, table_avatars.cols.id, oldAvatarID, table_avatars.cols.path);
+            String oldAvatarPath = (String) getSingleRowData(table_userAvatars.name, table_userAvatars.cols.id, oldAvatarID, table_userAvatars.cols.path);
             System.out.println(oldAvatarPath);
             System.out.println(new File(oldAvatarPath).delete());
             
-            String deleteOldAvatarRow = String.format("DELETE FROM %s WHERE %s = ?", table_avatars.name, table_avatars.cols.path);
+            String deleteOldAvatarRow = String.format("DELETE FROM %s WHERE %s = ?", table_userAvatars.name, table_userAvatars.cols.path);
             PreparedStatement statement = con.prepareStatement(deleteOldAvatarRow);
             statement.setString(1, oldAvatarPath);
             statement.execute();

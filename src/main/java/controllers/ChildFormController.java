@@ -63,13 +63,14 @@ public class ChildFormController {
     private String pathRef;
     
     @FXML
-    public void initialize() {
+    public void initialize() throws FileNotFoundException {
         //Init gender choice buttons and scene ref
         //OMG MY PATRIARCHY
         genderToggleGroup.getToggles().get(0).setSelected(true);
         
         //Init default image for child
-       
+        File defaultFile = new File("src\\main\\resources\\imgs\\default-avatar.png");
+        updateChosenImage(defaultFile);
     }
     
     @FXML
@@ -167,11 +168,7 @@ public class ChildFormController {
     
         try {
             updateChosenImage(chosen);
-
             slctdImgStrm = new FileInputStream(chosen);
-
-            pathRef = GlobalInfo.getChildrenImgDir() + "\\id\\"+ chosen.getName();
-            
         } catch (IOException e) {
             DialogUtils.displayError("File error", "There was an error selecting your chosen file, please try again");
             e.printStackTrace();
@@ -182,6 +179,7 @@ public class ChildFormController {
         slctdImgStrm = new FileInputStream(chosen);
         childImage.setImage(new Image(slctdImgStrm));
         imageName.setText(chosen.getName());
+        pathRef = GlobalInfo.getChildrenImgDir() + "\\id\\"+ chosen.getName();
     }
 }
 

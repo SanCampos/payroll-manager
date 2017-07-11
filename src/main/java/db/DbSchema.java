@@ -32,13 +32,22 @@ class DbSchema {
          }
     }
 
-    static class table_avatars {
+    static class table_userAvatars {
          static final String name = "user_avatars";
 
          static class cols {
              static final String id = "id";
              static final String path = "path";
          }
+    }
+    
+    static class table_childrenAvatars {
+        static final String name = "children_avatars";
+    
+        static class cols {
+            static final String id = "id";
+            static final String path = "path";
+        }
     }
     
     static class table_children {
