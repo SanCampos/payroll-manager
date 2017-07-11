@@ -21,6 +21,7 @@ import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 
 import static main.java.utils.ShapeUtils.getAvatarCircle;
+import main.java.db.DbSchema.*;
 
 /**
  * Created by thedr on 6/14/2017.
@@ -172,7 +173,7 @@ public class SettingsController {
     
             Database database = new Database();
             database.init();
-            database.updateImageOf(GlobalInfo.getUserID(), strgRef.getAbsolutePath().replace("\\", "\\\\"));
+            database.updateImageOf(GlobalInfo.getUserID(), strgRef.getAbsolutePath().replace("\\", "\\\\"), table_users.name);
             
             GlobalInfo.setCurrProfImg(strgRef);
         } catch (IOException e) {

@@ -3,83 +3,83 @@ package main.java.db;
 /**
  * Created by thedr on 5/31/2017.
  */
-class DbSchema {
+public class DbSchema {
 
-    static String name = "test";
+    public static String name = "test";
 
-     static class table_employees {
-         static final String name = "employees";
+     public static class table_employees {
+         public static final String name = "employees";
 
-         static class cols {
-             static final String first_name = "first_name";
-             static final String last_name = "last_name";
-             static final String age       = "age";
-             static final String salary = "salary";
-             static final String id        = "id";
+         public static class cols {
+             public static final String first_name = "first_name";
+             public static final String last_name = "last_name";
+             public static final String age       = "age";
+             public static final String salary = "salary";
+             public static final String id        = "id";
          }
     }
 
-     static class table_users {
-         static final String name = "users";
+     public static class table_users {
+         public static final String name = "users";
 
-         static class cols {
-             static final String username = "username";
-             static final String hash_pw = "hash_pw";
-             static final String id = "id";
-             static final String salt = "salt";
-             static final String prvlg_lvl = "prvlg_lvl"; //For application privileges. Will be used later on
+         public static class cols {
+             public static final String username = "username";
+             public static final String hash_pw = "hash_pw";
+             public static final String id = "id";
+             public static final String salt = "salt";
+             public static final String prvlg_lvl = "prvlg_lvl"; //For application privileges. Will be used later on
              public static String avatar_id = "avatar_id";
          }
     }
 
-    static class table_userAvatars {
-         static final String name = "user_avatars";
+    public static class table_userAvatars {
+         public static final String name = "users_avatars";
 
-         static class cols {
-             static final String id = "id";
-             static final String path = "path";
+         public static class cols {
+             public static final String id = "id";
+             public static final String path = "path";
          }
     }
     
-    static class table_childrenAvatars {
-        static final String name = "children_avatars";
+    public static class table_childrenAvatars {
+        public static final String name = "children_avatars";
     
-        static class cols {
-            static final String id = "id";
-            static final String path = "path";
+        public static class cols {
+            public static final String id = "id";
+            public static final String path = "path";
         }
     }
     
-    static class table_children {
-        static final String name = "children";
+    public static class table_children {
+        public static final String name = "children";
         
-        static class cols {
-            static final String fname = "fname";
-            static final String lname = "lname";
-            static final String nickname = "nickname";
-            static final String age = "age";
-            static final String place_of_birth = "place_of_birth";
-            static final String id = "id";
-            static final String description = "description";
-            static final String gender = "gender";
+        public static class cols {
+            public static final String fname = "fname";
+            public static final String lname = "lname";
+            public static final String nickname = "nickname";
+            public static final String age = "age";
+            public static final String place_of_birth = "place_of_birth";
+            public static final String id = "id";
+            public static final String description = "description";
+            public static final String gender = "gender";
         }
     }
     
-    static class table_places_of_birth {
-        static final String name = "places_of_birth";
+    public static class table_places_of_birth {
+        public static final String name = "places_of_birth";
         
-        static class cols {
-            static final String birthPlace = "birthPlace";
-            static final String id = "id";
+        public static class cols {
+            public static final String birthPlace = "birthPlace";
+            public static final String id = "id";
         }
     }
     
-    static class table_genders {
-        static final String name = "genders";
+    public static class table_genders {
+        public static final String name = "genders";
         
-        static class cols {
-            static final String gender = "gender";
-            static final String id =  "id";
+        public static class cols {
+            public static final String gender = "gender";
+            public static final String id =  "id";
         }
     }
 }

@@ -134,18 +134,24 @@ public class ChildFormController {
         int id;
     
         try {
+            //Add record for child and retrieve its id
             db.init();
             db.addNewChild(firstName, lastName, nickName, place_of_birth, age, childDesc, gender);
+           
+            //Retrieve id for use in storing img
             id = db.getIDof(firstName, lastName, nickName, place_of_birth, age, childDesc, gender);
             if (id == -89) throw new SQLException();
             File strgReg = new File(pathRef.replace("id", String.valueOf(id)));
             
+            //Store img file for child avatar
             if (!(strgReg.exists() && strgReg.isFile())) {
                 strgReg.getParentFile().mkdirs();
                 strgReg.createNewFile();
             }
             
             Files.copy(slctdImgStrm, Paths.get(strgReg.getPath()), StandardCopyOption.REPLACE_EXISTING);
+        
+            
         } catch (SQLException e) {
             e.printStackTrace();
             DialogUtils.displayError("Error saving child data", "There was an error in saving all child data. Please try again!");
@@ -156,7 +162,6 @@ public class ChildFormController {
         } finally {
             firstNameInput.getScene().getWindow().hide();
         }
-        
     }
     
     @FXML
