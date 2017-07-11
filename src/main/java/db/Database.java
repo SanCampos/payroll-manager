@@ -160,7 +160,7 @@ public class Database {
     }
 
     public String getAvatarPathOf(int id, String tableName) throws SQLException {
-        int avatarID = (int) getSingleRowData(tableName, table_users.cols.id, id, table_users.cols.avatar_id);
+        int avatarID = (int) getSingleRowData(tableName, table_users.cols.id, id, "avatar_id");
         return (String) getSingleRowData(tableName + "_avatars", table_userAvatars.cols.id, avatarID, table_userAvatars.cols.path);
     }
 
@@ -229,20 +229,21 @@ public class Database {
         //Check if old avatar is still used by other users
         
         //Retrieve oldAvatarId and fetch rows of users who still use it
-        int oldAvatarID = (int) getSingleRowData(tableName, table_users.cols.id, userID, table_users.cols.avatar_id);
+        Object oldAvatarID = getSingleRowData(tableName, table_users.cols.id, userID, "avatar_id");
+        
         System.out.println("Old Avatar ID = " + oldAvatarID);
-        String getUsersOfOldAvatar = String.format("SELECT * FROM %s WHERE %s = ?", tableName, table_users.cols.avatar_id);
+        String getUsersOfOldAvatar = String.format("SELECT * FROM %s WHERE %s = ?", tableName, "avatar_id");
         System.out.println(getUsersOfOldAvatar);
         PreparedStatement getUsersOfID = con.prepareStatement(getUsersOfOldAvatar);
-        getUsersOfID.setInt(1, oldAvatarID);
+        getUsersOfID.setObject(1, oldAvatarID);
         
         //Delete old avatar if no other users use it
         
         //Retrieve id from avatar table and set user column to this id
-        int avatarID = toIntExact((long)getSingleRowData(tableName + "_avatars", table_userAvatars.cols.path, path, table_userAvatars.cols.id));
-        String sql = String.format("UPDATE %s SET %s = ? WHERE %s = ?", tableName, table_users.cols.avatar_id, table_users.cols.id);
+        Object avatarID = getSingleRowData(tableName + "_avatars", table_userAvatars.cols.path, path, table_userAvatars.cols.id);
+        String sql = String.format("UPDATE %s SET %s = ? WHERE %s = ?", tableName, "avatar_id", table_users.cols.id);
         PreparedStatement updateAvatarIDS =  con.prepareStatement(sql);
-        updateAvatarIDS.setInt(1, avatarID);
+        updateAvatarIDS.setObject(1, avatarID);
         updateAvatarIDS.setInt(2, userID);
         boolean updatedIDs = updateAvatarIDS.executeUpdate() != 0;
         

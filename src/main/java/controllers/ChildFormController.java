@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import main.java.customNodes.PersistentPromptTextField;
 import main.java.db.Database;
+import main.java.db.DbSchema.*;
 import main.java.globalInfo.GlobalInfo;
 import main.java.utils.DialogUtils;
 import main.java.utils.NodeUtils;
@@ -150,8 +151,7 @@ public class ChildFormController {
             }
             
             Files.copy(slctdImgStrm, Paths.get(strgReg.getPath()), StandardCopyOption.REPLACE_EXISTING);
-        
-            
+            db.updateImageOf(id, strgReg.getPath(), table_children.name);
         } catch (SQLException e) {
             e.printStackTrace();
             DialogUtils.displayError("Error saving child data", "There was an error in saving all child data. Please try again!");
@@ -173,7 +173,6 @@ public class ChildFormController {
     
         try {
             updateChosenImage(chosen);
-            slctdImgStrm = new FileInputStream(chosen);
         } catch (IOException e) {
             DialogUtils.displayError("File error", "There was an error selecting your chosen file, please try again");
             e.printStackTrace();
@@ -184,7 +183,8 @@ public class ChildFormController {
         slctdImgStrm = new FileInputStream(chosen);
         childImage.setImage(new Image(slctdImgStrm));
         imageName.setText(chosen.getName());
-        pathRef = GlobalInfo.getChildrenImgDir() + "\\id\\"+ chosen.getName();
+        pathRef = GlobalInfo.getChildrenImgDir() + "\\"+ chosen.getName();
+        slctdImgStrm = new FileInputStream(chosen);
     }
 }
 
