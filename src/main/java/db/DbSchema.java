@@ -57,7 +57,7 @@ public class DbSchema {
             public static final String fname = "fname";
             public static final String lname = "lname";
             public static final String nickname = "nickname";
-            public static final String age = "age";
+            public static final String birth_date = "birth_date";
             public static final String place_of_birth = "place_of_birth";
             public static final String id = "id";
             public static final String description = "description";

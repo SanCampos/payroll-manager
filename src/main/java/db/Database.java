@@ -8,6 +8,7 @@ import main.java.models.Employee;
 import java.io.File;
 import java.security.SecureRandom;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -109,12 +110,12 @@ public class Database {
         return false;
     }
     
-    public int getIDof(String fName, String lName, String nickname, String birthPlace, int age, String description, String gender) throws SQLException {
-        String insertChild = String.format("SELECT * FROM %s WHERE %s = ? AND %s = ? AND %s = ? AND %s = ? AND %s = ? AND %s = ? AND %s = ?",
-                table_children.name, table_children.cols.fname, table_children.cols.lname, table_children.cols.nickname, table_children.cols.place_of_birth, table_children.cols.age,
+    public int getIDof(String fName, String lName, String nickname, String birthPlace, LocalDate birthDate, String description, String gender) throws SQLException {
+        String insertChild = String.format("SELECT * FROM %s WHERE %s = ? AND %s = ? AND %s = ? AND %s = ? AND %s = STR_TO_DATE(?, '%%Y-%%m-%%d') AND %s = ? AND %s = ?",
+                table_children.name, table_children.cols.fname, table_children.cols.lname, table_children.cols.nickname, table_children.cols.place_of_birth, table_children.cols.birth_date,
                 table_children.cols.description, table_children.cols.gender);
         
-        PreparedStatement statement = stmntWithAllChildProperties(insertChild, fName, lName, nickname, birthPlace, age, description, gender);
+        PreparedStatement statement = stmntWithAllChildProperties(insertChild, fName, lName, nickname, birthPlace, birthDate, description, gender);
         ResultSet child = statement.executeQuery();
         
         if (!child.next()) {
@@ -124,7 +125,7 @@ public class Database {
         return child.getInt(table_children.cols.id);
     }
     
-    private PreparedStatement stmntWithAllChildProperties(String sql, String fName, String lName, String nickname, String birthPlace, int age, String description, String gender) throws SQLException {
+    private PreparedStatement stmntWithAllChildProperties(String sql, String fName, String lName, String nickname, String birthPlace, LocalDate birthDate, String description, String gender) throws SQLException {
         int birthPlaceID = getBirthPlaceID(birthPlace);
         int genderID = getGenderID(gender);
         
@@ -133,18 +134,18 @@ public class Database {
         statement.setString(2, lName);
         statement.setString(3, nickname);
         statement.setInt(4, birthPlaceID);
-        statement.setInt(5, age);
+        statement.setString(5, birthDate.toString());
         statement.setString(6, description);
         statement.setInt(7, genderID);
         
         return statement;
     }
 
-    public boolean addNewChild(String fName, String lName, String nickname, String birthPlace, int age, String description, String gender) throws SQLException {
+    public boolean addNewChild(String fName, String lName, String nickname, String birthPlace, LocalDate age, String description, String gender) throws SQLException {
         //Add new birthPlace record if doesn't  exist
         addNewBirthPlace(birthPlace);
-        String insertChild = String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                table_children.name, table_children.cols.fname, table_children.cols.lname, table_children.cols.nickname, table_children.cols.place_of_birth, table_children.cols.age,
+        String insertChild = String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, STR_TO_DATE(?, '%%Y-%%m-%%d'), ?, ?)",
+                table_children.name, table_children.cols.fname, table_children.cols.lname, table_children.cols.nickname, table_children.cols.place_of_birth, table_children.cols.birth_date,
                 table_children.cols.description, table_children.cols.gender);
 
         PreparedStatement statement = stmntWithAllChildProperties(insertChild, fName, lName, nickname, birthPlace, age, description, gender);

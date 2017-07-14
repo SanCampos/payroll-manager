@@ -23,7 +23,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,25 +121,23 @@ public class ChildFormController {
         String childDesc = childDescInput.getText();
         String gender = ((String) genderToggleGroup.getSelectedToggle().getUserData());
     
-        //Get child's age
+        //Get child's birthdate
         LocalDate birthDate = birthDateInput.getValue();
-        LocalDate currentDate = LocalDate.now();
-        int age = Period.between(birthDate, currentDate).getYears();
-
         
         //Fire up db helper and insert new child record
         Database db = new Database();
         
         //Retrieve record's ID for later use
         int id;
+        
     
         try {
             //Add record for child and retrieve its id
             db.init();
-            db.addNewChild(firstName, lastName, nickName, place_of_birth, age, childDesc, gender);
+            db.addNewChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender);
            
             //Retrieve id for use in storing img
-            id = db.getIDof(firstName, lastName, nickName, place_of_birth, age, childDesc, gender);
+            id = db.getIDof(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender);
             if (id == -89) throw new SQLException();
             File strgReg = new File(pathRef.replace("id", String.valueOf(id)));
             

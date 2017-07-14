@@ -49,7 +49,7 @@
     <fx:define>
         <ToggleGroup fx:id="genderToggleGroup"/>
     </fx:define>
-    <RadioButton fx:id="maleButton" text="Male" userData="male" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+    <RadioButton fx:id="maleButton" text="Male" toggleGroup="$genderToggleGroup" userData="male" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
     <RadioButton fx:id="femaleButton" text="Female" toggleGroup="$genderToggleGroup" userData="female" GridPane.columnIndex="4" GridPane.rowIndex="5" />
 
         <!-- Input for birth date of child -->
