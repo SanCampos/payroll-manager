@@ -66,10 +66,10 @@ public class DbSchema {
     }
     
     public static class table_places_of_birth {
-        public static final String name = "places_of_birth";
+        public static final String name = "locations";
         
         public static class cols {
-            public static final String birthPlace = "birthPlace";
+            public static final String location = "location";
             public static final String id = "id";
         }
     }
