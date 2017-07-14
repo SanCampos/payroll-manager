@@ -11,7 +11,6 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import main.java.customNodes.PersistentPromptTextField?>
 
@@ -39,50 +38,57 @@
     <PersistentPromptTextField fx:id="lastNameInput" promptText="dela Cruz" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" />
 
     <!-- Input for nickname of child -->
-    <Label text="Nickname" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-    <Label text="(optional)" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+    <Label text="Nickname (optional)" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
     <PersistentPromptTextField fx:id="nickNameInput" promptText="&quot;John&quot;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+
+    <fx:define>
+        <ToggleGroup fx:id="genderToggleGroup" />
+    </fx:define>
 
     <!-- Input for gender of child -->
     <Label text="Gender" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-
-    <fx:define>
-        <ToggleGroup fx:id="genderToggleGroup"/>
-    </fx:define>
-    <RadioButton fx:id="maleButton" text="Male" toggleGroup="$genderToggleGroup" userData="male" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+    <RadioButton fx:id="maleButton" text="Male" userData="male" toggleGroup="$genderToggleGroup" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
     <RadioButton fx:id="femaleButton" text="Female" toggleGroup="$genderToggleGroup" userData="female" GridPane.columnIndex="4" GridPane.rowIndex="5" />
 
         <!-- Input for birth date of child -->
     <Label text="Birthdate" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-    <Label fx:id="birthDateWarning" styleClass="notify-empty" text="This form is empty!" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-    <DatePicker fx:id="birthDateInput" prefHeight="25.0" prefWidth="231.0" promptText="Format - 06/12/2000" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+    <Label fx:id="birthDateWarning" styleClass="notify-empty" text="Date forms are empty" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+    <DatePicker fx:id="birthDateInput" prefHeight="25.0" prefWidth="231.0" promptText="Format - 06/12/2000" styleClass="date-input" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
 
         <!-- Input for place of birth of child -->
     <Label text="Place of birth" GridPane.columnIndex="3" GridPane.rowIndex="6" />
     <Label fx:id="birthPlaceWarning" styleClass="notify-empty" text="This form is empty!" GridPane.columnIndex="4" GridPane.rowIndex="6" />
     <PersistentPromptTextField fx:id="birthPlaceInput" promptText="Negros Occ. Baco..." GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="7" />
 
+    <!-- Input for admission date of child -->
+    <Label text="Date of admission" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+    <Label fx:id="admissionDateWarning" styleClass="notify-empty" text="Date forms are empty" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+    <DatePicker fx:id="admissionDateInput" prefHeight="25.0" prefWidth="230.0" promptText="Format - 06/12/2000" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9" />
 
+    <!-- Input for referrer of child -->
+    <Label text="Referred by: " GridPane.columnIndex="3" GridPane.rowIndex="8" />
+    <Label fx:id="referrerWarning" styleClass="notify-empty" text="This form is empty" GridPane.columnIndex="4" GridPane.rowIndex="8" />
+    <PersistentPromptTextField fx:id="referrerInput" promptText="DSWD" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="9" />
 
     <!-- Input for child description -->
-    <Label prefWidth="66.0" text="Description" GridPane.columnIndex="0" GridPane.rowIndex="13" />
-    <Label fx:id="childDescWarning" styleClass="notify-empty" text="This form is empty!" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="13" />
-    <TextArea fx:id="childDescInput" prefHeight="391.0" prefWidth="432.0" wrapText="true" GridPane.columnIndex="0" GridPane.columnSpan="5" GridPane.rowIndex="14" />
+    <Label prefWidth="66.0" text="Description" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+    <Label fx:id="childDescWarning" styleClass="notify-empty" text="This form is empty!" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="10" />
+    <TextArea fx:id="childDescInput" prefHeight="391.0" prefWidth="432.0" wrapText="true" GridPane.columnIndex="0" GridPane.columnSpan="5" GridPane.rowIndex="11" />
 
         <!-- Submit and cancel buttons -->
-    <Button fx:id="submitBtn" onAction="#submit" prefHeight="25.0" prefWidth="75.0" text="Submit" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="15" />
-    <Button fx:id="cancelBtn" onAction="#cancel" prefHeight="25.0" prefWidth="76.0" text="Cancel" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="15" />
+    <Button fx:id="submitBtn" onAction="#submit" prefHeight="25.0" prefWidth="75.0" text="Submit" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="12" />
+    <Button fx:id="cancelBtn" onAction="#cancel" prefHeight="25.0" prefWidth="76.0" text="Cancel" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="12" />
 
     <!-- Warning text for incomplete form  -->
-    <Label fx:id="warnEmptyLabel" styleClass="notify-empty" text="You have incomplete fields!" GridPane.columnIndex="2" GridPane.rowIndex="15" />
+    <Label fx:id="warnEmptyLabel" styleClass="notify-empty" text="You have incomplete fields!" GridPane.columnIndex="2" GridPane.rowIndex="12" />
 
     <stylesheets>
         <URL value="@/css/childForm.css" />
     </stylesheets>
    <columnConstraints>
       <ColumnConstraints maxWidth="101.0" minWidth="70.0" prefWidth="94.0" />
-      <ColumnConstraints maxWidth="82.0" minWidth="51.0" prefWidth="61.0" />
-      <ColumnConstraints maxWidth="165.0" minWidth="147.0" prefWidth="158.0" />
+      <ColumnConstraints maxWidth="116.0" minWidth="51.0" prefWidth="110.0" />
+      <ColumnConstraints maxWidth="165.0" minWidth="109.0" prefWidth="115.0" />
       <ColumnConstraints />
       <ColumnConstraints />
    </columnConstraints>

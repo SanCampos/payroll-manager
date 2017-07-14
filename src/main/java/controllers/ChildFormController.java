@@ -93,16 +93,25 @@ public class ChildFormController {
         //Go mark each incomplete form
         for (Node n : textFields) {
             TextInputControl text = ((TextInputControl) n);
-            String labelID = text.getId() == null ? "#birthDateWarning" : "#" + text.getId().replace("Input", "Warning");
-    
+            
+            String[] ids;
+            
+            if (text.getId() == null) {
+                ids = new String[] {"birthDateWarning", "admissionDateWarning"};
+            } else {
+                ids = new String[] {text.getId().replace("Input", "Warning")};
+            }
+            
             //Manipulate warning label if current node is NOT nickname textfield
-            if (!labelID.contains("nick")) {
-                Label warning = ((Label) childImage.getParent().lookup(labelID));
-                if (text.getText().isEmpty()) {
-                    warning.setStyle("-fx-text-fill: red");
-                    incomplete = true;
-                } else {
-                    warning.setStyle("-fx-text-fill: transparent ");
+            if (!ids[0].contains("nick")) {
+                for (int i = 0; i < ids.length; i++) {
+                    Label warning = ((Label) childImage.getParent().lookup("#" + ids[i]));
+                    if (text.getText().isEmpty()) {
+                        warning.setStyle("-fx-text-fill: red");
+                        incomplete = true;
+                    } else {
+                        warning.setStyle("-fx-text-fill: transparent ");
+                    }
                 }
             }
         }

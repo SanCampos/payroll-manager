@@ -157,7 +157,7 @@ public class Database {
     }
 
     private int getBirthPlaceID(String birthPlace) throws SQLException {
-        return toIntExact((long) getSingleRowData(table_places_of_birth.name, table_places_of_birth.cols.birthPlace, birthPlace, table_places_of_birth.cols.id));
+        return toIntExact((long) getSingleRowData(table_places_of_birth.name, table_places_of_birth.cols.location, birthPlace, table_places_of_birth.cols.id));
     }
 
     public String getAvatarPathOf(int id, String tableName) throws SQLException {
@@ -194,7 +194,7 @@ public class Database {
     }
 
     private void addNewBirthPlace(String birthPlace) throws SQLException {
-        String addBirthPlace = String.format("INSERT INTO %s (%s) VALUES (?)", table_places_of_birth.name, table_places_of_birth.cols.birthPlace);
+        String addBirthPlace = String.format("INSERT INTO %s (%s) VALUES (?)", table_places_of_birth.name, table_places_of_birth.cols.location);
 
         PreparedStatement statement = con.prepareStatement(addBirthPlace);
         statement.setString(1, birthPlace);
