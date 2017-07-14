@@ -65,7 +65,7 @@ public class DbSchema {
         }
     }
     
-    public static class table_places_of_birth {
+    public static class table_locations {
         public static final String name = "locations";
         
         public static class cols {
