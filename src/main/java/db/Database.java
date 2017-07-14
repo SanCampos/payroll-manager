@@ -126,7 +126,7 @@ public class Database {
     }
     
     private PreparedStatement stmntWithAllChildProperties(String sql, String fName, String lName, String nickname, String birthPlace, LocalDate birthDate, String description, String gender) throws SQLException {
-        int birthPlaceID = getBirthPlaceID(birthPlace);
+        int birthPlaceID = getLocationID(birthPlace);
         int genderID = getGenderID(gender);
         
         PreparedStatement statement = con.prepareStatement(sql);
@@ -143,7 +143,7 @@ public class Database {
 
     public boolean addNewChild(String fName, String lName, String nickname, String birthPlace, LocalDate age, String description, String gender) throws SQLException {
         //Add new birthPlace record if doesn't  exist
-        addNewBirthPlace(birthPlace);
+        addNewLocation(birthPlace);
         String insertChild = String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, STR_TO_DATE(?, '%%Y-%%m-%%d'), ?, ?)",
                 table_children.name, table_children.cols.fname, table_children.cols.lname, table_children.cols.nickname, table_children.cols.place_of_birth, table_children.cols.birth_date,
                 table_children.cols.description, table_children.cols.gender);
@@ -156,8 +156,8 @@ public class Database {
         return (int) getSingleRowData(table_genders.name, table_genders.cols.gender, gender, table_genders.cols.id);
     }
 
-    private int getBirthPlaceID(String birthPlace) throws SQLException {
-        return toIntExact((long) getSingleRowData(table_places_of_birth.name, table_places_of_birth.cols.location, birthPlace, table_places_of_birth.cols.id));
+    private int getLocationID(String location) throws SQLException {
+        return toIntExact((long) getSingleRowData(table_locations.name, table_locations.cols.location, location, table_locations.cols.id));
     }
 
     public String getAvatarPathOf(int id, String tableName) throws SQLException {
@@ -193,11 +193,11 @@ public class Database {
         return statement.executeQuery();
     }
 
-    private void addNewBirthPlace(String birthPlace) throws SQLException {
-        String addBirthPlace = String.format("INSERT INTO %s (%s) VALUES (?)", table_places_of_birth.name, table_places_of_birth.cols.location);
+    private void addNewLocation(String location) throws SQLException {
+        String addBirthPlace = String.format("INSERT INTO %s (%s) VALUES (?)", table_locations.name, table_locations.cols.location);
 
         PreparedStatement statement = con.prepareStatement(addBirthPlace);
-        statement.setString(1, birthPlace);
+        statement.setString(1, location);
 
         statement.execute();
     }
