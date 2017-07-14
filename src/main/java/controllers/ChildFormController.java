@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
+import javafx.scene.control.ComboBox;
 import main.java.customNodes.PersistentPromptTextField;
 import main.java.db.Database;
 import main.java.db.DbSchema.*;
@@ -41,6 +42,9 @@ public class ChildFormController {
     private PersistentPromptTextField birthPlaceInput;
     
     @FXML
+    private ComboBox childState;
+    
+    @FXML
     private TextArea childDescInput;
     
     //TWO SCOOPS TWO GENDERS TWO TERMS
@@ -55,6 +59,7 @@ public class ChildFormController {
     
     @FXML
     private ImageView childImage;
+    
     @FXML
     private Label imageName;
 
@@ -67,6 +72,7 @@ public class ChildFormController {
         //Init gender choice buttons and scene ref
         //OMG MY PATRIARCHY
         genderToggleGroup.getToggles().get(0).setSelected(true);
+        childState.getSelectionModel().selectFirst();
         
         //Init default image for child
         File defaultFile = new File("src\\main\\resources\\imgs\\default-avatar.png");
@@ -128,7 +134,7 @@ public class ChildFormController {
         String nickName = nickNameInput.getText();
         String place_of_birth = birthPlaceInput.getText();
         String childDesc = childDescInput.getText();
-        String gender = ((String) genderToggleGroup.getSelectedToggle().getUserData());
+        int gender = Integer.parseInt((String)  genderToggleGroup.getSelectedToggle().getUserData());
     
         //Get child's birthdate
         LocalDate birthDate = birthDateInput.getValue();

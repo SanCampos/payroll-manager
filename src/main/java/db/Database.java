@@ -110,7 +110,7 @@ public class Database {
         return false;
     }
     
-    public int getIDof(String fName, String lName, String nickname, String birthPlace, LocalDate birthDate, String description, String gender) throws SQLException {
+    public int getIDof(String fName, String lName, String nickname, String birthPlace, LocalDate birthDate, String description, int gender) throws SQLException {
         String insertChild = String.format("SELECT * FROM %s WHERE %s = ? AND %s = ? AND %s = ? AND %s = ? AND %s = STR_TO_DATE(?, '%%Y-%%m-%%d') AND %s = ? AND %s = ?",
                 table_children.name, table_children.cols.fname, table_children.cols.lname, table_children.cols.nickname, table_children.cols.place_of_birth, table_children.cols.birth_date,
                 table_children.cols.description, table_children.cols.gender);
@@ -125,9 +125,8 @@ public class Database {
         return child.getInt(table_children.cols.id);
     }
     
-    private PreparedStatement stmntWithAllChildProperties(String sql, String fName, String lName, String nickname, String birthPlace, LocalDate birthDate, String description, String gender) throws SQLException {
+    private PreparedStatement stmntWithAllChildProperties(String sql, String fName, String lName, String nickname, String birthPlace, LocalDate birthDate, String description, int gender) throws SQLException {
         int birthPlaceID = getLocationID(birthPlace);
-        int genderID = getGenderID(gender);
         
         PreparedStatement statement = con.prepareStatement(sql);
         statement.setString(1, fName);
@@ -136,12 +135,12 @@ public class Database {
         statement.setInt(4, birthPlaceID);
         statement.setString(5, birthDate.toString());
         statement.setString(6, description);
-        statement.setInt(7, genderID);
+        statement.setInt(7, gender);
         
         return statement;
     }
 
-    public boolean addNewChild(String fName, String lName, String nickname, String birthPlace, LocalDate age, String description, String gender) throws SQLException {
+    public boolean addNewChild(String fName, String lName, String nickname, String birthPlace, LocalDate age, String description, int gender) throws SQLException {
         //Add new birthPlace record if doesn't  exist
         addNewLocation(birthPlace);
         String insertChild = String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, STR_TO_DATE(?, '%%Y-%%m-%%d'), ?, ?)",

@@ -32,7 +32,7 @@ public class NodeUtils {
                 }
             }
             
-            if (classMatches || superclasses == null)
+            if (classMatches)
                 nodes.add(n);
             
             //Dives into sub-parents to get their nodes
