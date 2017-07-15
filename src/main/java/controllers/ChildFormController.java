@@ -33,6 +33,11 @@ import java.util.List;
 public class ChildFormController {
     
     @FXML
+    private ImageView childImage;
+    @FXML
+    private Label imageName;
+    
+    @FXML
     private PersistentPromptTextField firstNameInput;
     @FXML
     private PersistentPromptTextField lastNameInput;
@@ -40,28 +45,26 @@ public class ChildFormController {
     private PersistentPromptTextField nickNameInput;
     @FXML
     private PersistentPromptTextField birthPlaceInput;
+    @FXML
+    private PersistentPromptTextField referrerInput;
     
     @FXML
-    private ComboBox childState;
+    private DatePicker birthDateInput;
+    @FXML
+    private DatePicker admissionDateInput;
+    
     
     @FXML
-    private TextArea childDescInput;
+    private ComboBox childStatus;
     
     //TWO SCOOPS TWO GENDERS TWO TERMS
     @FXML
     private ToggleGroup genderToggleGroup;
     
     @FXML
-    private DatePicker birthDateInput;
-    
+    private TextArea childDescInput;
     @FXML
     private Label warnEmptyLabel;
-    
-    @FXML
-    private ImageView childImage;
-    
-    @FXML
-    private Label imageName;
 
     private FileInputStream slctdImgStrm;
 
@@ -72,7 +75,7 @@ public class ChildFormController {
         //Init gender choice buttons and scene ref
         //OMG MY PATRIARCHY
         genderToggleGroup.getToggles().get(0).setSelected(true);
-        childState.getSelectionModel().selectFirst();
+        childStatus.getSelectionModel().selectFirst();
         
         //Init default image for child
         File defaultFile = new File("src\\main\\resources\\imgs\\default-avatar.png");
@@ -128,16 +131,20 @@ public class ChildFormController {
             return;
         }
     
-        //Fetch user input
+        //Fetch first part of user input
         String firstName = firstNameInput.getText();
         String lastName = lastNameInput.getText();
         String nickName = nickNameInput.getText();
         String place_of_birth = birthPlaceInput.getText();
         String childDesc = childDescInput.getText();
+        String referrer = referrerInput.getText();
+        
         int gender = Integer.parseInt((String)  genderToggleGroup.getSelectedToggle().getUserData());
-    
-        //Get child's birthdate
+        int status = childStatus.getSelectionModel().getSelectedIndex();
+        
+        //Get child's birthdate  and admission_date date
         LocalDate birthDate = birthDateInput.getValue();
+        LocalDate admissionDate = admissionDateInput.getValue();
         
         //Fire up db helper and insert new child record
         Database db = new Database();
@@ -149,10 +156,10 @@ public class ChildFormController {
         try {
             //Add record for child and retrieve its id
             db.init();
-            db.addNewChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender);
+            db.addNewChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
            
             //Retrieve id for use in storing img
-            id = db.getIDof(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender);
+            id = db.getIDof(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
             if (id == -89) throw new SQLException();
             File strgReg = new File(pathRef.replace("id", String.valueOf(id)));
             

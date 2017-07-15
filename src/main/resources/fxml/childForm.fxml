@@ -63,7 +63,7 @@
     <Label fx:id="birthPlaceWarning" styleClass="notify-empty" text="This form is empty!" GridPane.columnIndex="4" GridPane.rowIndex="6" />
     <PersistentPromptTextField fx:id="birthPlaceInput" promptText="Negros Occ. Baco..." GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="7" />
 
-    <!-- Input for admission date of child -->
+    <!-- Input admission_datesion date of child -->
     <Label text="Date of admission" GridPane.columnIndex="1" GridPane.rowIndex="8" />
     <Label fx:id="admissionDateWarning" styleClass="notify-empty" text="Date forms are empty" GridPane.columnIndex="2" GridPane.rowIndex="8" />
     <DatePicker fx:id="admissionDateInput" prefHeight="25.0" prefWidth="230.0" promptText="Format - 06/12/2000" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9" />
@@ -75,13 +75,13 @@
 
     <!--Input for Child Status -->
     <Label text="Status" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-    <ComboBox fx:id="childState" prefHeight="25.0" prefWidth="428.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="11">
+    <ComboBox fx:id="childStatus" prefHeight="25.0" prefWidth="428.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="11">
         <items>
             <FXCollections fx:factory="observableArrayList">
                 <String fx:value="Foundling"/>
                 <String fx:value="Abused"/>
-                <String fx:value="Neglected"/>
                 <String fx:value="No Parents"/>
+                <String fx:value="Neglected"/>
                 <String fx:value="Surrendered"/>
             </FXCollections>
         </items>

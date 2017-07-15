@@ -9,8 +9,6 @@ import java.io.File;
 import java.security.SecureRandom;
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 import main.java.db.DbSchema.*;
 import org.mindrot.jbcrypt.BCrypt;
@@ -110,12 +108,12 @@ public class Database {
         return false;
     }
     
-    public int getIDof(String fName, String lName, String nickname, String birthPlace, LocalDate birthDate, String description, int gender) throws SQLException {
+    public int getIDof(String fName, String lName, String nickname, String birthPlace, LocalDate birthDate, String description, int gender, String referrer, int status, LocalDate admissionDate) throws SQLException {
         String insertChild = String.format("SELECT * FROM %s WHERE %s = ? AND %s = ? AND %s = ? AND %s = ? AND %s = STR_TO_DATE(?, '%%Y-%%m-%%d') AND %s = ? AND %s = ?",
                 table_children.name, table_children.cols.fname, table_children.cols.lname, table_children.cols.nickname, table_children.cols.place_of_birth, table_children.cols.birth_date,
                 table_children.cols.description, table_children.cols.gender);
         
-        PreparedStatement statement = stmntWithAllChildProperties(insertChild, fName, lName, nickname, birthPlace, birthDate, description, gender);
+        PreparedStatement statement = stmntWithAllChildProperties(insertChild, fName, lName, nickname, birthPlace, birthDate, description, gender, referrer, status, admissionDate);
         ResultSet child = statement.executeQuery();
         
         if (!child.next()) {
@@ -125,7 +123,7 @@ public class Database {
         return child.getInt(table_children.cols.id);
     }
     
-    private PreparedStatement stmntWithAllChildProperties(String sql, String fName, String lName, String nickname, String birthPlace, LocalDate birthDate, String description, int gender) throws SQLException {
+    private PreparedStatement stmntWithAllChildProperties(String sql, String fName, String lName, String nickname, String birthPlace, LocalDate birthDate, String description, int gender, String referrer, int status, LocalDate admissionDate) throws SQLException {
         int birthPlaceID = getLocationID(birthPlace);
         
         PreparedStatement statement = con.prepareStatement(sql);
@@ -140,14 +138,14 @@ public class Database {
         return statement;
     }
 
-    public boolean addNewChild(String fName, String lName, String nickname, String birthPlace, LocalDate age, String description, int gender) throws SQLException {
+    public boolean addNewChild(String fName, String lName, String nickname, String birthPlace, LocalDate age, String description, int gender, String referrer, int status, LocalDate admissionDate) throws SQLException {
         //Add new birthPlace record if doesn't  exist
         addNewLocation(birthPlace);
-        String insertChild = String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, STR_TO_DATE(?, '%%Y-%%m-%%d'), ?, ?)",
+        String insertChild = String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, STR_TO_DATE(?, '%%Y-%%m-%%d'), ?, ?, ?, ?, ?)",
                 table_children.name, table_children.cols.fname, table_children.cols.lname, table_children.cols.nickname, table_children.cols.place_of_birth, table_children.cols.birth_date,
-                table_children.cols.description, table_children.cols.gender);
+                table_children.cols.description, table_children.cols.gender, table_children.cols.referrer, table_children.cols.status, table_children.cols.admission_date);
 
-        PreparedStatement statement = stmntWithAllChildProperties(insertChild, fName, lName, nickname, birthPlace, age, description, gender);
+        PreparedStatement statement = stmntWithAllChildProperties(insertChild, fName, lName, nickname, birthPlace, age, description, gender, referrer, status, admissionDate);
         return statement.executeUpdate() != 0;
     }
 

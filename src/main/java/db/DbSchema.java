@@ -62,6 +62,9 @@ public class DbSchema {
             public static final String id = "id";
             public static final String description = "description";
             public static final String gender = "gender";
+            public static final String referrer = "referrer";
+            public static final String status = "status";
+            public static final String admission_date = "admission_date";
         }
     }
     
