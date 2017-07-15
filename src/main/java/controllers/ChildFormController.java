@@ -139,7 +139,7 @@ public class ChildFormController {
         String childDesc = childDescInput.getText();
         String referrer = referrerInput.getText();
         
-        int gender = Integer.parseInt((String)  genderToggleGroup.getSelectedToggle().getUserData());
+        int gender = genderToggleGroup.getToggles().indexOf(genderToggleGroup.getSelectedToggle());
         int status = childStatus.getSelectionModel().getSelectedIndex();
         
         //Get child's birthdate  and admission_date date
@@ -159,7 +159,7 @@ public class ChildFormController {
             db.addNewChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
            
             //Retrieve id for use in storing img
-            id = db.getIDof(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
+            id = db.getChildIDOf(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
             if (id == -89) throw new SQLException();
             File strgReg = new File(pathRef.replace("id", String.valueOf(id)));
             
@@ -174,13 +174,13 @@ public class ChildFormController {
         } catch (SQLException e) {
             e.printStackTrace();
             DialogUtils.displayError("Error saving child data", "There was an error in saving all child data. Please try again!");
+            return;
         } catch (IOException e) {
             e.printStackTrace();
             DialogUtils.displayError("Error saving image", "There was an error saving the image of the child. " +
                     "All other data besides the image has been saved. Please attempt to add the child image in its own page.");
-        } finally {
-            firstNameInput.getScene().getWindow().hide();
         }
+        firstNameInput.getScene().getWindow().hide();
     }
     
     @FXML

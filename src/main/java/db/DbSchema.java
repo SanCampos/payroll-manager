@@ -62,7 +62,7 @@ public class DbSchema {
             public static final String id = "id";
             public static final String description = "description";
             public static final String gender = "gender";
-            public static final String referrer = "referrer";
+            public static final String referrer_id = "referrer_id";
             public static final String status = "status";
             public static final String admission_date = "admission_date";
         }
@@ -73,6 +73,15 @@ public class DbSchema {
         
         public static class cols {
             public static final String location = "location";
+            public static final String id = "id";
+        }
+    }
+    
+    public static class table_referrers {
+        public static final String name = "referrers";
+        
+        public static class cols {
+            public static final String referrer = "referrer";
             public static final String id = "id";
         }
     }
