@@ -1,9 +1,13 @@
 package main.java.utils;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.management.BufferPoolMXBean;
 import java.util.Optional;
 
@@ -55,5 +59,35 @@ public class DialogUtils {
         Optional<ButtonType> result = confirmDialog.showAndWait();
         
         return result.get() == ButtonType.OK;
+    }
+    
+    public static void displayExceptionError(Exception exception, String message) {
+        Alert errorDialog = new Alert(Alert.AlertType.ERROR);
+        errorDialog.setTitle("Error");
+        errorDialog.setHeaderText("Undefined error has occurred!");
+        errorDialog.setContentText(message);
+        
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        exception.printStackTrace(pw);
+        String stackTrace = sw.toString();
+        
+        GridPane exceptionInfo = new GridPane();
+    
+        Text text = new Text("Error info");
+        
+        TextArea textArea = new TextArea(stackTrace);
+    
+        textArea.setStyle("-fx-text-fill: red");
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+    
+        exceptionInfo.add(text, 0,  0);
+        exceptionInfo.add(textArea, 0, 1);
+        
+        errorDialog.getDialogPane().setExpandableContent(exceptionInfo);
+        errorDialog.showAndWait();
     }
 }

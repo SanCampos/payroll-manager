@@ -53,6 +53,8 @@ public class ChildFormController {
     @FXML
     private DatePicker admissionDateInput;
     
+    @FXML
+    private Button submitBtn;
     
     @FXML
     private ComboBox childStatus;
@@ -80,6 +82,37 @@ public class ChildFormController {
         //Init default image for child
         File defaultFile = new File("src\\main\\resources\\imgs\\default-avatar.png");
         updateChosenImage(defaultFile);
+        
+        //Init submit/next btn
+        initSubmitBtn();
+        
+        childStatus.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(observable);
+            System.out.println(newValue);
+                if (newValue.intValue() == 2) {
+                    initNextBtn();
+                } else if (newValue.intValue() != 2 && oldValue.intValue() == 2) {
+                    initSubmitBtn();
+                }
+        });
+    }
+    
+    private void initNextBtn() {
+        submitBtn.setText("Next");
+        submitBtn.getStyleClass().remove("submit");
+        submitBtn.getStyleClass().add("default");
+        submitBtn.setOnAction(event -> initParentForm());
+    }
+    
+    private void initParentForm() {
+    
+    }
+    
+    private void initSubmitBtn() {
+        submitBtn.setText("Submit");
+        submitBtn.getStyleClass().remove("default");
+        submitBtn.getStyleClass().add("submit");
+        submitBtn.setOnAction(event -> submit());
     }
     
     @FXML
@@ -87,48 +120,54 @@ public class ChildFormController {
         firstNameInput.getScene().getWindow().hide();
     }
     
-    @FXML
-    public void submit(ActionEvent actionEvent) throws ClassNotFoundException {
+    
+    public void submit() {
         //Clear warning label
         warnEmptyLabel.setStyle("-fx-text-fill: transparent");
-    
+     
         //Indicates that form is incomplete
         boolean incomplete = false;
     
         //Fetches textfield nodes from root
-        List<Node> textFields = NodeUtils.getAllNodesOf(childImage.getParent(), new ArrayList<>(),
-                "javafx.scene.control.TextInputControl");
+        try {
+            List<Node> textFields = NodeUtils.getAllNodesOf(childImage.getParent(), new ArrayList<>(),
+                    "javafx.scene.control.TextInputControl");
     
-        //Go mark each incomplete form
-        for (Node n : textFields) {
-            TextInputControl text = ((TextInputControl) n);
-            
-            String[] ids;
-            
-            if (text.getId() == null) {
-                ids = new String[] {"birthDateWarning", "admissionDateWarning"};
-            } else {
-                ids = new String[] {text.getId().replace("Input", "Warning")};
-            }
-            
-            //Manipulate warning label if current node is NOT nickname textfield
-            if (!ids[0].contains("nick")) {
-                for (int i = 0; i < ids.length; i++) {
-                    Label warning = ((Label) childImage.getParent().lookup("#" + ids[i]));
-                    if (text.getText().isEmpty()) {
-                        warning.setStyle("-fx-text-fill: red");
-                        incomplete = true;
-                    } else {
-                        warning.setStyle("-fx-text-fill: transparent ");
+            //Go mark each incomplete form
+            for (Node n : textFields) {
+                TextInputControl text = ((TextInputControl) n);
+        
+                String[] ids;
+        
+                if (text.getId() == null) {
+                    ids = new String[] {"birthDateWarning", "admissionDateWarning"};
+                } else {
+                    ids = new String[] {text.getId().replace("Input", "Warning")};
+                }
+        
+                //Manipulate warning label if current node is NOT nickname textfield
+                if (!ids[0].contains("nick")) {
+                    for (int i = 0; i < ids.length; i++) {
+                        Label warning = ((Label) childImage.getParent().lookup("#" + ids[i]));
+                        if (text.getText().isEmpty()) {
+                            warning.setStyle("-fx-text-fill: red");
+                            incomplete = true;
+                        } else {
+                            warning.setStyle("-fx-text-fill: transparent ");
+                        }
                     }
                 }
             }
-        }
     
-        //Notify user that form is incomplete
-        if (incomplete) {
-            warnEmptyLabel.setStyle("-fx-text-fill: red");
-            return;
+            //Notify user that form is incomplete
+            if (incomplete) {
+                warnEmptyLabel.setStyle("-fx-text-fill: red");
+                return;
+            }
+            
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            DialogUtils.displayExceptionError(e, "An error has occurred! Please contact the developer for assistance!");
         }
     
         //Fetch first part of user input

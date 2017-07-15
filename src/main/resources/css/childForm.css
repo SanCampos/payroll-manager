@@ -5,3 +5,21 @@
 .notify-empty {
     -fx-text-fill: transparent;
 }
+
+.submit {
+    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, rgb(49, 191,  234);
+}
+
+.submit:focused {
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: rgb(66, 134, 244);
+}
+
+.default {
+     -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
+}
+
+.default:focused {
+    -fx-color: -fx-hover-base;
+}

@@ -1,6 +1,7 @@
 package main.java;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -9,7 +10,10 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import main.java.db.Database;
 import main.java.models.Child;
+import main.java.utils.DialogUtils;
 
+import java.io.FileNotFoundException;
+import java.nio.file.FileAlreadyExistsException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;

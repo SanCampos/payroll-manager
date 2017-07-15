@@ -93,7 +93,7 @@
     <TextArea fx:id="childDescInput" prefHeight="391.0" prefWidth="432.0" wrapText="true" GridPane.columnIndex="0" GridPane.columnSpan="5" GridPane.rowIndex="13" />
 
         <!-- Submit and cancel buttons -->
-    <Button fx:id="submitBtn" onAction="#submit" prefHeight="25.0" prefWidth="75.0" text="Submit" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="14" />
+    <Button fx:id="submitBtn" prefHeight="25.0" prefWidth="75.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="14" />
     <Button fx:id="cancelBtn" onAction="#cancel" prefHeight="25.0" prefWidth="76.0" text="Cancel" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="14" />
 
     <!-- Warning text for incomplete form  -->
