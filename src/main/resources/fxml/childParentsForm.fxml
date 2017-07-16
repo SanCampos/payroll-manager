@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import main.java.customNodes.PersistentPromptTextField?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.childParentsController">
+
+    <Label text="Parental information" AnchorPane.leftAnchor="12" AnchorPane.topAnchor="12" />
+    <Label text="Mother" AnchorPane.leftAnchor="37" AnchorPane.topAnchor="35" />
+
+    <Label text="First Name: " AnchorPane.leftAnchor="55" AnchorPane.topAnchor="62" />
+    <Label text="Last Name: " AnchorPane.leftAnchor="55" AnchorPane.topAnchor="102" />
+    <Label text="Current address: " AnchorPane.leftAnchor="28" AnchorPane.topAnchor="142" />
+    <Label text="Contact no: " AnchorPane.leftAnchor="55" AnchorPane.topAnchor="182" />
+
+    <PersistentPromptTextField prefHeight="25.0" prefWidth="351.0" promptText="Johnavel" AnchorPane.leftAnchor="120" AnchorPane.topAnchor="59" />
+    <PersistentPromptTextField prefHeight="25.0" prefWidth="351.0" promptText="dela Cruz" AnchorPane.leftAnchor="120" AnchorPane.topAnchor="99" />
+    <PersistentPromptTextField prefHeight="25.0" prefWidth="351.0" promptText="House# 69, Cedar St, Bacolod, Negros Occidental, Philippines" AnchorPane.leftAnchor="120" AnchorPane.topAnchor="139" />
+    <PersistentPromptTextField prefHeight="25.0" prefWidth="351.0" promptText="0969420661" AnchorPane.leftAnchor="120" AnchorPane.topAnchor="179"/>
+
+
+</AnchorPane>
