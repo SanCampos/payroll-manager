@@ -11,8 +11,10 @@ import javafx.scene.control.TextField;
 public class PersistentPromptTextField extends TextField {
 
     public PersistentPromptTextField() {
+        String cssPath = this.getClass().getResource("/css/persistent-prompt.css").toExternalForm();
+        getStylesheets().add(cssPath);
         getStyleClass().add("input-prompt");
-
+    
         textProperty().addListener(observable -> refreshPromptText());
     }
 
