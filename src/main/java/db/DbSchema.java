@@ -94,4 +94,34 @@ public class DbSchema {
             public static final String id =  "id";
         }
     }
+    
+    public static class phone_numbers {
+         public static final String name = "phone_numbers";
+         
+         public static class cols {
+             public static final String id = "id";
+             public static final String number = "number";
+         }
+    }
+    
+    public static class parents {
+         public static final String name = "parents";
+         
+         public static class cols {
+             public static final String id = "id";
+             public static final String first_name = "first_name";
+             public static final String last_name = "last_name";
+             public static final String phone_number_id = "phone_number_id";
+             public static final String location_id = "location_id";
+         }
+    }
+    
+    public static class parent_child_relationships {
+         public static final String name = "parent_child_relationships";
+         
+         public static class cols {
+             public static final String parent_id = "parent_id";
+             public static final String child_id  = "child_id";
+         }
+    }
 }
