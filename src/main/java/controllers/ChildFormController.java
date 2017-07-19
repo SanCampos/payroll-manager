@@ -2,12 +2,15 @@ package main.java.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.scene.control.ComboBox;
+import javafx.stage.Stage;
 import main.java.customNodes.PersistentPromptTextField;
 import main.java.db.Database;
 import main.java.db.DbSchema.*;
@@ -30,7 +33,7 @@ import java.util.List;
 /**
  * Created by Santi on 6/29/2017.
  */
-public class ChildFormController {
+public class ChildFormController extends FormHelper {
     
     @FXML
     private ImageView childImage;
@@ -72,6 +75,10 @@ public class ChildFormController {
 
     private String pathRef;
     
+    private Parent nextParent;
+    
+    private fjsdakljafdf childParentsController;
+    
     @FXML
     public void initialize() throws FileNotFoundException {
         //Init gender choice buttons and scene ref
@@ -90,9 +97,9 @@ public class ChildFormController {
             System.out.println(observable);
             System.out.println(newValue);
                 if (newValue.intValue() == 2) {
-                    initNextBtn();
-                } else if (newValue.intValue() != 2 && oldValue.intValue() == 2) {
                     initSubmitBtn();
+                } else if (newValue.intValue() != 2 && oldValue.intValue() == 2) {
+                    initNextBtn();
                 }
         });
     }
@@ -105,7 +112,19 @@ public class ChildFormController {
     }
     
     private void initParentForm() {
-    
+        try {
+            if (nextParent ==  null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/childParentsForm.fxml"));
+                Parent root = loader.load();
+                childParentsController = loader.getController();
+                setNextParent(root);
+            }
+            submitBtn.getScene().setRoot(nextParent);
+            childParentsController.setPrevRoot(submitBtn.getParent());
+        } catch (IOException e) {
+            e.printStackTrace();
+            DialogUtils.displayExceptionError(e, "Severe error!");
+        }
     }
     
     private void initSubmitBtn() {
@@ -117,7 +136,7 @@ public class ChildFormController {
     
     @FXML
     public void cancel(ActionEvent actionEvent) {
-        firstNameInput.getScene().getWindow().hide();
+        FormHelper.cancel(actionEvent, ((Stage) submitBtn.getScene().getWindow()));
     }
     
     
@@ -243,6 +262,10 @@ public class ChildFormController {
         imageName.setText(chosen.getName());
         pathRef = GlobalInfo.getChildrenImgDir() + "\\"+ chosen.getName();
         slctdImgStrm = new FileInputStream(chosen);
+    }
+    
+    public void setNextParent(Parent nextParent) {
+        this.nextParent = nextParent;
     }
 }
 
