@@ -1,11 +1,15 @@
 package main.java.controllers;
 
 import javafx.application.Platform;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.BooleanExpression;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputControl;
@@ -38,8 +42,11 @@ public class ChildParentsController extends FormHelper {
     @FXML private CheckBox noFatherCheckBox;
     @FXML private CheckBox noMotherCheckBox;
     
-    private List<Node> nodeList;
+    @FXML private Button submit;
     
+    private BooleanBinding bothParentsDisabled;
+    
+    private List<Node> nodeList;
     
     private Parent prevRoot;
     
@@ -58,6 +65,12 @@ public class ChildParentsController extends FormHelper {
         });
         noFatherCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> setFormTo("father", newValue)));
         noMotherCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> setFormTo("mother", newValue)));
+    
+        bothParentsDisabled = noFatherCheckBox.selectedProperty().and(noMotherCheckBox.selectedProperty());
+        bothParentsDisabled.addListener(((observable, oldValue, newValue) -> {
+            //add warning message here
+            submit.setDisable(observable.getValue());
+        }));
     }
     
     
