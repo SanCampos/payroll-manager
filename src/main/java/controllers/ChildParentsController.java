@@ -1,13 +1,19 @@
 package main.java.controllers;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextInputControl;
 import javafx.stage.Stage;
 import main.java.customNodes.PersistentPromptTextField;
+import main.java.utils.DialogUtils;
 import main.java.utils.NodeUtils;
 
+import javax.xml.soap.Text;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,26 +34,19 @@ public class ChildParentsController extends FormHelper {
     @FXML private PersistentPromptTextField fatherAddressInput;
     @FXML private PersistentPromptTextField fatherPhoneNumberInput;
     
+    
+    //For easier access-- im low on time  ok
+    PersistentPromptTextField[] motherInputs = new PersistentPromptTextField[]{motherPhoneNumberInput, motherLastNameInput, motherFirstNameInput, motherAddressInput};
+    PersistentPromptTextField[] fatherInputs = new PersistentPromptTextField[]{fatherAddressInput, fatherFirstNameInput, fatherLastNameInput, fatherPhoneNumberInput};
+    
+    
     private Parent prevRoot;
     
     private Scene thisScene;
     //For form validation
-    private List inputList;
     
-    @FXML
-    public void initialize() throws ClassNotFoundException {
-        inputList = NodeUtils.getAllNodesOf(motherAddressInput.getParent(), new ArrayList<>(), "javafx.scene.control.TextInputControl");
-    }
+    private boolean formIsInvalid() {
     
-    public void setPrevRoot(Parent prevRoot)  {
-        this.prevRoot = prevRoot;
-    }
-    
-    public void goToPrevRoot(ActionEvent actionEvent) {
-        motherAddressInput.getScene().setRoot(prevRoot);
-    }
-    
-    public void submit(ActionEvent actionEvent) {
     }
     
     public void cancel(ActionEvent actionEvent) {

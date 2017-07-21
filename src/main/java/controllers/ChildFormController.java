@@ -112,6 +112,9 @@ public class ChildFormController extends FormHelper {
     }
     
     private void initParentForm() {
+        if (formIsIncomplete())
+            return;
+        
         try {
             if (nextParent ==  null) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/childParentsForm.fxml"));
@@ -141,54 +144,9 @@ public class ChildFormController extends FormHelper {
     
     
     public void submit() {
-        //Clear warning label
-        warnEmptyLabel.setStyle("-fx-text-fill: transparent");
-     
-        //Indicates that form is incomplete
-        boolean incomplete = false;
-    
-        //Fetches textfield nodes from root
-        try {
-            List<Node> textFields = NodeUtils.getAllNodesOf(childImage.getParent(), new ArrayList<>(),
-                    "javafx.scene.control.TextInputControl");
-    
-            //Go mark each incomplete form
-            for (Node n : textFields) {
-                TextInputControl text = ((TextInputControl) n);
+        if (formIsIncomplete())
+            return;
         
-                String[] ids;
-        
-                if (text.getId() == null) {
-                    ids = new String[] {"birthDateWarning", "admissionDateWarning"};
-                } else {
-                    ids = new String[] {text.getId().replace("Input", "Warning")};
-                }
-        
-                //Manipulate warning label if current node is NOT nickname textfield
-                if (!ids[0].contains("nick")) {
-                    for (int i = 0; i < ids.length; i++) {
-                        Label warning = ((Label) childImage.getParent().lookup("#" + ids[i]));
-                        if (text.getText().isEmpty()) {
-                            warning.setStyle("-fx-text-fill: red");
-                            incomplete = true;
-                        } else {
-                            warning.setStyle("-fx-text-fill: transparent ");
-                        }
-                    }
-                }
-            }
-    
-            //Notify user that form is incomplete
-            if (incomplete) {
-                warnEmptyLabel.setStyle("-fx-text-fill: red");
-                return;
-            }
-            
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            DialogUtils.displayExceptionError(e, "An error has occurred! Please contact the developer for assistance!");
-        }
-    
         //Fetch first part of user input
         String firstName = firstNameInput.getText();
         String lastName = lastNameInput.getText();
@@ -239,6 +197,54 @@ public class ChildFormController extends FormHelper {
                     "All other data besides the image has been saved. Please attempt to add the child image in its own page.");
         }
         firstNameInput.getScene().getWindow().hide();
+    }
+    
+    private boolean formIsIncomplete() {
+        //Clear warning labels
+        warnEmptyLabel.setStyle("-fx-text-fill: transparent");
+        
+        //Indicates that form is incomplete
+        boolean incomplete = false;
+        
+        //Fetches textfield nodes from root
+        try {
+            List<Node> textFields = NodeUtils.getAllNodesOf(childImage.getParent(), new ArrayList<>(),
+                    "javafx.scene.control.TextInputControl");
+    
+            //Go mark each incomplete form
+            for (Node n : textFields) {
+                TextInputControl text = ((TextInputControl) n);
+        
+                String[] ids;
+        
+                if (text.getId() == null) {
+                    ids = new String[] {"birthDateWarning", "admissionDateWarning"};
+                } else {
+                    ids = new String[] {text.getId().replace("Input", "Warning")};
+                }
+        
+                //Manipulate warning label if current node is NOT nickname textfield
+                if (!ids[0].contains("nick")) {
+                    for (int i = 0; i < ids.length; i++) {
+                        Label warning = ((Label) childImage.getParent().lookup("#" + ids[i]));
+                        if (text.getText().isEmpty()) {
+                            warning.setStyle("-fx-text-fill: red");
+                            incomplete = true;
+                        } else {
+                            warning.setStyle("-fx-text-fill: transparent ");
+                        }
+                    }
+                }
+            }
+    
+            //Notify user that form is incomplete
+            if (incomplete) warnEmptyLabel.setStyle("-fx-text-fill: red");
+            
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            DialogUtils.displayExceptionError(e, "An error has occurred! Please contact the developer for assistance!");
+        }
+        return incomplete;
     }
     
     @FXML

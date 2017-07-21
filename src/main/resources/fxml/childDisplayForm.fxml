@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.image.ImageView?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            prefHeight="1000.0" prefWidth="900.0">
+
+    <center>
+        <AnchorPane>
+            <Rectangle AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" x="0" y="0" height="110" width="900" style="-fx-fill: orange"/>
+            <ImageView fx:id="childImage" AnchorPane.leftAnchor="39" AnchorPane.topAnchor="57" fitWidth="99" fitHeight="99"/>
+            <Label fx:id="childName" AnchorPane.leftAnchor="154" AnchorPane.topAnchor="83"/>
+        </AnchorPane>
+    </center>
+
+</BorderPane>
