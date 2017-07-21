@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputControl;
 import javafx.stage.Stage;
@@ -34,10 +35,10 @@ public class ChildParentsController extends FormHelper {
     @FXML private PersistentPromptTextField fatherAddressInput;
     @FXML private PersistentPromptTextField fatherPhoneNumberInput;
     
+    @FXML private CheckBox noFatherCheckBox;
+    @FXML private CheckBox noMotherCheckBox;
     
-    //For easier access-- im low on time  ok
-    PersistentPromptTextField[] motherInputs = new PersistentPromptTextField[]{motherPhoneNumberInput, motherLastNameInput, motherFirstNameInput, motherAddressInput};
-    PersistentPromptTextField[] fatherInputs = new PersistentPromptTextField[]{fatherAddressInput, fatherFirstNameInput, fatherLastNameInput, fatherPhoneNumberInput};
+    private List<Node> nodeList;
     
     
     private Parent prevRoot;
@@ -45,11 +46,47 @@ public class ChildParentsController extends FormHelper {
     private Scene thisScene;
     //For form validation
     
-    private boolean formIsInvalid() {
+    @FXML
+    public void initialize() {
+        Platform.runLater(() -> {
+            try {
+                nodeList = NodeUtils.getAllNodesOf(fatherAddressInput.getParent(), new ArrayList<>(), "javafx.scene.control.TextInputControl");
+            } catch (ClassNotFoundException e) {
+                DialogUtils.displayExceptionError(e, "A severe error has occurred, please contact the developer for assistance");
+                e.printStackTrace();
+            }
+        });
+        noFatherCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> setFormTo("father", newValue)));
+        noMotherCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> setFormTo("mother", newValue)));
+    }
     
+    
+    private void setFormTo(String parent, boolean disableValue) {
+        for (Node n : nodeList) {
+            TextInputControl textInput = ((TextInputControl) n);
+            if (textInput.getId().contains(parent)) {
+                textInput.setDisable(disableValue);
+            }
+        }
+    }
+    
+    private boolean formIsInvalid() {
+        return false;
     }
     
     public void cancel(ActionEvent actionEvent) {
         FormHelper.cancel(actionEvent, ((Stage) motherAddressInput.getScene().getWindow()));
+    }
+    
+    public void setPrevRoot(Parent root) {
+        prevRoot = root;
+    }
+    
+    public void submit() {
+    
+    }
+    
+    public void goToPrevRoot() {
+        motherAddressInput.getScene().setRoot(prevRoot);
     }
 }
