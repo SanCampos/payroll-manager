@@ -2,20 +2,19 @@
 
 <?import java.net.URL?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 <?import main.java.customNodes.PersistentPromptTextField?>
 
-<?import javafx.scene.control.CheckBox?>
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.ChildParentsController">
+<AnchorPane prefHeight="686.0" prefWidth="576.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.ChildParentsController">
 
     <Label styleClass="title" text="Parental information" AnchorPane.leftAnchor="12" AnchorPane.topAnchor="12" />
     <Line fx:id="divider" endX="530" startX="5" AnchorPane.leftAnchor="12" AnchorPane.topAnchor="57" />
 
     <Label styleClass="header" text="Mother" AnchorPane.leftAnchor="37" AnchorPane.topAnchor="61" />
-    <CheckBox fx:id="noMotherCheckBox" text="No mother" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="67"/>
+    <CheckBox fx:id="noMotherCheckBox" text="No mother" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="67" />
 
     <Label text="First Name: " AnchorPane.leftAnchor="55" AnchorPane.topAnchor="104" />
     <Label text="Last Name: " AnchorPane.leftAnchor="55" AnchorPane.topAnchor="144" />
@@ -42,9 +41,9 @@
     <PersistentPromptTextField fx:id="fatherPhoneNumberInput" prefHeight="25.0" prefWidth="351.0" promptText="0969420661" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="413" />
 
 
-    <Button fx:id="submit" onAction="#submit" prefHeight="25" prefWidth="75" text="Submit" AnchorPane.bottomAnchor="10" AnchorPane.rightAnchor="190" />
-    <Button onAction="#goToPrevRoot" prefHeight="25" prefWidth="75" text="Back" AnchorPane.bottomAnchor="10" AnchorPane.rightAnchor="105" />
-    <Button onAction="#cancel" prefHeight="25" prefWidth="75" text="Cancel" AnchorPane.bottomAnchor="10" AnchorPane.rightAnchor="20" />
+    <Button fx:id="submit" layoutX="257.0" layoutY="651.0" onAction="#submit" prefHeight="25" prefWidth="75" text="Submit" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="239.0" />
+    <Button layoutX="361.0" layoutY="651.0" onAction="#goToPrevRoot" prefHeight="25" prefWidth="75" text="Back" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="140.0" />
+    <Button layoutX="463.0" layoutY="651.0" onAction="#cancel" prefHeight="25" prefWidth="75" text="Cancel" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="41.0" />
 
     <stylesheets>
         <URL value="@/css/childParentsForm.css" />

@@ -91,7 +91,7 @@ public class ChildFormController extends FormHelper {
         updateChosenImage(defaultFile);
         
         //Init submit/next btn
-        initSubmitBtn();
+        initNextBtn();
         
         childStatus.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println(observable);
