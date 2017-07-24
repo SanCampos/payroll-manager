@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Text?>
+
+<?import javafx.scene.text.TextFlow?>
+<BorderPane prefHeight="1000.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
+
+    <center>
+        <AnchorPane>
+            <!-- Banner -->
+            <Rectangle height="110" styleClass="banner" width="900" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
+            <ImageView fx:id="childImage" fitHeight="99" fitWidth="99" AnchorPane.leftAnchor="39" AnchorPane.topAnchor="57" />
+            <Label fx:id="childName" AnchorPane.leftAnchor="154" AnchorPane.topAnchor="83" />
+
+            <!-- Actual Info -->
+            <Text styleClass="infoLabel" text="First name: " AnchorPane.leftAnchor="39" AnchorPane.topAnchor="186" />
+            <Label fx:id="childFirstName" text="Warren" AnchorPane.leftAnchor="165" AnchorPane.topAnchor="186" />
+
+            <Text styleClass="infoLabel" text="Last Name: " AnchorPane.leftAnchor="39" AnchorPane.topAnchor="223" />
+            <Label fx:id="childLastName" text="Larrage" AnchorPane.leftAnchor="165" AnchorPane.topAnchor="223" />
+
+            <Text styleClass="infoLabel" text="Age: " AnchorPane.leftAnchor="39" AnchorPane.topAnchor="280" />
+            <Label fx:id="childAge" text="19" AnchorPane.leftAnchor="165" AnchorPane.topAnchor="280" />
+
+            <Text styleClass="infoLabel" text="Birthdate: " AnchorPane.leftAnchor="39" AnchorPane.topAnchor="317" />
+            <Label fx:id="childBirthDate" text="3/15/1998" AnchorPane.leftAnchor="165" AnchorPane.topAnchor="317" />
+
+            <Text styleClass="infoLabel" text="Birthplace: " AnchorPane.leftAnchor="39" AnchorPane.topAnchor="358" />
+            <Label fx:id="childBirthPlace" alignment="TOP_LEFT" prefHeight="135" prefWidth="260.0" text="ihdfxrhilwzajkwcckgjjoohftcgqcqkollntgvvhzosxzzgiluoracmslzmmwfzfhhqxhmroafqzkyqrhozgcefbwpqarxgwzrsdvhosirnjxkuvzfyuevmuwxtawqfjbkeaekwqkwjztrmhevsle" wrapText="true" AnchorPane.leftAnchor="165" AnchorPane.topAnchor="358" />
+
+            <Text styleClass="infoLabel" text="Description: " AnchorPane.leftAnchor="39" AnchorPane.topAnchor="499" />
+            <Label fx:id="childDescription" alignment="TOP_LEFT" prefHeight="335" prefWidth="542" styleClass="long_info" text="Nunc a sagittis elit, eget vehicula ligula. Etiam consequat tristique metus, maximus condimentum tellus varius nec. Nullam egetItem3 Item4 urna eu risus condimentum semper. Donec dictum felis ut efficitur aliquam. Curabitur sollicitudin ligula sit amet euismod imperdiet. Etiam lobortis vitae turpis euismod gravida. Integer sit amet lectus nec mauris ullamcorper faucibus. Cras " wrapText="true" AnchorPane.leftAnchor="39" AnchorPane.topAnchor="536" />
+
+            <Text styleClass="infoLabel" text="Status: " AnchorPane.leftAnchor="441" AnchorPane.topAnchor="186" />
+            <Label fx:id="childStatus" text="Foundling" AnchorPane.leftAnchor="658" AnchorPane.topAnchor="186" />
+
+            <Text styleClass="infoLabel" text="Parents: " AnchorPane.leftAnchor="441" AnchorPane.topAnchor="222" />
+            <TextFlow fx:id="childParents" lineSpacing="2" styleClass="long_info" prefWidth="122" prefHeight="36" AnchorPane.leftAnchor="657" AnchorPane.topAnchor="222"/>
+            <Button fx:id="parentInfoBtn" layoutX="811.0" layoutY="217.0" prefHeight="30" prefWidth="30" styleClass="infoBtn" text="i" AnchorPane.leftAnchor="811.0" AnchorPane.topAnchor="217.0" />
+
+            <Text styleClass="infoLabel" text="Age upon admission: " AnchorPane.leftAnchor="441" AnchorPane.topAnchor="285" />
+            <Label fx:id="childAdmissionAge" text="3" AnchorPane.leftAnchor="658" AnchorPane.topAnchor="285" />
+
+            <Text styleClass="infoLabel" text="Date of admission: " AnchorPane.leftAnchor="442" AnchorPane.topAnchor="322" />
+            <Label fx:id="childAdmissionDate" text="3/15/2001" AnchorPane.leftAnchor="658" AnchorPane.topAnchor="322" />
+
+            <Text styleClass="infoLabel" text="Referred by: " AnchorPane.leftAnchor="441" AnchorPane.topAnchor="359" />
+            <Label fx:id="childReferrer" text="DSWD" AnchorPane.leftAnchor="658" AnchorPane.topAnchor="359" />
+        </AnchorPane>
+    </center>
+
+    <right>
+
+    </right>
+
+    <stylesheets>
+        <URL value="@/css/childDisplay.css" />
+    </stylesheets>
+</BorderPane>

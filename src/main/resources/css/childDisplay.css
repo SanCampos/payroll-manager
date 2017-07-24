@@ -1,0 +1,20 @@
+.infoLabel {
+    -fx-font-weight: bold;
+    -fx-font-size: 150%;
+}
+
+.banner {
+    -fx-fill: orange;
+}
+
+.label {
+    -fx-font-size: 145%;
+}
+
+.long_info {
+    -fx-font-size: 120% !important;
+}
+
+.infoBtn {
+    -fx-font-style: italic;
+}
