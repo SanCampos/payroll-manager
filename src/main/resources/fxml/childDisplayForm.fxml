@@ -1,22 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.ImageView?>
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            prefHeight="1000.0" prefWidth="900.0">
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane prefHeight="1000.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
 
     <center>
         <AnchorPane>
-            <Rectangle AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" x="0" y="0" height="110" width="900" style="-fx-fill: orange"/>
-            <ImageView fx:id="childImage" AnchorPane.leftAnchor="39" AnchorPane.topAnchor="57" fitWidth="99" fitHeight="99"/>
-            <Label fx:id="childName" AnchorPane.leftAnchor="154" AnchorPane.topAnchor="83"/>
+            <!-- Banner -->
+            <Rectangle height="110" style="-fx-fill: orange" width="900" x="0" y="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
+            <ImageView fx:id="childImage" fitHeight="99" fitWidth="99" AnchorPane.leftAnchor="39" AnchorPane.topAnchor="57" />
+            <Label fx:id="childName" AnchorPane.leftAnchor="154" AnchorPane.topAnchor="83" />
+
+            <!-- Actual Info -->
+            <Text text="First name: " AnchorPane.leftAnchor="39" AnchorPane.topAnchor="186" />
+            <Text fx:id="childFirstName" AnchorPane.leftAnchor="165" AnchorPane.topAnchor="186" />
+
+            <Text text="Last Name: " AnchorPane.leftAnchor="39" AnchorPane.topAnchor="223" />
+            <Text fx:id="childLastName" AnchorPane.leftAnchor="165" AnchorPane.topAnchor="223" />
+
+            <Text text="Age: " AnchorPane.leftAnchor="39" AnchorPane.topAnchor="280" />
+            <Text fx:id="childAge" AnchorPane.leftAnchor="165" AnchorPane.topAnchor="280" />
+
+            <Text text="Birthdate: " AnchorPane.leftAnchor="39" AnchorPane.topAnchor="317" />
+            <Text fx:id="childBirthDate" AnchorPane.leftAnchor="165" AnchorPane.topAnchor="317" />
+
+            <Text text="Birthplace" AnchorPane.leftAnchor="39" AnchorPane.topAnchor="358" />
+            <Text fx:id="childBirthPlace" AnchorPane.leftAnchor="165" AnchorPane.topAnchor="359" />
+
+            <Text text="Description" AnchorPane.leftAnchor="39" AnchorPane.topAnchor="409" />
+            <TextArea fx:id="childDescription" prefHeight="137" prefWidth="542" AnchorPane.leftAnchor="39" AnchorPane.topAnchor="446" />
+
+            <Text text="Status" AnchorPane.leftAnchor="441" AnchorPane.topAnchor="186" />
+            <Text fx:id="childStatus" AnchorPane.leftAnchor="658" AnchorPane.topAnchor="186" />
+
+            <Text text="Parents" AnchorPane.leftAnchor="441" AnchorPane.topAnchor="222" />
+            <Text fx:id="childParents" AnchorPane.leftAnchor="657" AnchorPane.topAnchor="223" />
+            <Button fx:id="parentInfoBtn" layoutX="779.0" layoutY="217.0" prefHeight="30" prefWidth="30" text="i" AnchorPane.leftAnchor="779.0" AnchorPane.topAnchor="217.0" />
+
+            <Text text="Age upon admission" AnchorPane.leftAnchor="441" AnchorPane.topAnchor="285" />
+            <Text fx:id="childAdmissionAge" AnchorPane.leftAnchor="658" AnchorPane.topAnchor="285" />
+
+            <Text text="Date of admission" AnchorPane.leftAnchor="442" AnchorPane.topAnchor="322" />
+            <Text fx:id="childAdmissionDate" AnchorPane.leftAnchor="658" AnchorPane.topAnchor="322" />
+
+            <Text text="Referred by: " AnchorPane.leftAnchor="441" AnchorPane.topAnchor="359" />
+            <Text fx:id="childReferrer" AnchorPane.leftAnchor="658" AnchorPane.topAnchor="359" />
         </AnchorPane>
     </center>
 
