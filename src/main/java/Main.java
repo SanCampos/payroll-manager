@@ -25,7 +25,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         loginStage =  primaryStage;
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/childParentsForm.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/childForm.fxml"));
         Scene scene = new Scene(root, 575,  675);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Login");

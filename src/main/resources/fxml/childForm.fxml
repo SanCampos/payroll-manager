@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import java.net.URL?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -12,11 +14,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import main.java.customNodes.PersistentPromptTextField?>
 
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
 <GridPane alignment="TOP_CENTER" hgap="6" prefHeight="400.0" prefWidth="600.0" vgap="8" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.ChildFormController">
 
 
@@ -46,10 +45,10 @@
 
     <!-- Input for gender of child -->
     <Label text="Gender" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+
     <fx:define>
         <ToggleGroup fx:id="genderToggleGroup" />
     </fx:define>
-
     <RadioButton fx:id="maleButton" text="Male" toggleGroup="$genderToggleGroup" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
     <RadioButton fx:id="femaleButton" text="Female" toggleGroup="$genderToggleGroup" GridPane.columnIndex="4" GridPane.rowIndex="5" />
 
@@ -78,11 +77,11 @@
     <ComboBox fx:id="childStatus" prefHeight="25.0" prefWidth="428.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="11">
         <items>
             <FXCollections fx:factory="observableArrayList">
-                <String fx:value="Foundling"/>
-                <String fx:value="Abused"/>
-                <String fx:value="No Parents"/>
-                <String fx:value="Neglected"/>
-                <String fx:value="Surrendered"/>
+                <String fx:value="Foundling" />
+                <String fx:value="Abused" />
+                <String fx:value="No Parents" />
+                <String fx:value="Neglected" />
+                <String fx:value="Surrendered" />
             </FXCollections>
         </items>
     </ComboBox>
@@ -94,7 +93,7 @@
 
         <!-- Submit and cancel buttons -->
     <Button fx:id="submitBtn" prefHeight="25.0" prefWidth="75.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="14" />
-    <Button fx:id="cancelBtn" onAction="#cancel" prefHeight="25.0" prefWidth="76.0" text="Cancel" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="14" />
+    <Button fx:id="cancelBtn" onAction="#cancel" prefHeight="25.0" prefWidth="75.0" text="Cancel" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="14" />
 
     <!-- Warning text for incomplete form  -->
     <Label fx:id="warnEmptyLabel" styleClass="notify-empty" text="You have incomplete fields!" GridPane.columnIndex="2" GridPane.rowIndex="14" />
@@ -109,4 +108,5 @@
       <ColumnConstraints />
       <ColumnConstraints />
    </columnConstraints>
+
 </GridPane>
