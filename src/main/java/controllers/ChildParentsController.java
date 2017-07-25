@@ -2,8 +2,6 @@ package main.java.controllers;
 
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.BooleanExpression;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -11,14 +9,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import main.java.customNodes.PersistentPromptTextField;
 import main.java.utils.DialogUtils;
 import main.java.utils.NodeUtils;
 
-import javax.xml.soap.Text;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +23,10 @@ import java.util.List;
  * Created by thedr on 7/16/2017.
  */
 public class ChildParentsController extends FormHelper {
-    
+
+    //Error box for no parent submission
+    @FXML private StackPane errorNodesParent;
+
     //Inputs for  mother information
     @FXML private PersistentPromptTextField motherFirstNameInput;
     @FXML private PersistentPromptTextField motherLastNameInput;
@@ -47,6 +47,7 @@ public class ChildParentsController extends FormHelper {
     private BooleanBinding bothParentsDisabled;
     
     private List<Node> nodeList;
+    private List<Node> errorNodeList;
     
     private Parent prevRoot;
     
@@ -58,23 +59,36 @@ public class ChildParentsController extends FormHelper {
         Platform.runLater(() -> {
             try {
                 nodeList = NodeUtils.getAllNodesOf(fatherAddressInput.getParent(), new ArrayList<>(), "javafx.scene.control.TextInputControl");
+                errorNodeList = NodeUtils.getAllNodesOf(errorNodesParent, new ArrayList<>(), "javafx.scene.shape.Rectangle", "javafx.scene.control.Label");
             } catch (ClassNotFoundException e) {
                 DialogUtils.displayExceptionError(e, "A severe error has occurred, please contact the developer for assistance");
                 e.printStackTrace();
             }
         });
-        noFatherCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> setFormTo("father", newValue)));
-        noMotherCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> setFormTo("mother", newValue)));
+        noFatherCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> setDisableTo("father", newValue)));
+        noMotherCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> setDisableTo("mother", newValue)));
     
         bothParentsDisabled = noFatherCheckBox.selectedProperty().and(noMotherCheckBox.selectedProperty());
         bothParentsDisabled.addListener(((observable, oldValue, newValue) -> {
-            //add warning message here
-            submit.setDisable(observable.getValue());
+            boolean bothDisabled = newValue;
+
+            //block user from submitting form and inform him or her of the nuaghty thing he/she had done
+            //do vice versa if the naughty thing has been undone
+            submit.setDisable(bothDisabled);
+            for (Node n : errorNodeList) {
+                if (bothDisabled) {
+                    n.getStyleClass().add("error");
+                    n.getStyleClass().remove("disabled");
+                } else {
+                    n.getStyleClass().remove("error");
+                    n.getStyleClass().add("disabled");
+                }
+            }
         }));
     }
     
     
-    private void setFormTo(String parent, boolean disableValue) {
+    private void setDisableTo(String parent, boolean disableValue) {
         for (Node n : nodeList) {
             TextInputControl textInput = ((TextInputControl) n);
             if (textInput.getId().contains(parent)) {

@@ -119,6 +119,7 @@ public class ListController {
         scene.getStylesheets().add(getClass().getResource("/css/persistent-prompt.css").toExternalForm());
 
         Stage stage = new Stage();
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.setTitle("Add child");
         stage.initModality(Modality.APPLICATION_MODAL);

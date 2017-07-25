@@ -26,7 +26,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         loginStage =  primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/childForm.fxml"));
-        Scene scene = new Scene(root, 575,  675);
+        Scene scene = new Scene(root, 1000,  800);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Login");
         primaryStage.show();

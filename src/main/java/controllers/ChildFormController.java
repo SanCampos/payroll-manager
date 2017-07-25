@@ -89,7 +89,7 @@ public class ChildFormController extends FormHelper {
         //Init default image for child
         File defaultFile = new File("src\\main\\resources\\imgs\\default-avatar.png");
         updateChosenImage(defaultFile);
-        
+
         //Init submit/next btn
         initNextBtn();
         

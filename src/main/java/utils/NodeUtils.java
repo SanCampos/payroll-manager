@@ -14,11 +14,11 @@ public class NodeUtils {
      * Gets all nodes available in a parent. User can choose what instances of nodes are desired
      *
      * Runtime is O(n + (n*i)) where: n = amt of nodes in parent
-     *                                i = amt of allowed instances for all nodes
+     *                                i = amt of allowed superclass instances for all nodes
      *
      * @param root The parent node to be used as source of all nodes
      * @param nodes List to add nodes to
-     * @param superclasses Superclasses added nodes must be an instance of
+     * @param superclasses Superclasses that added nodes must be an instance of
      * @return List containing all nodes available in the parent
      */
     public static List<Node> getAllNodesOf(Parent root, List<Node> nodes, String... superclasses) throws ClassNotFoundException {
@@ -31,14 +31,13 @@ public class NodeUtils {
                     break;
                 }
             }
-            
+
             if (classMatches)
                 nodes.add(n);
             
             //Dives into sub-parents to get their nodes
             if (n instanceof Parent) {
                 getAllNodesOf((Parent) n, nodes, superclasses);
-                continue;
             }
         }
         return nodes;
