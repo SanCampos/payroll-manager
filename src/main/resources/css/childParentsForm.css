@@ -22,8 +22,8 @@
 }
 
 .error {
-    -fx-fill: rgba(255, 214, 214, 1);
-    -fx-text-fill: red;
+    -fx-fill: rgba(255, 214, 214, 1) !important;
+    -fx-text-fill: red !important;
 }
 
 .disabled {

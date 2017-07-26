@@ -126,6 +126,7 @@ public class ChildFormController extends FormHelper {
             }
             submitBtn.getScene().setRoot(nextParent);
             childParentsController.setPrevRoot(submitBtn.getParent());
+            childParentsController.setChildFormController(this);
         } catch (IOException e) {
             e.printStackTrace();
             DialogUtils.displayExceptionError(e, "Severe error!");
@@ -143,11 +144,15 @@ public class ChildFormController extends FormHelper {
     public void cancel(ActionEvent actionEvent) {
         FormHelper.cancel(actionEvent, ((Stage) submitBtn.getScene().getWindow()));
     }
-    
-    
-    public void submit() {
+
+
+    /**
+     * Submits the child with all of its respecitve information
+     * @return id of child submitted, negative number if submission has failed
+     */
+    public int submit() {
         if (formIsIncomplete())
-            return;
+            return -1;
         
         //Fetch first part of user input
         String firstName = firstNameInput.getText();
@@ -192,15 +197,18 @@ public class ChildFormController extends FormHelper {
         } catch (SQLException e) {
             e.printStackTrace();
             DialogUtils.displayError("Error saving child data", "There was an error in saving all child data. Please try again!");
-            return;
+            return -1;
         } catch (IOException e) {
             e.printStackTrace();
             DialogUtils.displayError("Error saving image", "There was an error saving the image of the child. " +
                     "All other data besides the image has been saved. Please attempt to add the child image in its own page.");
+            return -1;
         }
 
         refreshList();
         firstNameInput.getScene().getWindow().hide();
+
+        return id;
     }
     
     private boolean formIsIncomplete() {
