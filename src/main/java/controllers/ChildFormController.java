@@ -1,5 +1,7 @@
 package main.java.controllers;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -96,14 +98,28 @@ public class ChildFormController extends FormHelper {
         initNextBtn();
         
         childStatus.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(observable);
-            System.out.println(newValue);
                 if (newValue.intValue() == 2) {
                     initSubmitBtn();
                 } else if (newValue.intValue() != 2 && oldValue.intValue() == 2) {
                     initNextBtn();
                 }
         });
+
+        birthDateInput.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (admissionDateInput.getValue() != null) {
+                if (newValue.isAfter(admissionDateInput.getValue())) {
+                    birthDateInput.setValue(admissionDateInput.getValue());
+                }
+            }
+        });
+
+        admissionDateInput.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            if (birthDateInput.getValue() != null) {
+                if (admissionDateInput.getValue().isBefore(birthDateInput.getValue())) {
+                    admissionDateInput.setValue(birthDateInput.getValue());
+                }
+            }
+        }));
     }
     
     private void initNextBtn() {

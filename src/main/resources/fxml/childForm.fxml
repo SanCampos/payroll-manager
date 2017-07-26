@@ -41,7 +41,7 @@
 
     <!-- Input for nickname of child -->
     <Label text="Nickname (optional)" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-    <PersistentPromptTextField fx:id="nickNameInput" maxLength="15" promptText="&quot;John&quot;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+    <PersistentPromptTextField fx:id="nickNameInput" maxLength="15" promptText="John" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
 
     <!-- Input for gender of child -->
     <Label text="Gender" GridPane.columnIndex="3" GridPane.rowIndex="4" />
