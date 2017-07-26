@@ -1,8 +1,11 @@
 package main.java.models;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.image.Image;
+
+import java.io.File;
 
 /**
  * Created by thedr on 7/4/2017.
@@ -21,9 +24,9 @@ public class Child {
     private SimpleStringProperty referrer;
     private SimpleIntegerProperty id;
 
-    private Image image;
+    private SimpleObjectProperty<File> image;
 
-    public Child(String fName, String lName, String nickname, String place_of_birth, String description, String gender, String birth_date, String admission_date, String status, String referrer, int id, Image avatar) {
+    public Child(String fName, String lName, String nickname, String place_of_birth, String description, String gender, String birth_date, String admission_date, String status, String referrer, int id, File avatar) {
         this.fName = new SimpleStringProperty(fName);
         this.lName = new SimpleStringProperty(lName);
         this.nickname = new SimpleStringProperty(nickname);
@@ -35,7 +38,7 @@ public class Child {
         this.status = new SimpleStringProperty(status);
         this.referrer = new SimpleStringProperty(referrer);
         this.id = new SimpleIntegerProperty(id);
-        this.image = avatar;
+        this.image = new SimpleObjectProperty<>(avatar);
     }
 
     public String getfName() {
@@ -170,11 +173,11 @@ public class Child {
         this.id.set(id);
     }
 
-    public Image getImage() {
-        return image;
+    public Object getImage() {
+        return image.get();
     }
 
-    public void setImage(Image image) {
+    public void setImage(SimpleObjectProperty<File> image) {
         this.image = image;
     }
 }

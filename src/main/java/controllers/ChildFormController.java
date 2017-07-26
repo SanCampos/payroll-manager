@@ -87,7 +87,7 @@ public class ChildFormController extends FormHelper {
         childStatus.getSelectionModel().selectFirst();
         
         //Init default image for child
-        File defaultFile = new File("src\\main\\resources\\imgs\\default-avatar.png");
+        File defaultFile = new File("src\\main\\resources\\imgs\\default_avatar.png");
         updateChosenImage(defaultFile);
 
         //Init submit/next btn

@@ -249,8 +249,8 @@ public class Database {
             String status = (String) getSingleRowData(table_children_statuses.name, table_children_statuses.cols.id, children.getInt(table_children.cols.status), table_children_statuses.cols.status);
             //fetch image of child
             int id = (int) children.getInt(table_children.cols.id);
-            String avatarPath = (String) getAvatarPathOf(id, table_children.name);
-            Image avatar = new Image("file:///" + avatarPath);
+            String avatarPath = getAvatarPathOf(id, table_children.name);
+            File avatar = new File(avatarPath);
 
             String birth_date = children.getDate(table_children.cols.birth_date).toString();
             String admission_date = children.getDate(table_children.cols.admission_date).toString();

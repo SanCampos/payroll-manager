@@ -6,6 +6,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -23,6 +24,7 @@ import main.java.globalInfo.GlobalInfo;
 import main.java.models.Child;
 import main.java.utils.ImageUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -55,7 +57,9 @@ public class ListController {
 
     private void initAvatar() {
         profImg.setClip(ImageUtils.getAvatarCircle());
-        profImg.setImage(new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath()));
+        File FUCK = new File("src\\main\\resources\\imgs\\default_avatar.png");
+        Image value = new Image("file:///" + FUCK.getAbsolutePath());
+        profImg.setImage(value);
     }
 
     private void initTable() throws SQLException {
@@ -71,24 +75,27 @@ public class ListController {
         });
 
         table.setItems(db.getChildren());
-        col_picture.setCellValueFactory(new PropertyValueFactory<>("image"));
-        col_picture.setCellFactory(new Callback<TableColumn<Child, Image>, TableCell>() {
+        col_picture.setCellValueFactory(new PropertyValueFactory("image")); //its not an image class but for some goddamn reason A FUCKING CLASS NOT FOUND EXCEPTION OCCURS
+        col_picture.setCellFactory(new Callback<TableColumn<Child, File>, TableCell<Child, File>>() {
             @Override
             public TableCell call(TableColumn param) {
-                TableCell<Child, Image> cell = new TableCell<Child, Image>() {
+                TableCell<Child, File> cell = new TableCell<Child, File>() {
                     ImageView imageView = new ImageView();
 
                     @Override
-                    protected void updateItem(Image item, boolean empty) {
-                        imageView.setClip(ImageUtils.getAvatarCircle());
-                        imageView.setImage(new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath()));
+                    protected void updateItem(File item, boolean empty) {
+                        if (item != null) {
+                            Image value = new Image("file:///" + item.getAbsolutePath());
+                            imageView.setImage(value);
+                            imageView.setFitWidth(65);
+                            imageView.setFitHeight(65);
+                            imageView.setClip(ImageUtils.getAvatarCircle());
 
-                        HBox hBox = new HBox();
-                        hBox.setPrefHeight(35);
-                        hBox.setSpacing(30);
-                        hBox.setPrefWidth(35);
-                        hBox.getChildren().add(imageView);
-                        setGraphic(hBox);
+                            HBox hBox = new HBox();
+                            hBox.setAlignment(Pos.BASELINE_CENTER);
+                            hBox.getChildren().add(imageView);
+                            setGraphic(hBox);
+                        }
                     }
                 };
                 return cell;
