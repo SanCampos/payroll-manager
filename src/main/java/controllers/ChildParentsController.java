@@ -104,10 +104,6 @@ public class ChildParentsController extends FormHelper {
         }
     }
     
-    private boolean formIsInvalid() {
-        return false;
-    }
-    
     public void cancel(ActionEvent actionEvent) {
         FormHelper.cancel(actionEvent, ((Stage) motherAddressInput.getScene().getWindow()));
     }
@@ -119,16 +115,27 @@ public class ChildParentsController extends FormHelper {
     public void submit() {
         if (isIncomplete()) return;
 
-        int childID = childFormController.submit();
+        int childID = childFormController.submit(false);
 
         try {
             Database db = new Database();
             db.init();
 
+            if (!motherAddressInput.isDisabled()) {
+                String motherFName = motherFirstNameInput.getText();
+                String motherLName = motherLastNameInput.getText();
+                String motherAddress = motherAddressInput.getText();
+                String motherPhoneNumber = motherPhoneNumberInput.getText();
+
+                db.addNewParent(motherFName, motherLName, motherAddress, motherPhoneNumber, childID);
+            }
 
         } catch (SQLException e) {
+            DialogUtils.displayError("Parent registration error!", "There was an error registering the parent data, please try again!");
             e.printStackTrace();
         }
+        Stage thisStage = ((Stage) motherAddressInput.getScene().getWindow());
+        thisStage.close();
     }
     
     public void goToPrevRoot() {

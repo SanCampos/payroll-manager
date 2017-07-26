@@ -132,12 +132,12 @@ public class ChildFormController extends FormHelper {
             DialogUtils.displayExceptionError(e, "Severe error!");
         }
     }
-    
+
     private void initSubmitBtn() {
         submitBtn.setText("Submit");
         submitBtn.getStyleClass().remove("default");
         submitBtn.getStyleClass().add("submit");
-        submitBtn.setOnAction(event -> submit());
+        submitBtn.setOnAction(event -> submit(true));
     }
     
     @FXML
@@ -148,9 +148,10 @@ public class ChildFormController extends FormHelper {
 
     /**
      * Submits the child with all of its respecitve information
+     * @param active if this controller's scene is active
      * @return id of child submitted, negative number if submission has failed
      */
-    public int submit() {
+    public int submit(boolean active) {
         if (formIsIncomplete())
             return -1;
         
@@ -206,8 +207,9 @@ public class ChildFormController extends FormHelper {
         }
 
         refreshList();
-        firstNameInput.getScene().getWindow().hide();
-
+        if (active) {
+            firstNameInput.getScene().getWindow().hide();
+        }
         return id;
     }
     
