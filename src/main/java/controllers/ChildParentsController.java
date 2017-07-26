@@ -92,6 +92,10 @@ public class ChildParentsController extends FormHelper {
                 noParentsError.getStyleClass().remove("error");
             }
         }));
+
+        motherAddressInput.textProperty().addListener(((observable, oldValue, newValue) -> {
+            fatherAddressInput.setText(newValue);
+        }));
     }
     
     
