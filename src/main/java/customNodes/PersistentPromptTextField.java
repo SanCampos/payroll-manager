@@ -39,6 +39,7 @@ public class PersistentPromptTextField extends TextField {
     public void replaceText(int start, int end, String insertedText) {
         if (getMaxLength() == -1) {
             super.replaceText(start, end, insertedText);
+            return;
         }
 
         String combinedText = getText().substring(0, start) + insertedText + getText().substring(end);

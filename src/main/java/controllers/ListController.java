@@ -122,7 +122,7 @@ public class ListController {
                 String lastName = child.getlName();
                 String nickname = child.getNickname();
                 String complete = firstName + " " + lastName;
-                if (nickname != null) complete.replace(" ", "\"" + nickname + "\"");
+                if (nickname.length() != 0) complete =  complete.replace(" ", " \"" + nickname + "\" ");
                 return new SimpleStringProperty(complete);
             }
         });
@@ -179,7 +179,7 @@ public class ListController {
     public void showChildForm(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/childForm.fxml"));
         Parent root = loader.load();
-        ChildFormController controller = ((ChildFormController) loader.getController());
+        ChildFormController controller = loader.getController();
         controller.setListController(this);
         Scene scene = new Scene(root, 575, 675);
         scene.getStylesheets().add(getClass().getResource("/css/persistent-prompt.css").toExternalForm());

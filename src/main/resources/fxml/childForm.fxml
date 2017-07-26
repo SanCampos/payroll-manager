@@ -60,7 +60,7 @@
         <!-- Input for place of birth of child -->
     <Label text="Place of birth" GridPane.columnIndex="3" GridPane.rowIndex="6" />
     <Label fx:id="birthPlaceWarning" styleClass="notify-empty" text="This form is empty!" GridPane.columnIndex="4" GridPane.rowIndex="6" />
-    <PersistentPromptTextField fx:id="birthPlaceInput" promptText="Negros Occ. Baco..." GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+    <PersistentPromptTextField fx:id="birthPlaceInput" maxLength="150" promptText="Negros Occ. Baco..." GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="7" />
 
     <!-- Input admission_datesion date of child -->
     <Label text="Date of admission" GridPane.columnIndex="1" GridPane.rowIndex="8" />
