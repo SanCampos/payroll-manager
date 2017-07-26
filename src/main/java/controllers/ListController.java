@@ -1,6 +1,7 @@
 package main.java.controllers;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import com.sun.org.apache.bcel.internal.generic.TargetLostException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -11,11 +12,13 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -25,7 +28,9 @@ import main.java.db.Database;
 import main.java.globalInfo.GlobalInfo;
 import main.java.models.Child;
 import main.java.utils.ImageUtils;
+import org.w3c.dom.html.HTMLTableElement;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -81,32 +86,33 @@ public class ListController {
             }});
 
         table.setItems(db.getChildren());
-        col_picture.setCellValueFactory(new PropertyValueFactory("image")); //its not an image class but for some goddamn reason A FUCKING CLASS NOT FOUND EXCEPTION OCCURS
+        col_picture.setCellValueFactory(new PropertyValueFactory<Child, File>("image"));
         col_picture.setCellFactory(new Callback<TableColumn<Child, File>, TableCell<Child, File>>() {
             @Override
             public TableCell call(TableColumn param) {
-                TableCell<Child, File> cell = new TableCell<Child, File>() {
+                return new TableCell<Child, File>() {
                     ImageView imageView = new ImageView();
+                    Image childImage;
 
                     @Override
                     protected void updateItem(File item, boolean empty) {
                         if (item != null) {
-                            Image value = new Image("file:///" + item.getAbsolutePath());
-                            imageView.setImage(value);
-                            imageView.setFitWidth(65);
-                            imageView.setFitHeight(65);
-                            imageView.setClip(ImageUtils.getAvatarCircle());
+                            childImage = new Image("file:///" + item.getAbsolutePath());
 
-                            HBox hBox = new HBox();
-                            hBox.setAlignment(Pos.BASELINE_CENTER);
-                            hBox.getChildren().add(imageView);
+                            imageView.setImage(childImage);
+                            imageView.setClip(ImageUtils.getAvatarCircle());
+                            imageView.setFitHeight(65);
+                            imageView.setFitWidth(65);
+                            HBox hBox = new HBox(imageView);
+                            hBox.setAlignment(Pos.CENTER);
                             setGraphic(hBox);
                         }
                     }
                 };
-                return cell;
             }
         });
+
+
 
         col_name.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Child, String>, ObservableValue>() {
             @Override
@@ -115,11 +121,26 @@ public class ListController {
                 String firstName = child.getfName();
                 String lastName = child.getlName();
                 String nickname = child.getNickname();
-                return new SimpleStringProperty(firstName + " \"" + nickname + "\" " + lastName.replace(" \" \" "," "));
+                String complete = firstName + " " + lastName;
+                if (nickname != null) complete.replace(" ", "\"" + nickname + "\"");
+                return new SimpleStringProperty(complete);
             }
         });
 
-        col_name.setStyle("-fx-alignment: CENTER");
+        col_name.setCellFactory(new Callback<TableColumn<Child, String>, TableCell<Child, String>>() {
+            @Override
+            public TableCell call(TableColumn<Child, String> param) {
+                return new TableCell<Child, String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        setText(item);
+                        setAlignment(Pos.CENTER);
+                    }
+                };
+            }
+        });
+
+
     }
 
     private void disableReorder() {

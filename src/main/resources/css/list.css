@@ -59,5 +59,8 @@
     -fx-image: url("/imgs/settings.png");
 }
 
-
+#col_name {
+    -fx-font-weight: bold;
+    -fx-font-size: 165%;
+}
 
