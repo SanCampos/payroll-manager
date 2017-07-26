@@ -2,6 +2,7 @@ package main.java.utils;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
+import javafx.scene.shape.Circle;
 
 /**
  * Created by thedr on 6/15/2017.
@@ -23,5 +24,9 @@ public class ImageUtils {
                     return false;
 
         return true;
+    }
+
+    public static Circle getAvatarCircle() {
+        return new Circle(32.5, 32.5, 32.5);
     }
 }

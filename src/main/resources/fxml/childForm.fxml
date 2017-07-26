@@ -22,7 +22,7 @@
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
-    <!-- Input for image avatar -->
+    <!-- Input for imimageatar -->
     <ImageView fx:id="childImage" fitHeight="97.0" fitWidth="88.0" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4" />
 
     <Label fx:id="imageName" alignment="CENTER" prefWidth="88.0" text="FUCK.JPG" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.rowSpan="2" GridPane.valignment="TOP" />

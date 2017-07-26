@@ -1,27 +1,27 @@
 package main.java.controllers;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import main.java.Main;
 import main.java.Settings.SettingsStage;
 import main.java.db.Database;
 import main.java.globalInfo.GlobalInfo;
-import main.java.models.Employee;
-import main.java.utils.ShapeUtils;
+import main.java.models.Child;
+import main.java.utils.ImageUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -34,11 +34,9 @@ public class ListController {
     @FXML private ImageView profImg;
     @FXML private Button logout_button;
 
-    @FXML private TableView<Employee> table;
-    @FXML private TableColumn col_fname;
-    @FXML private TableColumn col_lname;
-    @FXML private TableColumn col_salary;
-    @FXML private TableColumn col_age;
+    @FXML private TableView<Child> table;
+    @FXML private TableColumn col_name;
+    @FXML private TableColumn col_picture;
 
     //TO BE MOVED TO EXTERNAL CLASS
     private static Database db;
@@ -56,27 +54,59 @@ public class ListController {
     }
 
     private void initAvatar() {
-        profImg.setClip(ShapeUtils.getAvatarCircle());
+        profImg.setClip(ImageUtils.getAvatarCircle());
         profImg.setImage(new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath()));
     }
 
     private void initTable() throws SQLException {
         db.init();
 
-        table.setItems(db.getEmployees());
-        col_fname.setCellValueFactory(new PropertyValueFactory<Employee, String>("fName"));
-        col_lname.setCellValueFactory(new PropertyValueFactory<Employee, String>("lName"));
-        col_salary.setCellValueFactory(new PropertyValueFactory<Employee, String>("salary"));
-        col_age.setCellValueFactory(new PropertyValueFactory<Employee, Integer>("age"));
-
         table.setRowFactory(param -> {
-            TableRow<Employee> row =  new TableRow<>();
+            TableRow<Child> row =  new TableRow<>();
 
             row.setOnMouseClicked(event -> {
                 int id =  row.getItem().getId();
             });
             return row;
         });
+
+        table.setItems(db.getChildren());
+        col_picture.setCellValueFactory(new PropertyValueFactory<>("image"));
+        col_picture.setCellFactory(new Callback<TableColumn<Child, Image>, TableCell>() {
+            @Override
+            public TableCell call(TableColumn param) {
+                TableCell<Child, Image> cell = new TableCell<Child, Image>() {
+                    ImageView imageView = new ImageView();
+
+                    @Override
+                    protected void updateItem(Image item, boolean empty) {
+                        imageView.setClip(ImageUtils.getAvatarCircle());
+                        imageView.setImage(new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath()));
+
+                        HBox hBox = new HBox();
+                        hBox.setPrefHeight(35);
+                        hBox.setSpacing(30);
+                        hBox.setPrefWidth(35);
+                        hBox.getChildren().add(imageView);
+                        setGraphic(hBox);
+                    }
+                };
+                return cell;
+            }
+        });
+
+        col_name.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Child, String>, ObservableValue>() {
+            @Override
+            public ObservableValue call(TableColumn.CellDataFeatures<Child, String> param) {
+                Child child = param.getValue();
+                String firstName = child.getfName();
+                String lastName = child.getlName();
+                String nickname = child.getNickname();
+                return new SimpleStringProperty(firstName + " \"" + nickname + "\" " + lastName.replace(" \" \" "," "));
+            }
+        });
+
+        col_name.setStyle("-fx-alignment: CENTER");
     }
 
     private void disableReorder() {

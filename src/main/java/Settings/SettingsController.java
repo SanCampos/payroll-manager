@@ -20,7 +20,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 
-import static main.java.utils.ShapeUtils.getAvatarCircle;
 import main.java.db.DbSchema.*;
 
 /**
@@ -69,7 +68,7 @@ public class SettingsController {
     
     private void initAvatar() {
         Image get = new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath());
-        prof_img.setClip(getAvatarCircle());
+        prof_img.setClip(ImageUtils.getAvatarCircle());
         updateAvatar(GlobalInfo.getCurrProfImg().getName(), get);
     }
 

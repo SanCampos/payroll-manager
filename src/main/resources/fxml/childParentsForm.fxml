@@ -50,7 +50,7 @@
             <padding>
                 <Insets right="7" left="7"/>
             </padding>
-            <Label text="You must register at least one parent to this child. If the child's parents are unknown, please switch their state to 'Foundling'." wrapText="true" prefWidth="351" prefHeight="50" styleClass="disabled" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="453"/>
+            <Label text="You must register at least one parent to this child. If the child's parents are unknown, please switch their status to 'No Parents'." wrapText="true" prefWidth="351" prefHeight="50" styleClass="disabled" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="453"/>
         </StackPane>
     </StackPane>
 

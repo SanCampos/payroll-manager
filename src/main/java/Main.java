@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import main.java.db.Database;
 
 import java.sql.SQLException;
 
@@ -16,16 +17,16 @@ public class Main extends Application {
     public static Stage loginStage;
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-       /* Database db =  new Database();
+        /*Database db =  new Database();
         db.init();
-        db.registerUser("root", "root");  */
+        db.registerUser("root", "root"); */
         launch(args);
     }
     
     @Override
     public void start(Stage primaryStage) throws Exception {
         loginStage =  primaryStage;
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/childForm.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/login.fxml"));
         Scene scene = new Scene(root, 1000,  800);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Login");

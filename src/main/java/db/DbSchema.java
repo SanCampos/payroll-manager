@@ -67,6 +67,15 @@ public class DbSchema {
             public static final String admission_date = "admission_date";
         }
     }
+
+    public static class table_children_statuses {
+         public static final String name = "children_statuses";
+
+         public static class cols {
+             public static final String id = "id";
+             public static final String status = "status";
+         }
+    }
     
     public static class table_locations {
         public static final String name = "locations";

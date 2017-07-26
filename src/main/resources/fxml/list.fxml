@@ -36,10 +36,8 @@
         <TableView fx:id="table">
             <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
             <columns>
-                <TableColumn fx:id="col_fname" text="First Name" />
-                <TableColumn fx:id="col_lname" text="Last Name" />
-                <TableColumn fx:id="col_salary" text="Salary" />
-                <TableColumn fx:id="col_age" text="Age" />
+                <TableColumn fx:id="col_picture"/>
+                <TableColumn fx:id="col_name"/>
             </columns>
         </TableView>
     </center>

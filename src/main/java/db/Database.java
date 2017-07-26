@@ -2,10 +2,13 @@ package main.java.db;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.image.Image;
 import main.java.globalInfo.GlobalInfo;
+import main.java.models.Child;
 import main.java.models.Employee;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.security.SecureRandom;
 import java.sql.*;
 import java.time.LocalDate;
@@ -27,7 +30,7 @@ public class Database {
     private Connection con;
 
     public void init() throws SQLException {
-        String url = "jdbc:mysql://localhost:3306/test?verifyServerCertificate=false&useSSL=true";
+        String url = "jdbc:mysql://localhost:3306/tset?verifyServerCertificate=false&useSSL=true";
         String user = "root";
         String pass = "root";
 
@@ -227,6 +230,37 @@ public class Database {
         }
         return results;
     }
+
+    public ObservableList<Child> getChildren() throws SQLException {
+        Statement statement = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+        ResultSet children = statement.executeQuery("SELECT * FROM children");
+
+        ObservableList<Child> childrenList = FXCollections.observableArrayList();
+
+        while (children.next()) {
+            //Fetch the ton of shit CAN WE PLEASE USE FUCKING JOOQ
+            String fname = children.getString(table_children.cols.fname);
+            String lname = children.getString(table_children.cols.lname);
+            String nickname = children.getString(table_children.cols.nickname);
+            String place_of_birth = children.getString(table_children.cols.place_of_birth);
+            String description = children.getString(table_children.cols.description);
+            String referrer = (String) getSingleRowData(table_referrers.name, table_referrers.cols.id, children.getInt(table_children.cols.referrer_id), table_referrers.cols.referrer);
+            String gender = (String) getSingleRowData(table_genders.name, table_genders.cols.id, children.getInt(table_children.cols.gender), table_genders.cols.gender);
+            String status = (String) getSingleRowData(table_children_statuses.name, table_children_statuses.cols.id, children.getInt(table_children.cols.status), table_children_statuses.cols.status);
+            //fetch image of child
+            int id = (int) children.getInt(table_children.cols.id);
+            String avatarPath = (String) getAvatarPathOf(id, table_children.name);
+            Image avatar = new Image("file:///" + avatarPath);
+
+            String birth_date = children.getDate(table_children.cols.birth_date).toString();
+            String admission_date = children.getDate(table_children.cols.admission_date).toString();
+
+            childrenList.add(new Child(fname, lname, nickname, place_of_birth, description, gender, birth_date, admission_date, status, referrer, id, avatar));
+        }
+        return childrenList;
+    }
+
+
 
     public boolean updateImageOf(int userID, String path, String tableName) throws SQLException {
         //Insert new  row for image path to avatar  table
