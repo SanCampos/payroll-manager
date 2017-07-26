@@ -32,16 +32,16 @@
     <!-- Input for first name of child -->
     <Label text="First name" GridPane.columnIndex="1" GridPane.rowIndex="0" />
     <Label fx:id="firstNameWarning" styleClass="notify-empty" text="This form is empty!" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-    <PersistentPromptTextField fx:id="firstNameInput" promptText="Juan" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+    <PersistentPromptTextField fx:id="firstNameInput" maxLength="30" promptText="Juan" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" />
 
     <!-- Input for last name of child -->
     <Label text="Last name" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
     <Label fx:id="lastNameWarning" styleClass="notify-empty" text="This form is empty!" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-    <PersistentPromptTextField fx:id="lastNameInput" promptText="dela Cruz" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" />
+    <PersistentPromptTextField fx:id="lastNameInput" maxLength="30" promptText="dela Cruz" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" />
 
     <!-- Input for nickname of child -->
     <Label text="Nickname (optional)" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-    <PersistentPromptTextField fx:id="nickNameInput" promptText="&quot;John&quot;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+    <PersistentPromptTextField fx:id="nickNameInput" maxLength="15" promptText="&quot;John&quot;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
 
     <!-- Input for gender of child -->
     <Label text="Gender" GridPane.columnIndex="3" GridPane.rowIndex="4" />
@@ -70,7 +70,7 @@
     <!-- Input for referrer of child -->
     <Label text="Referred by: " GridPane.columnIndex="3" GridPane.rowIndex="8" />
     <Label fx:id="referrerWarning" styleClass="notify-empty" text="This form is empty" GridPane.columnIndex="4" GridPane.rowIndex="8" />
-    <PersistentPromptTextField fx:id="referrerInput" promptText="DSWD" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="9" />
+    <PersistentPromptTextField fx:id="referrerInput" maxLength="100" promptText="DSWD" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="9" />
 
     <!--Input for Child Status -->
     <Label text="Status" GridPane.columnIndex="1" GridPane.rowIndex="10" />

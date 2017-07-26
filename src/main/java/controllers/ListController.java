@@ -4,6 +4,7 @@ import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -13,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -62,17 +64,21 @@ public class ListController {
         profImg.setImage(value);
     }
 
-    private void initTable() throws SQLException {
+    public void initTable() throws SQLException {
         db.init();
 
-        table.setRowFactory(param -> {
-            TableRow<Child> row =  new TableRow<>();
-
-            row.setOnMouseClicked(event -> {
-                int id =  row.getItem().getId();
-            });
-            return row;
-        });
+        table.setRowFactory(new Callback<TableView<Child>, TableRow<Child>>() {
+            @Override
+            public TableRow<Child> call(TableView<Child> param) {
+                TableRow<Child> row = new TableRow<>();
+                row.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        System.out.println(row.getItem().getId());
+                    }
+                });
+                return row;
+            }});
 
         table.setItems(db.getChildren());
         col_picture.setCellValueFactory(new PropertyValueFactory("image")); //its not an image class but for some goddamn reason A FUCKING CLASS NOT FOUND EXCEPTION OCCURS
@@ -150,8 +156,10 @@ public class ListController {
 
     @FXML
     public void showChildForm(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/childForm.fxml"));
-
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/childForm.fxml"));
+        Parent root = loader.load();
+        ChildFormController controller = ((ChildFormController) loader.getController());
+        controller.setListController(this);
         Scene scene = new Scene(root, 575, 675);
         scene.getStylesheets().add(getClass().getResource("/css/persistent-prompt.css").toExternalForm());
 

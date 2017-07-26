@@ -78,7 +78,9 @@ public class ChildFormController extends FormHelper {
     private Parent nextParent;
     
     private ChildParentsController childParentsController;
-    
+
+    private ListController listController;
+
     @FXML
     public void initialize() throws FileNotFoundException {
         //Init gender choice buttons and scene ref
@@ -196,6 +198,8 @@ public class ChildFormController extends FormHelper {
             DialogUtils.displayError("Error saving image", "There was an error saving the image of the child. " +
                     "All other data besides the image has been saved. Please attempt to add the child image in its own page.");
         }
+
+        refreshList();
         firstNameInput.getScene().getWindow().hide();
     }
     
@@ -269,9 +273,22 @@ public class ChildFormController extends FormHelper {
         pathRef = GlobalInfo.getChildrenImgDir() + "\\"+ chosen.getName();
         slctdImgStrm = new FileInputStream(chosen);
     }
+
+    private void refreshList() {
+        try {
+            listController.initTable();
+        } catch (SQLException e) {
+            DialogUtils.displayError("Synchronization error!", "There was an error synchronizing the data of the new child!");
+            e.printStackTrace();
+        }
+    }
     
     public void setNextParent(Parent nextParent) {
         this.nextParent = nextParent;
+    }
+
+    public void setListController(ListController listController) {
+        this.listController = listController;
     }
 }
 
