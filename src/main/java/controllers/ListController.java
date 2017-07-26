@@ -64,8 +64,7 @@ public class ListController {
 
     private void initAvatar() {
         profImg.setClip(ImageUtils.getAvatarCircle());
-        File FUCK = new File("src\\main\\resources\\imgs\\default_avatar.png");
-        Image value = new Image("file:///" + FUCK.getAbsolutePath());
+        Image value = new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath());
         profImg.setImage(value);
     }
 

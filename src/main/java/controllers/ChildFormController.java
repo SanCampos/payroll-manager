@@ -158,7 +158,8 @@ public class ChildFormController extends FormHelper {
     
     @FXML
     public void cancel(ActionEvent actionEvent) {
-        FormHelper.cancel(actionEvent, ((Stage) submitBtn.getScene().getWindow()));
+        Stage stage = ((Stage) submitBtn.getScene().getWindow());
+        stage.close();
     }
 
 
