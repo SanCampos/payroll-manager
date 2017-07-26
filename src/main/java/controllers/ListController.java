@@ -121,8 +121,19 @@ public class ListController {
                 String firstName = child.getfName();
                 String lastName = child.getlName();
                 String nickname = child.getNickname();
-                String complete = firstName + " " + lastName;
-                if (nickname.length() != 0) complete =  complete.replace(" ", " \"" + nickname + "\" ");
+
+                String placeholder = "PLACEHOLDER"; //Place holder for adding nickname if exists
+                String complete = firstName + placeholder + lastName;
+
+                //place nickname between first and last name if exists
+                if (nickname.length() != 0){
+                    String nicknameString = " \"" + nickname + "\" ";
+                    complete =  complete.replace(placeholder, nicknameString);
+
+                //if nickname does not exist
+                } else {
+                    complete = complete.replace(placeholder, "");
+                }
                 return new SimpleStringProperty(complete);
             }
         });

@@ -104,10 +104,6 @@ public class ChildParentsController extends FormHelper {
         }
     }
     
-    private boolean formIsInvalid() {
-        return false;
-    }
-    
     public void cancel(ActionEvent actionEvent) {
         FormHelper.cancel(actionEvent, ((Stage) motherAddressInput.getScene().getWindow()));
     }
@@ -119,18 +115,44 @@ public class ChildParentsController extends FormHelper {
     public void submit() {
         if (isIncomplete()) return;
 
-        int childID = childFormController.submit();
+        int childID = childFormController.submit(false);
 
         try {
             Database db = new Database();
             db.init();
 
+            addParent(childID, db, "mother");
+            addParent(childID, db, "father");
 
         } catch (SQLException e) {
+            DialogUtils.displayError("Parent registration error!", "There was an error registering the parent data, please try again!");
             e.printStackTrace();
         }
+        Stage thisStage = ((Stage) motherAddressInput.getScene().getWindow());
+        thisStage.close();
     }
-    
+
+    private void addParent(int childID, Database db, String parent) throws SQLException {
+            TextInputControl addressInput = getTextInputOf(parent, "AddressInput");
+
+        if (!addressInput.isDisabled()) {
+            String fName = getTextInputTextOf(parent, "FirstNameInput");
+            String lName = getTextInputTextOf(parent, "LastNameInput");
+            String address = addressInput.getText();
+            String phoneNumber = getTextInputTextOf(parent, "PhoneNumberInput");
+
+            db.addNewParent(fName, lName, address, phoneNumber, childID);
+        }
+    }
+
+    private TextInputControl getTextInputOf(String parent, String input) {
+        return (TextInputControl) motherAddressInput.getParent().lookup(String.format("#%s%s", parent, input));
+    }
+
+    private String getTextInputTextOf(String parent, String input) {
+        return ((TextInputControl) motherAddressInput.getParent().lookup(String.format("#%s%s", parent, input))).getText();
+    }
+
     public void goToPrevRoot() {
         motherAddressInput.getScene().setRoot(prevRoot);
     }

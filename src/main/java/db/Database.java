@@ -2,13 +2,11 @@ package main.java.db;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.image.Image;
 import main.java.globalInfo.GlobalInfo;
 import main.java.models.Child;
 import main.java.models.Employee;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.security.SecureRandom;
 import java.sql.*;
 import java.time.LocalDate;
@@ -148,8 +146,8 @@ public class Database {
 
     public boolean addNewChild(String fName, String lName, String nickname, String birthPlace, LocalDate age, String description, int gender, String referrer, int status, LocalDate admissionDate) throws SQLException {
         //Add birthplace and referrer record
-        addForeignKey(birthPlace, table_locations.name);
-        addForeignKey(referrer, table_referrers.name);
+        addSingleUniqueData(birthPlace, table_locations.name);
+        addSingleUniqueData(referrer, table_referrers.name);
         String insertChild = String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, STR_TO_DATE(?, '%%Y-%%m-%%d'), ?, ?, ?, ?, ?)",
                 table_children.name, table_children.cols.fname, table_children.cols.lname, table_children.cols.nickname, table_children.cols.place_of_birth, table_children.cols.birth_date,
                 table_children.cols.description, table_children.cols.gender, table_children.cols.referrer_id, table_children.cols.status, table_children.cols.admission_date);
@@ -205,11 +203,11 @@ public class Database {
      * @param tableName  name  of table
      * @throws SQLException
      */
-    private void addForeignKey(String data, String tableName) throws SQLException {
-        String addBirthPlace = String.format("INSERT IGNORE INTO %s (%s) VALUES (?)", tableName, tableName.substring(0, tableName.length()-1));
+    private void addSingleUniqueData(Object data, String tableName) throws SQLException {
+        String sql = String.format("INSERT IGNORE INTO %s (%s) VALUES (?)", tableName, tableName.substring(0, tableName.length()-1));
 
-        PreparedStatement statement = con.prepareStatement(addBirthPlace);
-        statement.setString(1, data);
+        PreparedStatement statement = con.prepareStatement(sql);
+        statement.setObject(1, data);
 
         statement.execute();
     }
@@ -310,5 +308,45 @@ public class Database {
 
     public void closeConnection() throws SQLException {
         con.close();
+    }
+
+    public boolean addNewParent(String fName, String lName, String address, String phoneNumber, int childID) throws SQLException {
+        boolean parentAdded;
+        boolean relationshipAdded;
+
+        addSingleUniqueData(address, table_locations.name);
+        addSingleUniqueData(phoneNumber, table_phone_numbers.name);
+
+        int locationID = getSingleDataIDOf(address, table_locations.name);
+        int phoneNumberID = getSingleDataIDOf(phoneNumber, table_phone_numbers.name);
+
+        String insertParentSQL = String.format("INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?, ?, ?)", table_parents.name, table_parents.cols.first_name, table_parents.cols.last_name, table_parents.cols.location_id, table_parents.cols.phone_number_id);
+
+        PreparedStatement preparedStatement = con.prepareStatement(insertParentSQL, Statement.RETURN_GENERATED_KEYS);
+        preparedStatement.setString(1, fName);
+        preparedStatement.setString(2, lName);
+        preparedStatement.setInt(3, locationID);
+        preparedStatement.setInt(4, phoneNumberID);
+
+        parentAdded = preparedStatement.executeUpdate() != 0;
+
+        ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+
+        if (!generatedKeys.next()) {
+            throw new NullPointerException("Failed to retrieve generated parent ID");
+        }
+
+        Object parentID = generatedKeys.getObject(1);
+        if (parentID instanceof Long) {
+            parentID = toIntExact(((Long) parentID));
+        }
+
+        String insertRelationshipSQL = String.format("INSERT INTO %s (%s, %s) VALUES (?, ?)", table_parent_child_relationships.name, table_parent_child_relationships.cols.parent_id, table_parent_child_relationships.cols.child_id);
+        preparedStatement = con.prepareStatement(insertRelationshipSQL);
+        preparedStatement.setInt(1, ((int) parentID));
+        preparedStatement.setInt(2, childID);
+        relationshipAdded = preparedStatement.executeUpdate() != 0;
+
+        return parentAdded && relationshipAdded;
     }
 }

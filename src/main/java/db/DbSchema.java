@@ -104,16 +104,16 @@ public class DbSchema {
         }
     }
     
-    public static class phone_numbers {
+    public static class table_phone_numbers {
          public static final String name = "phone_numbers";
          
          public static class cols {
              public static final String id = "id";
-             public static final String number = "number";
+             public static final String number = "phone_number";
          }
     }
     
-    public static class parents {
+    public static class table_parents {
          public static final String name = "parents";
          
          public static class cols {
@@ -125,7 +125,7 @@ public class DbSchema {
          }
     }
     
-    public static class parent_child_relationships {
+    public static class table_parent_child_relationships {
          public static final String name = "parent_child_relationships";
          
          public static class cols {
