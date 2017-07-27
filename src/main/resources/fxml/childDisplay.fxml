@@ -15,6 +15,13 @@
 
 <BorderPane prefHeight="800" prefWidth="1030" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.ChildDisplayController">
 
+    <right>
+        <HBox fx:id="issuePlaceHolder" alignment="CENTER" prefHeight="871.0" prefWidth="181.0" styleClass="border_box">
+            <Text styleClass="list_header" text="WORK IN PROGRESS" />
+        </HBox>
+    </right>
+
+
     <center>
         <AnchorPane fx:id="anchorPane" minWidth="0" prefHeight="800" prefWidth="850">
             <!-- Banner -->
@@ -67,12 +74,6 @@
             <Label fx:id="childReferrer" text="DSWD" AnchorPane.leftAnchor="658" AnchorPane.topAnchor="359" />
         </AnchorPane>
     </center>
-
-    <right>
-        <HBox alignment="CENTER" prefHeight="871.0" prefWidth="181.0" styleClass="border_box">
-            <Text styleClass="list_header" text="WORK IN PROGRESS" />
-        </HBox>
-    </right>
 
     <stylesheets>
         <URL value="@/css/childDisplay.css" />
