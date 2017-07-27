@@ -1,7 +1,6 @@
 package main.java.controllers;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
-import com.sun.org.apache.bcel.internal.generic.TargetLostException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -18,7 +17,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -28,9 +26,7 @@ import main.java.db.Database;
 import main.java.globalInfo.GlobalInfo;
 import main.java.models.Child;
 import main.java.utils.ImageUtils;
-import org.w3c.dom.html.HTMLTableElement;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -117,22 +113,7 @@ public class ListController {
             @Override
             public ObservableValue call(TableColumn.CellDataFeatures<Child, String> param) {
                 Child child = param.getValue();
-                String firstName = child.getfName();
-                String lastName = child.getlName();
-                String nickname = child.getNickname();
-
-                String placeholder = "PLACEHOLDER"; //Place holder for adding nickname if exists
-                String complete = firstName + placeholder + lastName;
-
-                //place nickname between first and last name if exists
-                if (nickname.length() != 0){
-                    String nicknameString = " \"" + nickname + "\" ";
-                    complete =  complete.replace(placeholder, nicknameString);
-
-                //if nickname does not exist
-                } else {
-                    complete = complete.replace(placeholder, "");
-                }
+                String complete = child.getCompleteName();
                 return new SimpleStringProperty(complete);
             }
         });
@@ -149,8 +130,6 @@ public class ListController {
                 };
             }
         });
-
-
     }
 
     private void disableReorder() {

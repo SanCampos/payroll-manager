@@ -13,7 +13,7 @@
 <?import javafx.scene.text.TextFlow?>
 
 <?import javafx.scene.layout.StackPane?>
-<BorderPane prefHeight="800" prefWidth="1030" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="800" prefWidth="1030" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.ChildDisplayController">
 
     <center>
         <AnchorPane prefHeight="800" prefWidth="875.0">
@@ -55,7 +55,7 @@
 
             <Text styleClass="infoLabel" text="Parents: " AnchorPane.leftAnchor="459" AnchorPane.topAnchor="222" />
             <TextFlow fx:id="childParents" lineSpacing="2" prefHeight="36" prefWidth="122" styleClass="long_info" AnchorPane.leftAnchor="657" AnchorPane.topAnchor="222" />
-            <Button fx:id="parentInfoBtn" layoutX="811.0" layoutY="217.0" prefHeight="30" prefWidth="30" styleClass="infoBtn" text="i" AnchorPane.leftAnchor="811.0" AnchorPane.topAnchor="217.0" />
+            <Button fx:id="parentsButton" layoutX="811.0" layoutY="217.0" prefHeight="30" prefWidth="30" styleClass="infoBtn" text="i" AnchorPane.leftAnchor="811.0" AnchorPane.topAnchor="217.0" />
 
             <Text styleClass="infoLabel" text="Age upon admission: " AnchorPane.leftAnchor="459" AnchorPane.topAnchor="285" />
             <Label fx:id="childAdmissionAge" text="3" AnchorPane.leftAnchor="658" AnchorPane.topAnchor="285" />

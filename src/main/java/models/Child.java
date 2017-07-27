@@ -77,7 +77,7 @@ public class Child {
         this.nickname.set(nickname);
     }
 
-    public String getPlace_of_birth() {
+    public String getPlaceOfBirth() {
         return place_of_birth.get();
     }
 
@@ -113,7 +113,7 @@ public class Child {
         this.gender.set(gender);
     }
 
-    public String getBirth_date() {
+    public String getBirthDate() {
         return birth_date.get();
     }
 
@@ -125,7 +125,7 @@ public class Child {
         this.birth_date.set(birth_date);
     }
 
-    public String getAdmission_date() {
+    public String getAdmissionDate() {
         return admission_date.get();
     }
 
@@ -179,5 +179,25 @@ public class Child {
 
     public void setImage(SimpleObjectProperty<File> image) {
         this.image = image;
+    }
+
+    public String getCompleteName() {
+        String firstName = getfName();
+        String lastName = getlName();
+        String nickname = getNickname();
+
+        String placeholder = "PLACEHOLDER"; //Place holder for adding nickname if exists
+        String complete = firstName + placeholder + lastName;
+
+        //place nickname between first and last name if exists
+        if (nickname.length() != 0){
+            String nicknameString = " \"" + nickname + "\" ";
+            complete =  complete.replace(placeholder, nicknameString);
+
+        //if nickname does not exist
+        } else {
+            complete = complete.replace(placeholder, "");
+        }
+        return complete;
     }
 }

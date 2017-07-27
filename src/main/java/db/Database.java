@@ -12,6 +12,8 @@ import java.sql.*;
 import java.time.LocalDate;
 
 import main.java.db.DbSchema.*;
+import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.text.WordUtils;
 import org.mindrot.jbcrypt.BCrypt;
 
 import static java.lang.Math.toIntExact;
@@ -243,8 +245,8 @@ public class Database {
             String place_of_birth = children.getString(table_children.cols.place_of_birth);
             String description = children.getString(table_children.cols.description);
             String referrer = (String) getSingleRowData(table_referrers.name, table_referrers.cols.id, children.getInt(table_children.cols.referrer_id), table_referrers.cols.referrer);
-            String gender = (String) getSingleRowData(table_genders.name, table_genders.cols.id, children.getInt(table_children.cols.gender), table_genders.cols.gender);
-            String status = (String) getSingleRowData(table_children_statuses.name, table_children_statuses.cols.id, children.getInt(table_children.cols.status), table_children_statuses.cols.status);
+            String gender = WordUtils.capitalize((String) getSingleRowData(table_genders.name, table_genders.cols.id, children.getInt(table_children.cols.gender), table_genders.cols.gender));
+            String status = WordUtils.capitalize((String) getSingleRowData(table_children_statuses.name, table_children_statuses.cols.id, children.getInt(table_children.cols.status), table_children_statuses.cols.status));
             //fetch image of child
             int id = (int) children.getInt(table_children.cols.id);
             String avatarPath = getAvatarPathOf(id, table_children.name);
