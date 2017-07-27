@@ -16,7 +16,7 @@
 <BorderPane prefHeight="800" prefWidth="1030" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.ChildDisplayController">
 
     <center>
-        <AnchorPane fx:id="anchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="0" prefHeight="800" prefWidth="850">
+        <AnchorPane fx:id="anchorPane" minWidth="0" prefHeight="800" prefWidth="850">
             <!-- Banner -->
             <Rectangle fx:id="bannerRect" height="110" styleClass="banner" width="850" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
             <ImageView fx:id="childImage" fitHeight="99" fitWidth="99" AnchorPane.leftAnchor="57" AnchorPane.topAnchor="57" />

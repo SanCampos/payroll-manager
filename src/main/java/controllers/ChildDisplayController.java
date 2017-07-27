@@ -54,6 +54,12 @@ public class ChildDisplayController {
     public void initialize() {
         childImage.setClip(ImageUtils.getAvatarCircle(childImage.getFitHeight()));
         bannerRect.widthProperty().bind(anchorPane.widthProperty());
+        final Rectangle centerClip = new Rectangle();
+        anchorPane.setClip(centerClip);
+        anchorPane.layoutBoundsProperty().addListener(((observable, oldValue, newValue) -> {
+            centerClip.setWidth(newValue.getWidth());
+            centerClip.setHeight(newValue.getHeight());
+        }));
         /*(Platform.runLater(() -> ((Stage) childImage.getScene().getWindow())
                 .maximizedProperty().addListener((observable, oldValue, newValue) -> {
                     if (!newValue) {
