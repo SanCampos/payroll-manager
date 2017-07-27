@@ -1,16 +1,20 @@
 package main.java.controllers;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import main.java.models.Child;
+import main.java.utils.DragResizerXY;
 import main.java.utils.ImageUtils;
 
 import java.io.File;
@@ -50,6 +54,8 @@ public class ChildDisplayController {
 
     @FXML AnchorPane anchorPane;
 
+    @FXML HBox issuePlaceHolder;
+
     @FXML
     public void initialize() {
         childImage.setClip(ImageUtils.getAvatarCircle(childImage.getFitHeight()));
@@ -60,17 +66,13 @@ public class ChildDisplayController {
             centerClip.setWidth(newValue.getWidth());
             centerClip.setHeight(newValue.getHeight());
         }));
-        /*(Platform.runLater(() -> ((Stage) childImage.getScene().getWindow())
-                .maximizedProperty().addListener((observable, oldValue, newValue) -> {
-                    if (!newValue) {
-                        anchorPane.setMaxWidth(anchorPane.getPrefWidth());
-                        anchorPane.setMaxHeight(anchorPane.getPrefHeight());
-                    } else {
-                        anchorPane.setMaxHeight(Double.MAX_VALUE);
-                        anchorPane.setMaxWidth(Double.MAX_VALUE);
-                    }
-                })); */
-
+        issuePlaceHolder.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println(event.getX());
+            }
+        });
+        DragResizerXY.makeResizable(issuePlaceHolder, true);
     }
 
     public void setChild(Child child) {
