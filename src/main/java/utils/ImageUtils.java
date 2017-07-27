@@ -26,7 +26,7 @@ public class ImageUtils {
         return true;
     }
 
-    public static Circle getAvatarCircle() {
-        return new Circle(32.5, 32.5, 32.5);
+    public static Circle getAvatarCircle(double diameter) {
+        return new Circle(diameter/2, diameter/2, diameter/2);
     }
 }

@@ -1,12 +1,17 @@
 package main.java.controllers;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 import main.java.models.Child;
+import main.java.utils.ImageUtils;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -40,6 +45,27 @@ public class ChildDisplayController {
     @FXML Label childAdmissionAge;
     @FXML Label childAdmissionDate;
     @FXML Label childReferrer;
+
+    @FXML Rectangle bannerRect;
+
+    @FXML AnchorPane anchorPane;
+
+    @FXML
+    public void initialize() {
+        childImage.setClip(ImageUtils.getAvatarCircle(childImage.getFitHeight()));
+        bannerRect.widthProperty().bind(anchorPane.widthProperty());
+        /*(Platform.runLater(() -> ((Stage) childImage.getScene().getWindow())
+                .maximizedProperty().addListener((observable, oldValue, newValue) -> {
+                    if (!newValue) {
+                        anchorPane.setMaxWidth(anchorPane.getPrefWidth());
+                        anchorPane.setMaxHeight(anchorPane.getPrefHeight());
+                    } else {
+                        anchorPane.setMaxHeight(Double.MAX_VALUE);
+                        anchorPane.setMaxWidth(Double.MAX_VALUE);
+                    }
+                })); */
+
+    }
 
     public void setChild(Child child) {
         childImage.setImage(new Image("file:///" + ((File) child.getImage()).getAbsoluteFile()));

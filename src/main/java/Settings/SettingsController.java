@@ -68,7 +68,7 @@ public class SettingsController {
     
     private void initAvatar() {
         Image get = new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath());
-        prof_img.setClip(ImageUtils.getAvatarCircle());
+        prof_img.setClip(ImageUtils.getAvatarCircle(prof_img.getFitHeight()));
         updateAvatar(GlobalInfo.getCurrProfImg().getName(), get);
     }
 

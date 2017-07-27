@@ -8,19 +8,19 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<?import javafx.scene.layout.StackPane?>
 <BorderPane prefHeight="800" prefWidth="1030" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.ChildDisplayController">
 
     <center>
-        <AnchorPane prefHeight="800" prefWidth="875.0">
+        <AnchorPane fx:id="anchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="0" prefHeight="800" prefWidth="850">
             <!-- Banner -->
-            <Rectangle height="110" styleClass="banner" width="850" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
+            <Rectangle fx:id="bannerRect" height="110" styleClass="banner" width="850" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
             <ImageView fx:id="childImage" fitHeight="99" fitWidth="99" AnchorPane.leftAnchor="57" AnchorPane.topAnchor="57" />
-            <Label fx:id="childName" AnchorPane.leftAnchor="154" AnchorPane.topAnchor="83" />
+            <Label fx:id="childName" AnchorPane.leftAnchor="170" AnchorPane.topAnchor="83" />
 
             <StackPane AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
                 <ImageView fitHeight="30" fitWidth="30">
@@ -28,7 +28,7 @@
                         <Image url="/imgs/left_arrow.png" />
                     </image>
                 </ImageView>
-                <Button fx:id="backButton" prefHeight="30" prefWidth="30" styleClass="btn_overlay"/>
+                <Button fx:id="backButton" prefHeight="30" prefWidth="30" styleClass="btn_overlay" />
             </StackPane>
 
             <!-- Actual Info -->
@@ -55,7 +55,7 @@
 
             <Text styleClass="infoLabel" text="Parents: " AnchorPane.leftAnchor="459" AnchorPane.topAnchor="222" />
             <TextFlow fx:id="childParents" lineSpacing="2" prefHeight="36" prefWidth="122" styleClass="long_info" AnchorPane.leftAnchor="657" AnchorPane.topAnchor="222" />
-            <Button fx:id="parentsButton" layoutX="811.0" layoutY="217.0" prefHeight="30" prefWidth="30" styleClass="infoBtn" text="i" AnchorPane.leftAnchor="811.0" AnchorPane.topAnchor="217.0" />
+            <Button fx:id="parentInfoBtn" layoutX="811.0" layoutY="217.0" prefHeight="30" prefWidth="30" styleClass="infoBtn" text="i" AnchorPane.leftAnchor="811.0" AnchorPane.topAnchor="217.0" />
 
             <Text styleClass="infoLabel" text="Age upon admission: " AnchorPane.leftAnchor="459" AnchorPane.topAnchor="285" />
             <Label fx:id="childAdmissionAge" text="3" AnchorPane.leftAnchor="658" AnchorPane.topAnchor="285" />
@@ -69,7 +69,7 @@
     </center>
 
     <right>
-        <HBox prefHeight="871.0" prefWidth="181.0" styleClass="border_box">
+        <HBox alignment="CENTER" prefHeight="871.0" prefWidth="181.0" styleClass="border_box">
             <Text styleClass="list_header" text="WORK IN PROGRESS" />
         </HBox>
     </right>

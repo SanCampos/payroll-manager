@@ -196,7 +196,7 @@ public class Child {
 
         //if nickname does not exist
         } else {
-            complete = complete.replace(placeholder, "");
+            complete = complete.replace(placeholder, " ");
         }
         return complete;
     }

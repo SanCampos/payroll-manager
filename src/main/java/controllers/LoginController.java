@@ -69,7 +69,7 @@ public class LoginController {
 
             //Initiate list window
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/list.fxml"));
-            Scene scene = new Scene(root, 1100, 800);
+            Scene scene = new Scene(root, 1030, 800);
             Stage listStage = new Stage();
             listStage.setTitle("List");
             listStage.setScene(scene);

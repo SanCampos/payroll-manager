@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
@@ -46,6 +47,9 @@ public class ListController {
     //TO BE MOVED TO EXTERNAL CLASS
     private static Database db;
 
+    private int currentLoadedChild;
+    private Parent currentLoadedChildSceneRoot;
+
     @FXML
     public void initialize() {
         db = new Database();
@@ -56,10 +60,11 @@ public class ListController {
         }
         initAvatar();
         disableReorder();
+        currentLoadedChild = -1;
     }
 
     private void initAvatar() {
-        profImg.setClip(ImageUtils.getAvatarCircle());
+        profImg.setClip(ImageUtils.getAvatarCircle(profImg.getFitHeight()));
         Image value = new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath());
         profImg.setImage(value);
     }
@@ -74,7 +79,19 @@ public class ListController {
                 row.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        System.out.println(row.getItem().getId());
+                        if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() >= 2) {
+                            try {
+                                if (currentLoadedChild != row.getItem().getId()) {
+                                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/childDisplay.fxml"));
+                                    currentLoadedChildSceneRoot = loader.load();
+                                    ChildDisplayController controller = loader.getController();
+                                    controller.setChild(row.getItem());
+                                }
+                                    profImg.getScene().setRoot(currentLoadedChildSceneRoot);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 });
                 return row;
@@ -95,9 +112,9 @@ public class ListController {
                             childImage = new Image("file:///" + item.getAbsolutePath());
 
                             imageView.setImage(childImage);
-                            imageView.setClip(ImageUtils.getAvatarCircle());
                             imageView.setFitHeight(65);
                             imageView.setFitWidth(65);
+                            imageView.setClip(ImageUtils.getAvatarCircle(imageView.getFitHeight()));
                             HBox hBox = new HBox(imageView);
                             hBox.setAlignment(Pos.CENTER);
                             setGraphic(hBox);
