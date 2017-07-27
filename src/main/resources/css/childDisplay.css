@@ -1,3 +1,8 @@
+* {
+    -fx-btn-hover: rgba(64, 64, 64, 0.2);
+    -fx-btn-pressed: rgba(5, 5, 5, 0.35);
+}
+
 .infoLabel {
     -fx-font-weight: bold;
     -fx-font-size: 150%;
@@ -27,4 +32,19 @@
 .border_box {
     -fx-border-style: solid inside;
     -fx-border-color: black;
+}
+
+.btn_overlay {
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.btn_overlay:hover {
+    -fx-background-color: -fx-btn-hover;
+    -fx-border-color: -fx-btn-hover;
+}
+
+.btn_overlay:pressed {
+    -fx-background-color: -fx-btn-pressed;
+    -fx-border-color: -fx-btn-pressed;
 }
