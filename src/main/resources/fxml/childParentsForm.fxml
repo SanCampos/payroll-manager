@@ -23,7 +23,7 @@
     <Label text="Contact no: " AnchorPane.leftAnchor="55" AnchorPane.topAnchor="224" />
 
 
-    <PersistentPromptTextField fx:id="firstFirstNameInput" prefHeight="25.0" prefWidth="351.0" promptText="Johnavel" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="101" />
+    <PersistentPromptTextField fx:id="firstParentFirstNameInput" prefHeight="25.0" prefWidth="351.0" promptText="Johnavel" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="101" />
     <PersistentPromptTextField fx:id="firstParentLastNameInput" prefHeight="25.0" prefWidth="351.0" promptText="dela Cruz" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="141" />
     <PersistentPromptTextField fx:id="firstParentAddressInput" prefHeight="25.0" prefWidth="351.0" promptText="House# 69, Cedar St, Bacolod, Negros Occidental, Philippines" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="181" />
     <PersistentPromptTextField fx:id="firstParentPhoneNumberInput" prefHeight="25.0" prefWidth="351.0" promptText="0969420661" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="221" />
@@ -42,9 +42,9 @@
 
     <CheckBox fx:id="noSecondParentCheckBox" text="No parent" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="473" />
 
-    <StackPane AnchorPane.leftAnchor="127" AnchorPane.topAnchor="453" alignment="TOP_LEFT">
-        <Rectangle fx:id="errorBox" width="351"  height="50" styleClass="disabled" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="453"/>
-        <StackPane AnchorPane.leftAnchor="127" AnchorPane.topAnchor="453" alignment="TOP_LEFT">
+    <StackPane AnchorPane.leftAnchor="127" AnchorPane.topAnchor="512" alignment="TOP_LEFT">
+        <Rectangle fx:id="errorBox" width="351"  height="50" styleClass="disabled"/>
+        <StackPane alignment="TOP_LEFT">
             <padding>
                 <Insets right="7" left="7"/>
             </padding>

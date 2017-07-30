@@ -31,7 +31,7 @@ public class Database {
     private Connection con;
 
     public void init() throws SQLException {
-        String url = "jdbc:mysql://localhost:3306/tset?verifyServerCertificate=false&useSSL=true";
+        String url = "jdbc:mysql://localhost:3306/test?verifyServerCertificate=false&useSSL=true";
         String user = "root";
         String pass = "root";
 
@@ -160,7 +160,7 @@ public class Database {
     }
     
     private int getSingleDataIDOf(String data, String tableName) throws SQLException {
-        Object id = getUniqueRowData(tableName, tableName.substring(0, tableName.length()-1), data, "id");
+        Object id = getUniqueRowData(tableName, tableName.substring(0, tableName.length()-1), data, "id").get(0);
         if (id instanceof Long) {
             return toIntExact((long) id);
         }
@@ -256,11 +256,24 @@ public class Database {
 
             //fetch parents
             List<Object> parentIDs = getUniqueRowData(table_parent_child_relationships.name, table_parent_child_relationships.cols.child_id, id, table_parent_child_relationships.cols.parent_id);
+            List<Child.Parent> parents = new ArrayList<>();
+            
+            for (Object o : parentIDs) {
+                int parentID = ((int) o);
+                ResultSet parent = con.createStatement().executeQuery(String.format("SELECT * FROM %s WHERE %s = %s", table_parents.name, table_parents.cols.id, parentID));
+                
+                String fName = parent.getString(table_parents.cols.first_name);
+                String lName = parent.getString(table_parents.cols.last_name);
+                String location = parent.getString(table_parents.cols.location_id);
+                String phoneNo = parent.getString(table_parents.cols.phone_number_id);
+                parents.add(new Child.Parent(fName, lName,phoneNo, location));
+            }
+            
             String birth_date = children.getDate(table_children.cols.birth_date).toString();
             String admission_date = children.getDate(table_children.cols.admission_date).toString();
 
 
-            childrenList.add(new Child(fname, lname, nickname, place_of_birth, description, gender, birth_date, admission_date, status, referrer, id, avatar));
+            childrenList.add(new Child(fname, lname, nickname, place_of_birth, description, gender, birth_date, admission_date, status, referrer, id, avatar, parents));
         }
         return childrenList;
     }
@@ -277,7 +290,7 @@ public class Database {
         //Check if old avatar is still used by other users
         
         //Retrieve oldAvatarId and fetch rows of users who still use it
-        Object oldAvatarID = getUniqueRowData(tableName, table_users.cols.id, userID, "avatar_id");
+        Object oldAvatarID = getUniqueRowData(tableName, table_users.cols.id, userID, "avatar_id").get(0);
         
         System.out.println("Old Avatar ID = " + oldAvatarID);
         String getUsersOfOldAvatar = String.format("SELECT * FROM %s WHERE %s = ?", tableName, "avatar_id");
@@ -288,7 +301,7 @@ public class Database {
         //Delete old avatar if no other users use it
         
         //Retrieve id from avatar table and set user column to this id
-        Object avatarID = getUniqueRowData(tableName + "_avatars", table_userAvatars.cols.path, path, table_userAvatars.cols.id);
+        Object avatarID = getUniqueRowData(tableName + "_avatars", table_userAvatars.cols.path, path, table_userAvatars.cols.id).get(0);
         String sql = String.format("UPDATE %s SET %s = ? WHERE %s = ?", tableName, "avatar_id", table_users.cols.id);
         PreparedStatement updateAvatarIDS =  con.prepareStatement(sql);
         updateAvatarIDS.setObject(1, avatarID);

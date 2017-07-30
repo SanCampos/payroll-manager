@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import org.apache.commons.collections4.BidiMap;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,7 +30,7 @@ public class Child {
 
     private SimpleObjectProperty<File> image;
 
-    private SimpleMapProperty<ParentType, Parent> parents;
+    private List<Parent> parents;
 
     public static class Parent {
         private SimpleStringProperty fName;
@@ -92,12 +93,8 @@ public class Child {
             this.address.set(address);
         }
     }
-
-    public enum ParentType {
-        MOTHER, FATHER
-    }
-
-    public Child(String fName, String lName, String nickname, String place_of_birth, String description, String gender, String birth_date, String admission_date, String status, String referrer, int id, File avatar, BidiMap<ParentType, Parent> parents) {
+    
+    public Child(String fName, String lName, String nickname, String place_of_birth, String description, String gender, String birth_date, String admission_date, String status, String referrer, int id, File avatar, List<Parent> parents) {
         this.fName = new SimpleStringProperty(fName);
         this.lName = new SimpleStringProperty(lName);
         this.nickname = new SimpleStringProperty(nickname);
@@ -110,23 +107,7 @@ public class Child {
         this.referrer = new SimpleStringProperty(referrer);
         this.id = new SimpleIntegerProperty(id);
         this.image = new SimpleObjectProperty<>(avatar);
-        this.parents = new SimpleMapProperty<>();
-
-        for (Parent parent : parents.values()) {
-            addParent(parent, parents.getKey(parent));
-        }
-    }
-
-    private void addParent(Parent parent, ParentType parentType) {
-        parents.put(parentType, parent);
-    }
-
-    private void addFather(Parent father) {
-        parents.put(ParentType.FATHER, father);
-    }
-
-    private void addMother(Parent mother) {
-        parents.put(ParentType.MOTHER, mother);
+        this.parents = parents;
     }
 
     public String getfName() {
@@ -287,5 +268,33 @@ public class Child {
             complete = complete.replace(placeholder, " ");
         }
         return complete;
+    }
+    
+    public String getPlace_of_birth() {
+        return place_of_birth.get();
+    }
+    
+    public String getBirth_date() {
+        return birth_date.get();
+    }
+    
+    public String getAdmission_date() {
+        return admission_date.get();
+    }
+    
+    public SimpleObjectProperty<File> imageProperty() {
+        return image;
+    }
+    
+    public void setImage(File image) {
+        this.image.set(image);
+    }
+    
+    public List<Parent> getParents() {
+        return parents;
+    }
+    
+    public void setParents(List<Parent> parents) {
+        this.parents = parents;
     }
 }
