@@ -261,12 +261,13 @@ public class Database {
             for (Object o : parentIDs) {
                 int parentID = ((int) o);
                 ResultSet parent = con.createStatement().executeQuery(String.format("SELECT * FROM %s WHERE %s = %s", table_parents.name, table_parents.cols.id, parentID));
-                
-                String fName = parent.getString(table_parents.cols.first_name);
-                String lName = parent.getString(table_parents.cols.last_name);
-                String location = parent.getString(table_parents.cols.location_id);
-                String phoneNo = parent.getString(table_parents.cols.phone_number_id);
-                parents.add(new Child.Parent(fName, lName,phoneNo, location));
+                if (parent.next()) {
+                    String fName = parent.getString(table_parents.cols.first_name);
+                    String lName = parent.getString(table_parents.cols.last_name);
+                    String location = parent.getString(table_parents.cols.location_id);
+                    String phoneNo = parent.getString(table_parents.cols.phone_number_id);
+                    parents.add(new Child.Parent(fName, lName, phoneNo, location));
+                }
             }
             
             String birth_date = children.getDate(table_children.cols.birth_date).toString();
