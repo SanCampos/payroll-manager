@@ -1,11 +1,14 @@
 package main.java.models;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.image.Image;
+import org.apache.commons.collections4.BidiMap;
 
 import java.io.File;
+import java.util.Map;
 
 /**
  * Created by thedr on 7/4/2017.
@@ -26,7 +29,75 @@ public class Child {
 
     private SimpleObjectProperty<File> image;
 
-    public Child(String fName, String lName, String nickname, String place_of_birth, String description, String gender, String birth_date, String admission_date, String status, String referrer, int id, File avatar) {
+    private SimpleMapProperty<ParentType, Parent> parents;
+
+    public static class Parent {
+        private SimpleStringProperty fName;
+        private SimpleStringProperty lName;
+        private SimpleStringProperty phoneNo;
+        private SimpleStringProperty address;
+
+        public Parent(String fName, String lName, String phoneNo, String address) {
+            this.fName = new SimpleStringProperty(fName);
+            this.lName = new SimpleStringProperty(lName);
+            this.phoneNo = new SimpleStringProperty(phoneNo);
+            this.address = new SimpleStringProperty(address);
+        }
+
+        public String getfName() {
+            return fName.get();
+        }
+
+        public SimpleStringProperty fNameProperty() {
+            return fName;
+        }
+
+        public void setfName(String fName) {
+            this.fName.set(fName);
+        }
+
+        public String getlName() {
+            return lName.get();
+        }
+
+        public SimpleStringProperty lNameProperty() {
+            return lName;
+        }
+
+        public void setlName(String lName) {
+            this.lName.set(lName);
+        }
+
+        public String getPhoneNo() {
+            return phoneNo.get();
+        }
+
+        public SimpleStringProperty phoneNoProperty() {
+            return phoneNo;
+        }
+
+        public void setPhoneNo(String phoneNo) {
+            this.phoneNo.set(phoneNo);
+        }
+
+        public String getAddress() {
+            return address.get();
+        }
+
+        public SimpleStringProperty addressProperty() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address.set(address);
+        }
+    }
+
+    public enum ParentType {
+        MOTHER, FATHER
+    }
+
+    public Child(String fName, String lName, String nickname, String place_of_birth, String description, String gender, String birth_date, String admission_date, String status, String referrer, int id, File avatar, BidiMap<ParentType, Parent> parents) {
         this.fName = new SimpleStringProperty(fName);
         this.lName = new SimpleStringProperty(lName);
         this.nickname = new SimpleStringProperty(nickname);
@@ -39,6 +110,23 @@ public class Child {
         this.referrer = new SimpleStringProperty(referrer);
         this.id = new SimpleIntegerProperty(id);
         this.image = new SimpleObjectProperty<>(avatar);
+        this.parents = new SimpleMapProperty<>();
+
+        for (Parent parent : parents.values()) {
+            addParent(parent, parents.getKey(parent));
+        }
+    }
+
+    private void addParent(Parent parent, ParentType parentType) {
+        parents.put(parentType, parent);
+    }
+
+    private void addFather(Parent father) {
+        parents.put(ParentType.FATHER, father);
+    }
+
+    private void addMother(Parent mother) {
+        parents.put(ParentType.MOTHER, mother);
     }
 
     public String getfName() {

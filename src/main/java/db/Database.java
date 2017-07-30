@@ -10,6 +10,8 @@ import java.io.File;
 import java.security.SecureRandom;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import main.java.db.DbSchema.*;
 import org.apache.commons.text.WordUtils;
@@ -158,7 +160,7 @@ public class Database {
     }
     
     private int getSingleDataIDOf(String data, String tableName) throws SQLException {
-        Object id = getSingleRowData(tableName, tableName.substring(0, tableName.length()-1), data, "id");
+        Object id = getUniqueRowData(tableName, tableName.substring(0, tableName.length()-1), data, "id");
         if (id instanceof Long) {
             return toIntExact((long) id);
         }
@@ -166,8 +168,8 @@ public class Database {
     }
 
     public String getAvatarPathOf(int id, String tableName) throws SQLException {
-        int avatarID = (int) getSingleRowData(tableName, table_users.cols.id, id, "avatar_id");
-        return (String) getSingleRowData(tableName + "_avatars", table_userAvatars.cols.id, avatarID, table_userAvatars.cols.path);
+        int avatarID = (int) getUniqueRowData(tableName, table_users.cols.id, id, "avatar_id").get(0);
+        return (String) getUniqueRowData(tableName + "_avatars", table_userAvatars.cols.id, avatarID, table_userAvatars.cols.path).get(0);
     }
 
     /**
@@ -180,13 +182,13 @@ public class Database {
      * @param desiredColumnData name of column from which the data will be retrieved from
      * @return A result set representing that single row
      */
-    private Object getSingleRowData(String tableName, String comparisonColumn, Object comparisonData, String desiredColumnData) throws SQLException {
+    private List<Object> getUniqueRowData(String tableName, String comparisonColumn, Object comparisonData, String desiredColumnData) throws SQLException {
         ResultSet row = getSingleRow(tableName, comparisonColumn, comparisonData);
-
-        if (row.next()) {
-            return row.getObject(desiredColumnData);
+        List<Object> data = new ArrayList<>();
+        while (row.next()) {
+            data.add(row.getObject(desiredColumnData));
         }
-        return null;
+        return data;
     }
 
     private ResultSet getSingleRow(String tableName, String comparisonColumn, Object comparisonData) throws SQLException {
@@ -243,16 +245,20 @@ public class Database {
             String nickname = children.getString(table_children.cols.nickname);
             String place_of_birth = children.getString(table_children.cols.place_of_birth);
             String description = children.getString(table_children.cols.description);
-            String referrer = (String) getSingleRowData(table_referrers.name, table_referrers.cols.id, children.getInt(table_children.cols.referrer_id), table_referrers.cols.referrer);
-            String gender = WordUtils.capitalize((String) getSingleRowData(table_genders.name, table_genders.cols.id, children.getInt(table_children.cols.gender), table_genders.cols.gender));
-            String status = WordUtils.capitalize((String) getSingleRowData(table_children_statuses.name, table_children_statuses.cols.id, children.getInt(table_children.cols.status), table_children_statuses.cols.status));
+            String referrer = (String) getUniqueRowData(table_referrers.name, table_referrers.cols.id, children.getInt(table_children.cols.referrer_id), table_referrers.cols.referrer).get(0);
+            String gender = WordUtils.capitalize((String) getUniqueRowData(table_genders.name, table_genders.cols.id, children.getInt(table_children.cols.gender), table_genders.cols.gender).get(0));
+            String status = WordUtils.capitalize((String) getUniqueRowData(table_children_statuses.name, table_children_statuses.cols.id, children.getInt(table_children.cols.status), table_children_statuses.cols.status).get(0));
+
             //fetch image of child
             int id = (int) children.getInt(table_children.cols.id);
             String avatarPath = getAvatarPathOf(id, table_children.name);
             File avatar = new File(avatarPath);
 
+            //fetch parents
+            List<Object> parentIDs = getUniqueRowData(table_parent_child_relationships.name, table_parent_child_relationships.cols.child_id, id, table_parent_child_relationships.cols.parent_id);
             String birth_date = children.getDate(table_children.cols.birth_date).toString();
             String admission_date = children.getDate(table_children.cols.admission_date).toString();
+
 
             childrenList.add(new Child(fname, lname, nickname, place_of_birth, description, gender, birth_date, admission_date, status, referrer, id, avatar));
         }
@@ -271,7 +277,7 @@ public class Database {
         //Check if old avatar is still used by other users
         
         //Retrieve oldAvatarId and fetch rows of users who still use it
-        Object oldAvatarID = getSingleRowData(tableName, table_users.cols.id, userID, "avatar_id");
+        Object oldAvatarID = getUniqueRowData(tableName, table_users.cols.id, userID, "avatar_id");
         
         System.out.println("Old Avatar ID = " + oldAvatarID);
         String getUsersOfOldAvatar = String.format("SELECT * FROM %s WHERE %s = ?", tableName, "avatar_id");
@@ -282,7 +288,7 @@ public class Database {
         //Delete old avatar if no other users use it
         
         //Retrieve id from avatar table and set user column to this id
-        Object avatarID = getSingleRowData(tableName + "_avatars", table_userAvatars.cols.path, path, table_userAvatars.cols.id);
+        Object avatarID = getUniqueRowData(tableName + "_avatars", table_userAvatars.cols.path, path, table_userAvatars.cols.id);
         String sql = String.format("UPDATE %s SET %s = ? WHERE %s = ?", tableName, "avatar_id", table_users.cols.id);
         PreparedStatement updateAvatarIDS =  con.prepareStatement(sql);
         updateAvatarIDS.setObject(1, avatarID);
@@ -295,7 +301,7 @@ public class Database {
         
         System.out.println(isEmpty);
         if (isEmpty) {
-            String oldAvatarPath = (String) getSingleRowData(tableName + "_avatars", table_userAvatars.cols.id, oldAvatarID, table_userAvatars.cols.path);
+            String oldAvatarPath = (String) getUniqueRowData(tableName + "_avatars", table_userAvatars.cols.id, oldAvatarID, table_userAvatars.cols.path).get(0);
             System.out.println(oldAvatarPath);
             System.out.println(new File(oldAvatarPath).delete());
             

@@ -29,20 +29,20 @@ public class ChildParentsController extends FormHelper {
 
 
 
-    //Inputs for  mother information
-    @FXML private PersistentPromptTextField motherFirstNameInput;
-    @FXML private PersistentPromptTextField motherLastNameInput;
-    @FXML private PersistentPromptTextField motherAddressInput;
-    @FXML private PersistentPromptTextField motherPhoneNumberInput;
+    //Inputs for  first Parent information
+    @FXML private PersistentPromptTextField firstParentFirstNameInput;
+    @FXML private PersistentPromptTextField firstParentLastNameInput;
+    @FXML private PersistentPromptTextField firstParentAddressInput;
+    @FXML private PersistentPromptTextField firstParentPhoneNumberInput;
     
-    //Inputs for  father information
-    @FXML private PersistentPromptTextField fatherFirstNameInput;
-    @FXML private PersistentPromptTextField fatherLastNameInput;
-    @FXML private PersistentPromptTextField fatherAddressInput;
+    //Inputs for  second Parent information
+    @FXML private PersistentPromptTextField secondParentFirstNameInput;
+    @FXML private PersistentPromptTextField secondParentLastNameInput;
+    @FXML private PersistentPromptTextField secondParentAddressInput;
     @FXML private PersistentPromptTextField fatherPhoneNumberInput;
-    
-    @FXML private CheckBox noFatherCheckBox;
-    @FXML private CheckBox noMotherCheckBox;
+
+    @FXML private CheckBox noFirstParentCheckBox;
+    @FXML private CheckBox noSecondParentCheckBox;
     
     @FXML private Button submit;
 
@@ -66,16 +66,16 @@ public class ChildParentsController extends FormHelper {
     public void initialize() {
         Platform.runLater(() -> {
             try {
-                inputNodes = NodeUtils.getAllNodesOf(fatherAddressInput.getParent(), new ArrayList<>(), "javafx.scene.control.TextInputControl");
+                inputNodes = NodeUtils.getAllNodesOf(secondParentAddressInput.getParent(), new ArrayList<>(), "javafx.scene.control.TextInputControl");
             } catch (ClassNotFoundException e) {
                 DialogUtils.displayExceptionError(e, "A severe error has occurred, please contact the developer for assistance");
                 e.printStackTrace();
             }
         });
-        noFatherCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> setDisableTo("father", newValue)));
-        noMotherCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> setDisableTo("mother", newValue)));
+        noFirstParentCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> setDisableTo("first", newValue)));
+        noSecondParentCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> setDisableTo("second", newValue)));
     
-        bothParentsDisabled = noFatherCheckBox.selectedProperty().and(noMotherCheckBox.selectedProperty());
+        bothParentsDisabled = noSecondParentCheckBox.selectedProperty().and(noFirstParentCheckBox.selectedProperty());
         bothParentsDisabled.addListener(((observable, oldValue, newValue) -> {
             boolean bothDisabled = newValue;
 
@@ -93,8 +93,8 @@ public class ChildParentsController extends FormHelper {
             }
         }));
 
-        motherAddressInput.textProperty().addListener(((observable, oldValue, newValue) -> {
-            fatherAddressInput.setText(newValue);
+        firstParentAddressInput.textProperty().addListener(((observable, oldValue, newValue) -> {
+            secondParentAddressInput.setText(newValue);
         }));
     }
     
@@ -109,7 +109,7 @@ public class ChildParentsController extends FormHelper {
     }
     
     public void cancel(ActionEvent actionEvent) {
-        FormHelper.cancel(actionEvent, ((Stage) motherAddressInput.getScene().getWindow()));
+        FormHelper.cancel(actionEvent, ((Stage) firstParentAddressInput.getScene().getWindow()));
     }
     
     public void setPrevRoot(Parent root) {
@@ -125,40 +125,40 @@ public class ChildParentsController extends FormHelper {
             Database db = new Database();
             db.init();
 
-            addParent(childID, db, "mother");
-            addParent(childID, db, "father");
+            addParent(childID, db, "first");
+            addParent(childID, db, "second");
 
         } catch (SQLException e) {
             DialogUtils.displayError("Parent registration error!", "There was an error registering the parent data, please try again!");
             e.printStackTrace();
         }
-        Stage thisStage = ((Stage) motherAddressInput.getScene().getWindow());
+        Stage thisStage = ((Stage) firstParentAddressInput.getScene().getWindow());
         thisStage.close();
     }
 
     private void addParent(int childID, Database db, String parent) throws SQLException {
-            TextInputControl addressInput = getTextInputOf(parent, "AddressInput");
+            TextInputControl addressInput = getTextInputOf(parent, "ParentAddressInput");
 
         if (!addressInput.isDisabled()) {
-            String fName = getTextInputTextOf(parent, "FirstNameInput");
-            String lName = getTextInputTextOf(parent, "LastNameInput");
+            String fName = getTextInputTextOf(parent, "ParentFirstNameInput");
+            String lName = getTextInputTextOf(parent, "ParentLastNameInput");
             String address = addressInput.getText();
-            String phoneNumber = getTextInputTextOf(parent, "PhoneNumberInput");
+            String phoneNumber = getTextInputTextOf(parent, "ParentPhoneNumberInput");
 
             db.addNewParent(fName, lName, address, phoneNumber, childID);
         }
     }
 
     private TextInputControl getTextInputOf(String parent, String input) {
-        return (TextInputControl) motherAddressInput.getParent().lookup(String.format("#%s%s", parent, input));
+        return (TextInputControl) firstParentAddressInput.getParent().lookup(String.format("#%s%s", parent, input));
     }
 
     private String getTextInputTextOf(String parent, String input) {
-        return ((TextInputControl) motherAddressInput.getParent().lookup(String.format("#%s%s", parent, input))).getText();
+        return ((TextInputControl) firstParentAddressInput.getParent().lookup(String.format("#%s%s", parent, input))).getText();
     }
 
     public void goToPrevRoot() {
-        motherAddressInput.getScene().setRoot(prevRoot);
+        firstParentAddressInput.getScene().setRoot(prevRoot);
     }
 
     public void setChildFormController(ChildFormController childFormController) {

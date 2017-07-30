@@ -17,32 +17,30 @@
     <Label styleClass="title" text="Parental information" AnchorPane.leftAnchor="12" AnchorPane.topAnchor="12" />
     <Line fx:id="divider" endX="530" startX="5" AnchorPane.leftAnchor="12" AnchorPane.topAnchor="57" />
 
-    <Label styleClass="header" text="Mother" AnchorPane.leftAnchor="37" AnchorPane.topAnchor="61" />
-    <CheckBox fx:id="noMotherCheckBox" text="No mother" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="67" />
-
     <Label text="First Name: " AnchorPane.leftAnchor="55" AnchorPane.topAnchor="104" />
     <Label text="Last Name: " AnchorPane.leftAnchor="55" AnchorPane.topAnchor="144" />
     <Label text="Current address: " AnchorPane.leftAnchor="28" AnchorPane.topAnchor="184" />
     <Label text="Contact no: " AnchorPane.leftAnchor="55" AnchorPane.topAnchor="224" />
 
 
-    <PersistentPromptTextField fx:id="motherFirstNameInput" prefHeight="25.0" prefWidth="351.0" promptText="Johnavel" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="101" />
-    <PersistentPromptTextField fx:id="motherLastNameInput" prefHeight="25.0" prefWidth="351.0" promptText="dela Cruz" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="141" />
-    <PersistentPromptTextField fx:id="motherAddressInput" prefHeight="25.0" prefWidth="351.0" promptText="House# 69, Cedar St, Bacolod, Negros Occidental, Philippines" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="181" />
-    <PersistentPromptTextField fx:id="motherPhoneNumberInput" prefHeight="25.0" prefWidth="351.0" promptText="0969420661" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="221" />
+    <PersistentPromptTextField fx:id="firstFirstNameInput" prefHeight="25.0" prefWidth="351.0" promptText="Johnavel" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="101" />
+    <PersistentPromptTextField fx:id="firstParentLastNameInput" prefHeight="25.0" prefWidth="351.0" promptText="dela Cruz" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="141" />
+    <PersistentPromptTextField fx:id="firstParentAddressInput" prefHeight="25.0" prefWidth="351.0" promptText="House# 69, Cedar St, Bacolod, Negros Occidental, Philippines" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="181" />
+    <PersistentPromptTextField fx:id="firstParentPhoneNumberInput" prefHeight="25.0" prefWidth="351.0" promptText="0969420661" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="221" />
 
-    <Label styleClass="header" text="Father" AnchorPane.leftAnchor="37" AnchorPane.topAnchor="255" />
-    <CheckBox fx:id="noFatherCheckBox" text="No father" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="261" />
+    <CheckBox fx:id="noFirstParentCheckBox" text="No Parent" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="261" />
 
-    <Label text="First Name: " AnchorPane.leftAnchor="55" AnchorPane.topAnchor="300" />
-    <Label text="Last Name: " AnchorPane.leftAnchor="55" AnchorPane.topAnchor="340" />
-    <Label text="Current address: " AnchorPane.leftAnchor="28" AnchorPane.topAnchor="380" />
-    <Label text="Contact no: " AnchorPane.leftAnchor="55" AnchorPane.topAnchor="420" />
+    <Label text="First Name: " AnchorPane.leftAnchor="55" AnchorPane.topAnchor="320" />
+    <Label text="Last Name: " AnchorPane.leftAnchor="55" AnchorPane.topAnchor="360" />
+    <Label text="Current address: " AnchorPane.leftAnchor="28" AnchorPane.topAnchor="400" />
+    <Label text="Contact no: " AnchorPane.leftAnchor="55" AnchorPane.topAnchor="440" />
 
-    <PersistentPromptTextField fx:id="fatherFirstNameInput" prefHeight="25.0" prefWidth="351.0" promptText="Johnavel" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="293" />
-    <PersistentPromptTextField fx:id="fatherLastNameInput" prefHeight="25.0" prefWidth="351.0" promptText="dela Cruz" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="333" />
-    <PersistentPromptTextField fx:id="fatherAddressInput" prefHeight="25.0" prefWidth="351.0" promptText="House# 69, Cedar St, Bacolod, Negros Occidental, Philippines" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="373" />
-    <PersistentPromptTextField fx:id="fatherPhoneNumberInput" prefHeight="25.0" prefWidth="351.0" promptText="0969420661" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="413" />
+    <PersistentPromptTextField fx:id="secondParentFirstNameInput" prefHeight="25.0" prefWidth="351.0" promptText="Johnavel" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="313" />
+    <PersistentPromptTextField fx:id="secondParentLastNameInput" prefHeight="25.0" prefWidth="351.0" promptText="dela Cruz" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="353" />
+    <PersistentPromptTextField fx:id="secondParentAddressInput" prefHeight="25.0" prefWidth="351.0" promptText="House# 69, Cedar St, Bacolod, Negros Occidental, Philippines" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="393" />
+    <PersistentPromptTextField fx:id="secondParentPhoneNumberInput" prefHeight="25.0" prefWidth="351.0" promptText="0969420661" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="433" />
+
+    <CheckBox fx:id="noSecondParentCheckBox" text="No parent" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="473" />
 
     <StackPane AnchorPane.leftAnchor="127" AnchorPane.topAnchor="453" alignment="TOP_LEFT">
         <Rectangle fx:id="errorBox" width="351"  height="50" styleClass="disabled" AnchorPane.leftAnchor="127" AnchorPane.topAnchor="453"/>
