@@ -28,6 +28,13 @@
             <Rectangle fx:id="bannerRect" height="110" styleClass="banner" width="850" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
             <ImageView fx:id="childImage" fitHeight="99" fitWidth="99" AnchorPane.leftAnchor="57" AnchorPane.topAnchor="57" />
             <Label fx:id="childName" AnchorPane.leftAnchor="170" AnchorPane.topAnchor="83" />
+            <StackPane AnchorPane.leftAnchor="180" AnchorPane.topAnchor="82">
+                <ImageView fitHeight="25" fitWidth="25">
+                    <image>
+                        <Image url="/imgs/pencil_icon.png"/>
+                    </image>
+                </ImageView>
+            </StackPane>
 
             <StackPane AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
                 <ImageView fitHeight="30" fitWidth="30">
