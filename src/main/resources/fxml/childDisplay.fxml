@@ -35,7 +35,7 @@
                         <Image url="/imgs/left_arrow.png" />
                     </image>
                 </ImageView>
-                <Button fx:id="backButton" prefHeight="30" prefWidth="30" styleClass="btn_overlay" />
+                <Button prefHeight="30" prefWidth="30" styleClass="btn_overlay" onAction="#goBackToList" />
             </StackPane>
 
             <!-- Actual Info -->

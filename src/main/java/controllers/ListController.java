@@ -31,6 +31,7 @@ import main.java.utils.ImageUtils;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by thedr on 6/6/2017.
@@ -49,6 +50,8 @@ public class ListController {
 
     private int currentLoadedChild;
     private Parent currentLoadedChildSceneRoot;
+    
+    private ListController itself;
 
     @FXML
     public void initialize() {
@@ -61,6 +64,7 @@ public class ListController {
         initAvatar();
         disableReorder();
         currentLoadedChild = -1;
+        itself = this;
     }
 
     private void initAvatar() {
@@ -86,6 +90,8 @@ public class ListController {
                                     currentLoadedChildSceneRoot = loader.load();
                                     ChildDisplayController controller = loader.getController();
                                     controller.setChild(row.getItem());
+                                    controller.setListController(itself);
+                                    controller.setListRoot(table.getParent());
                                 }
                                     profImg.getScene().setRoot(currentLoadedChildSceneRoot);
                             } catch (IOException e) {
