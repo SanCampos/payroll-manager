@@ -17,6 +17,7 @@ import main.java.customNodes.PersistentPromptTextField;
 import main.java.db.Database;
 import main.java.db.DbSchema.*;
 import main.java.globalInfo.GlobalInfo;
+import main.java.models.Child;
 import main.java.utils.DialogUtils;
 import main.java.utils.NodeUtils;
 
@@ -82,6 +83,8 @@ public class ChildFormController extends FormHelper {
     private ChildParentsController childParentsController;
 
     private ListController listController;
+    
+    private boolean isEdit  = false;
 
     @FXML
     public void initialize() throws FileNotFoundException {
@@ -135,10 +138,7 @@ public class ChildFormController extends FormHelper {
         
         try {
             if (nextParent ==  null) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/childParentsForm.fxml"));
-                Parent root = loader.load();
-                childParentsController = loader.getController();
-                setNextParent(root);
+                prepareParentForm();
             }
             submitBtn.getScene().setRoot(nextParent);
             childParentsController.setPrevRoot(submitBtn.getParent());
@@ -148,7 +148,14 @@ public class ChildFormController extends FormHelper {
             DialogUtils.displayExceptionError(e, "Severe error!");
         }
     }
-
+    
+    private void prepareParentForm() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/childParentsForm.fxml"));
+        Parent root = loader.load();
+        childParentsController = loader.getController();
+        setNextParent(root);
+    }
+    
     private void initSubmitBtn() {
         submitBtn.setText("Submit");
         submitBtn.getStyleClass().remove("default");
@@ -158,8 +165,12 @@ public class ChildFormController extends FormHelper {
     
     @FXML
     public void cancel(ActionEvent actionEvent) {
-        Stage stage = ((Stage) submitBtn.getScene().getWindow());
-        stage.close();
+        if (!isEdit) {
+            FormHelper.cancel(actionEvent, ((Stage) submitBtn.getScene().getWindow()));
+        } else {
+            Stage stage = ((Stage) submitBtn.getScene().getWindow());
+            stage.close();
+        }
     }
 
 
@@ -316,6 +327,41 @@ public class ChildFormController extends FormHelper {
 
     public void setListController(ListController listController) {
         this.listController = listController;
+    }
+    
+    public void setChild(Child child) throws IOException {
+        firstNameInput.setText(child.getfName());
+        lastNameInput.setText(child.getlName());
+        nickNameInput.setText(child.getNickname());
+        childImage.setImage(new Image("file:///" + ((File) child.getImage()).getAbsolutePath()));
+        
+        birthDateInput.setValue(LocalDate.parse(child.getBirth_date()));
+        admissionDateInput.setValue(LocalDate.parse(child.getAdmission_date()));
+        birthPlaceInput.setText(child.getPlace_of_birth());
+        referrerInput.setText(child.getReferrer());
+        genderToggleGroup.getToggles().get(child.getGender().equalsIgnoreCase("male") ? 0 : 1);
+        for (Object o : childStatus.getItems())  {
+            if (o.equals(child.getStatus())) {
+                childStatus.getSelectionModel().select(childStatus.getItems().indexOf(o));
+                break;
+            }
+        }
+        childDescInput.setText(child.getDescription());
+    
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/childParentsForm.fxml"));
+        Parent root = loader.load();
+        childParentsController = loader.getController();
+        setNextParent(root);
+        childParentsController.setParents(child.getParents());
+        
+    }
+    
+    public void setEdit(boolean edit) {
+        this.isEdit = edit;
+    }
+    
+    public boolean getEdit() {
+        return isEdit;
     }
 }
 

@@ -7,16 +7,15 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextInputControl;
+import javafx.scene.control.*;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import main.java.customNodes.PersistentPromptTextField;
 import main.java.db.Database;
+import main.java.models.Child;
 import main.java.utils.DialogUtils;
 import main.java.utils.NodeUtils;
+import org.apache.commons.text.WordUtils;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class ChildParentsController extends FormHelper {
     @FXML private PersistentPromptTextField secondParentFirstNameInput;
     @FXML private PersistentPromptTextField secondParentLastNameInput;
     @FXML private PersistentPromptTextField secondParentAddressInput;
-    @FXML private PersistentPromptTextField fatherPhoneNumberInput;
+    @FXML private PersistentPromptTextField secondParentPhoneNumberInput;
 
     @FXML private CheckBox noFirstParentCheckBox;
     @FXML private CheckBox noSecondParentCheckBox;
@@ -60,6 +59,7 @@ public class ChildParentsController extends FormHelper {
     private Parent prevRoot;
     
     private Scene thisScene;
+    
     //For form validation
     
     @FXML
@@ -94,7 +94,9 @@ public class ChildParentsController extends FormHelper {
         }));
 
         firstParentAddressInput.textProperty().addListener(((observable, oldValue, newValue) -> {
-            secondParentAddressInput.setText(newValue);
+            if (!secondParentAddressInput.isDisabled()) {
+                secondParentAddressInput.setText(newValue);
+            }
         }));
     }
     
@@ -109,7 +111,10 @@ public class ChildParentsController extends FormHelper {
     }
     
     public void cancel(ActionEvent actionEvent) {
-        FormHelper.cancel(actionEvent, ((Stage) firstParentAddressInput.getScene().getWindow()));
+        if (!childFormController.getEdit())
+            FormHelper.cancel(actionEvent, ((Stage) firstParentAddressInput.getScene().getWindow()));
+        else
+            ((Stage) firstParentPhoneNumberInput.getScene().getWindow()).close();
     }
     
     public void setPrevRoot(Parent root) {
@@ -180,5 +185,39 @@ public class ChildParentsController extends FormHelper {
             }
         }
         return false;
+    }
+    
+    public void setParents(List<Child.Parent> parents) {
+        Platform.runLater(() -> {
+            noFirstParentCheckBox.setSelected(true);
+            noSecondParentCheckBox.setSelected(true);
+            for (int i = 0; i < parents.size(); i++) {
+                setParentInfoOf(parents.get(i), getOrdinal(i+1));
+            }
+        });
+    }
+    
+    private void setParentInfoOf(Child.Parent parent, String parentKind) {
+        TextInputControl addressInput = getTextInputOf(parentKind, "ParentAddressInput");
+        TextInputControl fName = getTextInputOf(parentKind, "ParentFirstNameInput");
+        TextInputControl lName = getTextInputOf(parentKind, "ParentLastNameInput");
+       
+        TextInputControl phoneNumber = getTextInputOf(parentKind, "ParentPhoneNumberInput");
+        CheckBox disableParent = (CheckBox) firstParentPhoneNumberInput.getParent().lookup(String.format("#no%sParentCheckBox", WordUtils.capitalize(parentKind)));
+        disableParent.setSelected(false);
+        
+        fName.setText(parent.getfName());
+        lName.setText(parent.getlName());
+        addressInput.setText(parent.getAddress());
+        phoneNumber.setText(parent.getPhoneNo());
+    }
+    
+    
+    //temporary
+    private String getOrdinal(int i) {
+        if (i == 1)
+            return "first";
+        else
+            return "second";
     }
 }

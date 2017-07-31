@@ -27,20 +27,17 @@
             <!-- Banner -->
             <Rectangle fx:id="bannerRect" height="110" styleClass="banner" width="850" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
             <ImageView fx:id="childImage" fitHeight="99" fitWidth="99" AnchorPane.leftAnchor="57" AnchorPane.topAnchor="57" />
-            <Label fx:id="childName" AnchorPane.leftAnchor="170" AnchorPane.topAnchor="83" />
-            <StackPane AnchorPane.leftAnchor="180" AnchorPane.topAnchor="82">
-                <ImageView fitHeight="25" fitWidth="25">
-                    <image>
-                        <Image url="/imgs/pencil_icon.png"/>
-                    </image>
+            <Label fx:id="childName" text="Warren Larrage" AnchorPane.leftAnchor="170" AnchorPane.topAnchor="83" />
+            <StackPane fx:id="editPane" AnchorPane.leftAnchor="180" AnchorPane.topAnchor="82">
+                <ImageView fitHeight="22" fitWidth="22">
+                    <Image url="/imgs/pencil_icon.png"/>
                 </ImageView>
+                <Button styleClass="btn_overlay" prefHeight="25" prefWidth="25" onAction="#editChild"/>
             </StackPane>
 
             <StackPane AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
                 <ImageView fitHeight="30" fitWidth="30">
-                    <image>
                         <Image url="/imgs/left_arrow.png" />
-                    </image>
                 </ImageView>
                 <Button prefHeight="30" prefWidth="30" styleClass="btn_overlay" onAction="#goBackToList" />
             </StackPane>

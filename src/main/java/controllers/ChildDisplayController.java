@@ -14,9 +14,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import main.java.models.Child;
 import main.java.utils.DragResizerXY;
@@ -63,31 +65,44 @@ public class ChildDisplayController {
     
     @FXML Parent listRoot;
     
+    @FXML StackPane editPane;
+    
     private ListController listController;
     
     private boolean changeMade;
-
+    
+    private Child child;
+    
     @FXML
     public void initialize() {
+        Platform.runLater(() -> {
+            double topAnchor = AnchorPane.getTopAnchor(childName);
+            double leftAnchor = AnchorPane.getLeftAnchor(childName) + 5;
+            double length = childName.getWidth();
+            AnchorPane.setTopAnchor(editPane, topAnchor);
+            AnchorPane.setLeftAnchor(editPane, leftAnchor + length);
+        });
         changeMade = false;
-            childImage.setClip(ImageUtils.getAvatarCircle(childImage.getFitHeight()));
-            bannerRect.widthProperty().bind(anchorPane.widthProperty());
-            final Rectangle centerClip = new Rectangle();
-            anchorPane.setClip(centerClip);
-            anchorPane.layoutBoundsProperty().addListener(((observable, oldValue, newValue) -> {
-                centerClip.setWidth(newValue.getWidth());
-                centerClip.setHeight(newValue.getHeight());
-            }));
-            issuePlaceHolder.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
+        childImage.setClip(ImageUtils.getAvatarCircle(childImage.getFitHeight()));
+        bannerRect.widthProperty().bind(anchorPane.widthProperty());
+        final Rectangle centerClip = new Rectangle();
+        anchorPane.setClip(centerClip);
+        anchorPane.layoutBoundsProperty().addListener(((observable, oldValue, newValue) -> {
+            centerClip.setWidth(newValue.getWidth());
+            centerClip.setHeight(newValue.getHeight());
+        }));
+        issuePlaceHolder.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
                     System.out.println(event.getX());
                 }
-            });
-            DragResizerXY.makeResizable(issuePlaceHolder, true);
-        }
+        });
+        DragResizerXY.makeResizable(issuePlaceHolder, true);
+    }
     
     public void setChild(Child child) {
+        this.child = child;
+        
         childImage.setImage(new Image("file:///" + ((File) child.getImage()).getAbsoluteFile()));
         childName.setText(child.getCompleteName());
         
@@ -108,6 +123,8 @@ public class ChildDisplayController {
             Text parentName = new Text(parent.getfName() + " "  + parent.getlName() + " \n");
             childParents.getChildren().add(parentName);
         }
+        
+        
     }
     
     public void setListRoot(Parent listRoot) {
@@ -128,5 +145,22 @@ public class ChildDisplayController {
     
     public void setListController(ListController listController) {
         this.listController = listController;
+    }
+    
+    public void editChild() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/childForm.fxml"));
+            Stage stage = new Stage();
+            Parent root = loader.load();
+            Scene scene = new Scene(root, 575, 675);
+            ChildFormController controller = loader.getController();
+            controller.setEdit(true);
+            controller.setChild(child);
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
