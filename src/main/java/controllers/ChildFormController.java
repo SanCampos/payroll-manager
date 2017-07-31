@@ -84,8 +84,8 @@ public class ChildFormController extends FormHelper {
 
     private ListController listController;
     
-    private boolean isEdit  = false;
-
+    private Child child;
+    
     @FXML
     public void initialize() throws FileNotFoundException {
         //Init gender choice buttons and scene ref
@@ -165,12 +165,7 @@ public class ChildFormController extends FormHelper {
     
     @FXML
     public void cancel(ActionEvent actionEvent) {
-        if (!isEdit) {
-            FormHelper.cancel(actionEvent, ((Stage) submitBtn.getScene().getWindow()));
-        } else {
-            Stage stage = ((Stage) submitBtn.getScene().getWindow());
-            stage.close();
-        }
+         FormHelper.cancel(actionEvent, ((Stage) submitBtn.getScene().getWindow()));
     }
 
 
@@ -330,6 +325,7 @@ public class ChildFormController extends FormHelper {
     }
     
     public void setChild(Child child) throws IOException {
+        this.child = child;
         firstNameInput.setText(child.getfName());
         lastNameInput.setText(child.getlName());
         nickNameInput.setText(child.getNickname());
@@ -353,15 +349,18 @@ public class ChildFormController extends FormHelper {
         childParentsController = loader.getController();
         setNextParent(root);
         childParentsController.setParents(child.getParents());
-        
     }
     
-    public void setEdit(boolean edit) {
-        this.isEdit = edit;
-    }
-    
-    public boolean getEdit() {
-        return isEdit;
+    public boolean hasBeenEdited() {
+        return firstNameInput.getText().equals(child.getfName()) &&
+        lastNameInput.getText().equals(child.getlName()) &&
+        nickNameInput.getText().equals(child.getNickname()) &&
+        birthPlaceInput.getText().equals(child.getPlace_of_birth()) &&
+        birthDateInput.getValue().equals(LocalDate.parse(child.getBirth_date())) &&
+        admissionDateInput.getValue().equals(LocalDate.parse(child.getAdmission_date())) &&
+        childDescInput.getText().equals(child.getDescription()) &&
+        referrerInput.getText().equals(child.getReferrer()) && (genderToggleGroup.getToggles().indexOf(genderToggleGroup.getSelectedToggle()) == 0 ? "male" : "female").equals(child.getGender()) &&
+        childStatus.getSelectionModel().getSelectedItem().equals(child.getReferrer());
     }
 }
 

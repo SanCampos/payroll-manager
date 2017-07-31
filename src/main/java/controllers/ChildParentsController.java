@@ -59,6 +59,7 @@ public class ChildParentsController extends FormHelper {
     private Parent prevRoot;
     
     private Scene thisScene;
+    private List<Child.Parent> parents;
     
     //For form validation
     
@@ -111,10 +112,7 @@ public class ChildParentsController extends FormHelper {
     }
     
     public void cancel(ActionEvent actionEvent) {
-        if (!childFormController.getEdit())
-            FormHelper.cancel(actionEvent, ((Stage) firstParentAddressInput.getScene().getWindow()));
-        else
-            ((Stage) firstParentPhoneNumberInput.getScene().getWindow()).close();
+        FormHelper.cancel(actionEvent, ((Stage) firstParentAddressInput.getScene().getWindow()));
     }
     
     public void setPrevRoot(Parent root) {
@@ -189,6 +187,7 @@ public class ChildParentsController extends FormHelper {
     
     public void setParents(List<Child.Parent> parents) {
         Platform.runLater(() -> {
+            this.parents = parents;
             noFirstParentCheckBox.setSelected(true);
             noSecondParentCheckBox.setSelected(true);
             for (int i = 0; i < parents.size(); i++) {
@@ -219,5 +218,35 @@ public class ChildParentsController extends FormHelper {
             return "first";
         else
             return "second";
+    }
+    
+    public boolean hasBeenEdited() {
+        boolean firstParentFirstNameMatch = firstParentFirstNameInput.getText().equals(parents.get(0).getfName()) ||
+                                   firstParentFirstNameInput.getText().equals(parents.get(1).getfName());
+       
+        boolean firstParentLastNameMatch = firstParentLastNameInput.getText().equals(parents.get(0).getlName()) ||
+                firstParentLastNameInput.getText().equals(parents.get(1).getlName());
+    
+        boolean firstParentAddressMatch = firstParentAddressInput.getText().equals(parents.get(0).getAddress()) ||
+                firstParentAddressInput.getText().equals(parents.get(1).getAddress());
+    
+        boolean firstParentPhoneNumberMatch = firstParentPhoneNumberInput.getText().equals(parents.get(0).getPhoneNo()) ||
+                firstParentPhoneNumberInput.getText().equals(parents.get(1).getPhoneNo());
+    
+        boolean secondParentFirstNameMatch = secondParentFirstNameInput.getText().equals(parents.get(0).getfName()) ||
+                secondParentFirstNameInput.getText().equals(parents.get(1).getfName());
+    
+        boolean secondParentLastNameMatch = secondParentLastNameInput.getText().equals(parents.get(0).getlName()) ||
+                secondParentLastNameInput.getText().equals(parents.get(1).getlName());
+    
+        boolean secondParentAddressMatch = secondParentAddressInput.getText().equals(parents.get(0).getAddress()) ||
+                secondParentAddressInput.getText().equals(parents.get(1).getAddress());
+    
+        boolean secondParentPhoneNumberMatch = secondParentPhoneNumberInput.getText().equals(parents.get(0).getPhoneNo()) ||
+                secondParentPhoneNumberInput.getText().equals(parents.get(1).getPhoneNo());
+    
+        return firstParentFirstNameMatch && firstParentLastNameMatch && firstParentAddressMatch && firstParentPhoneNumberMatch &&
+                secondParentFirstNameMatch && secondParentLastNameMatch && secondParentAddressMatch && secondParentPhoneNumberMatch;
+         
     }
 }
