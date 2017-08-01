@@ -1,5 +1,6 @@
 package main.java.controllers;
 
+import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -87,7 +88,8 @@ public class ChildFormController extends FormHelper {
     private ListController listController;
     
     private Child child;
-    
+    private SimpleBooleanProperty[] matches;
+
     @FXML
     public void initialize() throws FileNotFoundException {
         //Init gender choice buttons and scene ref
@@ -125,7 +127,7 @@ public class ChildFormController extends FormHelper {
                 }
             }
         }));
-        initMatchers();
+        Platform.runLater(this::initMatchers);
     }
     
     private void initNextBtn() {
@@ -355,18 +357,29 @@ public class ChildFormController extends FormHelper {
     }
     
     public void initMatchers() {
-        SimpleBooleanProperty firstNameMatches = new SimpleBooleanProperty((firstNameInput.getText().equals(child.getfName())));
-        SimpleBooleanProperty lastNameMatches = new SimpleBooleanProperty(lastNameInput.getText().equals(child.getlName()));
-        SimpleBooleanProperty nickNameMatches = new SimpleBooleanProperty(nickNameInput.getText().equals(child.getNickname()));
-        SimpleBooleanProperty birthPlaceMatches = new SimpleBooleanProperty(birthPlaceInput.getText().equals(child.getPlace_of_birth()));
-        SimpleBooleanProperty birthDateMatches= new SimpleBooleanProperty(birthDateInput.getValue().equals(LocalDate.parse(child.getBirth_date())));
-        SimpleBooleanProperty admissionDateMatches = new SimpleBooleanProperty(admissionDateInput.getValue().equals(LocalDate.parse(child.getAdmission_date())));
-        SimpleBooleanProperty descriptionMatches = new SimpleBooleanProperty(childDescInput.getText().equals(child.getDescription()));
-        SimpleBooleanProperty referrerMatches = new SimpleBooleanProperty(referrerInput.getText().equals(child.getReferrer()));
-        SimpleBooleanProperty genderMatches = new SimpleBooleanProperty((genderToggleGroup.getToggles().indexOf(genderToggleGroup.getSelectedToggle()) == 0 ? "male" : "female").equals(child.getGender()));
-        SimpleBooleanProperty statusMatches = new SimpleBooleanProperty(childStatus.getSelectionModel().getSelectedItem().equals(child.getReferrer()));
+        SimpleBooleanProperty firstNameMatches = new SimpleBooleanProperty();
+        SimpleBooleanProperty lastNameMatches = new SimpleBooleanProperty();
+        SimpleBooleanProperty nickNameMatches = new SimpleBooleanProperty();
+        SimpleBooleanProperty birthPlaceMatches = new SimpleBooleanProperty();
+        SimpleBooleanProperty birthDateMatches = new SimpleBooleanProperty();
+        SimpleBooleanProperty admissionDateMatches = new SimpleBooleanProperty();
+        SimpleBooleanProperty descriptionMatches = new SimpleBooleanProperty();
+        SimpleBooleanProperty referrerMatches = new SimpleBooleanProperty();
+        SimpleBooleanProperty genderMatches = new SimpleBooleanProperty();
+        SimpleBooleanProperty statusMatches = new SimpleBooleanProperty();
 
-        SimpleBooleanProperty[] matches = new SimpleBooleanProperty[]{firstNameMatches, lastNameMatches, nickNameMatches, birthPlaceMatches, birthDateMatches, admissionDateMatches, descriptionMatches, referrerMatches, genderMatches, statusMatches};
+        firstNameInput.textProperty().addListener(matchingListener(child.getfName(), firstNameMatches));
+        lastNameInput.textProperty().addListener(matchingListener(child.getlName(), lastNameMatches));
+        nickNameInput.textProperty().addListener(matchingListener(child.getNickname(), nickNameMatches));
+        birthPlaceInput.textProperty().addListener(matchingListener(child.getBirthDate(), birthPlaceMatches));
+        birthDateInput.valueProperty().addListener(matchingListener(child.getfName(), birthDateMatches));
+        admissionDateInput.valueProperty().addListener(matchingListener(child.getAdmission_date(), admissionDateMatches));
+        childDescInput.textProperty().addListener(matchingListener(child.getDescription(), descriptionMatches));
+        referrerInput.textProperty().addListener(matchingListener(child.getReferrer(), referrerMatches));
+        genderToggleGroup.selectedToggleProperty().addListener(matchingListener(child.getGender().equalsIgnoreCase("male") ? 0 : 1, genderMatches));
+        childStatus.getSelectionModel().selectedItemProperty().addListener(matchingListener(child.getStatus(), statusMatches));
+
+        matches = new SimpleBooleanProperty[]{firstNameMatches, lastNameMatches, nickNameMatches, birthPlaceMatches, birthDateMatches, admissionDateMatches, descriptionMatches, referrerMatches, genderMatches, statusMatches};
 
         BooleanBinding nothingEdited = new BooleanBinding() {
             {
@@ -381,12 +394,22 @@ public class ChildFormController extends FormHelper {
                 return true;
             }
         };
+        nothingEdited.addListener(((observable, oldValue, newValue) -> System.out.println("FUCK")));
+    }
 
-        nothingEdited.addListener(((observable, oldValue, newValue) -> {
-            boolean noChanges = newValue;
-            submitBtn.setDisable(noChanges);
-        }));
+    //black magic
+    private <T> ChangeListener<T> matchingListener(T toMatch, SimpleBooleanProperty matcher) {
+        return new ChangeListener<T>() {
+            @Override
+            public void changed(ObservableValue<? extends T> observable, T oldValue, T newValue) {
+                boolean fuck = newValue.equals(toMatch);
+                matcher.set(newValue.equals(fuck));
+            }
+
+        };
     }
 }
+
+
 
 
