@@ -61,7 +61,6 @@ public class LoginController {
 
             //Notify login failure
             if (!db.loginUser(user, pass)) {
-                loginFailNotif.setStyle("-fx-text-fill: red");
                 inputPass.clear();
                 db.closeConnection();
                 return;
@@ -78,10 +77,12 @@ public class LoginController {
             Main.loginStage.close();
 
         } catch (SQLException e) {
+            loginFailNotif.setStyle("-fx-text-fill: red");
             loginFailNotif.setText("Error connecting to the server, please try again!");
             e.printStackTrace();
 
         } catch (IOException e) {
+            loginFailNotif.setStyle("-fx-text-fill: red");
             loginFailNotif.setText("An error has occurred, please try again!");
             e.printStackTrace();
         }

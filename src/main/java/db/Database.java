@@ -192,7 +192,7 @@ public class Database {
     }
 
     private ResultSet getSingleRow(String tableName, String comparisonColumn, Object comparisonData) throws SQLException {
-        String sql = String.format("SELECT * FROM  %s WHERE %s = ?", tableName, comparisonColumn);
+        String sql = String.format("SELECT * FROM %s WHERE %s = ?", tableName, comparisonColumn);
 
         PreparedStatement statement = con.prepareStatement(sql);
         statement.setObject(1, comparisonData);

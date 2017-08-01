@@ -1,5 +1,7 @@
 package main.java.controllers;
 
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -123,6 +125,7 @@ public class ChildFormController extends FormHelper {
                 }
             }
         }));
+        initMatchers();
     }
     
     private void initNextBtn() {
@@ -351,16 +354,38 @@ public class ChildFormController extends FormHelper {
         childParentsController.setParents(child.getParents());
     }
     
-    public boolean hasBeenEdited() {
-        return !(firstNameInput.getText().equals(child.getfName()) &&
-        lastNameInput.getText().equals(child.getlName()) &&
-        nickNameInput.getText().equals(child.getNickname()) &&
-        birthPlaceInput.getText().equals(child.getPlace_of_birth()) &&
-        birthDateInput.getValue().equals(LocalDate.parse(child.getBirth_date())) &&
-        admissionDateInput.getValue().equals(LocalDate.parse(child.getAdmission_date())) &&
-        childDescInput.getText().equals(child.getDescription()) &&
-        referrerInput.getText().equals(child.getReferrer()) && (genderToggleGroup.getToggles().indexOf(genderToggleGroup.getSelectedToggle()) == 0 ? "male" : "female").equals(child.getGender()) &&
-        childStatus.getSelectionModel().getSelectedItem().equals(child.getReferrer()));
+    public void initMatchers() {
+        SimpleBooleanProperty firstNameMatches = new SimpleBooleanProperty((firstNameInput.getText().equals(child.getfName())));
+        SimpleBooleanProperty lastNameMatches = new SimpleBooleanProperty(lastNameInput.getText().equals(child.getlName()));
+        SimpleBooleanProperty nickNameMatches = new SimpleBooleanProperty(nickNameInput.getText().equals(child.getNickname()));
+        SimpleBooleanProperty birthPlaceMatches = new SimpleBooleanProperty(birthPlaceInput.getText().equals(child.getPlace_of_birth()));
+        SimpleBooleanProperty birthDateMatches= new SimpleBooleanProperty(birthDateInput.getValue().equals(LocalDate.parse(child.getBirth_date())));
+        SimpleBooleanProperty admissionDateMatches = new SimpleBooleanProperty(admissionDateInput.getValue().equals(LocalDate.parse(child.getAdmission_date())));
+        SimpleBooleanProperty descriptionMatches = new SimpleBooleanProperty(childDescInput.getText().equals(child.getDescription()));
+        SimpleBooleanProperty referrerMatches = new SimpleBooleanProperty(referrerInput.getText().equals(child.getReferrer()));
+        SimpleBooleanProperty genderMatches = new SimpleBooleanProperty((genderToggleGroup.getToggles().indexOf(genderToggleGroup.getSelectedToggle()) == 0 ? "male" : "female").equals(child.getGender()));
+        SimpleBooleanProperty statusMatches = new SimpleBooleanProperty(childStatus.getSelectionModel().getSelectedItem().equals(child.getReferrer()));
+
+        SimpleBooleanProperty[] matches = new SimpleBooleanProperty[]{firstNameMatches, lastNameMatches, nickNameMatches, birthPlaceMatches, birthDateMatches, admissionDateMatches, descriptionMatches, referrerMatches, genderMatches, statusMatches};
+
+        BooleanBinding nothingEdited = new BooleanBinding() {
+            {
+                super.bind(matches);
+            }
+            @Override
+            protected boolean computeValue() {
+                for (SimpleBooleanProperty booleanProperty : matches) {
+                    if (!booleanProperty.getValue())
+                        return false;
+                }
+                return true;
+            }
+        };
+
+        nothingEdited.addListener(((observable, oldValue, newValue) -> {
+            boolean noChanges = newValue;
+            submitBtn.setDisable(noChanges);
+        }));
     }
 }
 
