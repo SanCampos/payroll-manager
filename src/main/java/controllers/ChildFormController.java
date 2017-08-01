@@ -352,7 +352,7 @@ public class ChildFormController extends FormHelper {
     }
     
     public boolean hasBeenEdited() {
-        return firstNameInput.getText().equals(child.getfName()) &&
+        return !(firstNameInput.getText().equals(child.getfName()) &&
         lastNameInput.getText().equals(child.getlName()) &&
         nickNameInput.getText().equals(child.getNickname()) &&
         birthPlaceInput.getText().equals(child.getPlace_of_birth()) &&
@@ -360,7 +360,7 @@ public class ChildFormController extends FormHelper {
         admissionDateInput.getValue().equals(LocalDate.parse(child.getAdmission_date())) &&
         childDescInput.getText().equals(child.getDescription()) &&
         referrerInput.getText().equals(child.getReferrer()) && (genderToggleGroup.getToggles().indexOf(genderToggleGroup.getSelectedToggle()) == 0 ? "male" : "female").equals(child.getGender()) &&
-        childStatus.getSelectionModel().getSelectedItem().equals(child.getReferrer());
+        childStatus.getSelectionModel().getSelectedItem().equals(child.getReferrer()));
     }
 }
 

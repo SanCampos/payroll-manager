@@ -245,8 +245,8 @@ public class ChildParentsController extends FormHelper {
         boolean secondParentPhoneNumberMatch = secondParentPhoneNumberInput.getText().equals(parents.get(0).getPhoneNo()) ||
                 secondParentPhoneNumberInput.getText().equals(parents.get(1).getPhoneNo());
     
-        return firstParentFirstNameMatch && firstParentLastNameMatch && firstParentAddressMatch && firstParentPhoneNumberMatch &&
-                secondParentFirstNameMatch && secondParentLastNameMatch && secondParentAddressMatch && secondParentPhoneNumberMatch;
+        return !(firstParentFirstNameMatch && firstParentLastNameMatch && firstParentAddressMatch && firstParentPhoneNumberMatch &&
+                secondParentFirstNameMatch && secondParentLastNameMatch && secondParentAddressMatch && secondParentPhoneNumberMatch);
          
     }
 }
