@@ -154,6 +154,7 @@ public class ChildDisplayController {
             Parent root = loader.load();
             Scene scene = new Scene(root, 575, 675);
             ChildFormController controller = loader.getController();
+            controller.setListController(listController);
             controller.setChild(child);
             stage.setScene(scene);
             stage.initModality(Modality.APPLICATION_MODAL);
