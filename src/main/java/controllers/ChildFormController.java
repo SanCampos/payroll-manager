@@ -22,6 +22,7 @@ import main.java.db.DbSchema.*;
 import main.java.globalInfo.GlobalInfo;
 import main.java.models.Child;
 import main.java.utils.DialogUtils;
+import main.java.utils.ImageUtils;
 import main.java.utils.NodeUtils;
 
 import java.io.File;
@@ -89,7 +90,8 @@ public class ChildFormController extends FormHelper {
     
     private Child child;
     private SimpleBooleanProperty[] matches;
-
+    private boolean edit;
+    
     @FXML
     public void initialize() throws FileNotFoundException {
         //Init gender choice buttons and scene ref
@@ -107,7 +109,7 @@ public class ChildFormController extends FormHelper {
         childStatus.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue.intValue() == 2) {
                     initSubmitBtn();
-                } else if (newValue.intValue() != 2 && oldValue.intValue() == 2) {
+                } else if (newValue.intValue() != 2 && oldValue.intValue() == 2 && !edit) {
                     initNextBtn();
                 }
         });
@@ -354,31 +356,35 @@ public class ChildFormController extends FormHelper {
         childParentsController = loader.getController();
         setNextParent(root);
         childParentsController.setParents(child.getParents());
+        initSubmitBtn();
+        edit = true;
+        submitBtn.setDisable(true);
     }
     
     public void initMatchers() {
-        SimpleBooleanProperty firstNameMatches = new SimpleBooleanProperty();
-        SimpleBooleanProperty lastNameMatches = new SimpleBooleanProperty();
-        SimpleBooleanProperty nickNameMatches = new SimpleBooleanProperty();
-        SimpleBooleanProperty birthPlaceMatches = new SimpleBooleanProperty();
-        SimpleBooleanProperty birthDateMatches = new SimpleBooleanProperty();
-        SimpleBooleanProperty admissionDateMatches = new SimpleBooleanProperty();
-        SimpleBooleanProperty descriptionMatches = new SimpleBooleanProperty();
-        SimpleBooleanProperty referrerMatches = new SimpleBooleanProperty();
-        SimpleBooleanProperty genderMatches = new SimpleBooleanProperty();
-        SimpleBooleanProperty statusMatches = new SimpleBooleanProperty();
-
+        SimpleBooleanProperty firstNameMatches = new SimpleBooleanProperty(true);
+        SimpleBooleanProperty lastNameMatches = new SimpleBooleanProperty(true);
+        SimpleBooleanProperty nickNameMatches = new SimpleBooleanProperty(true);
+        SimpleBooleanProperty birthPlaceMatches = new SimpleBooleanProperty(true);
+        SimpleBooleanProperty birthDateMatches = new SimpleBooleanProperty(true);
+        SimpleBooleanProperty admissionDateMatches = new SimpleBooleanProperty(true);
+        SimpleBooleanProperty descriptionMatches = new SimpleBooleanProperty(true);
+        SimpleBooleanProperty referrerMatches = new SimpleBooleanProperty(true);
+        SimpleBooleanProperty genderMatches = new SimpleBooleanProperty(true);
+        SimpleBooleanProperty statusMatches = new SimpleBooleanProperty(true);
+        SimpleBooleanProperty imageMatches = new SimpleBooleanProperty(true);
+        
         firstNameInput.textProperty().addListener(matchingListener(child.getfName(), firstNameMatches));
         lastNameInput.textProperty().addListener(matchingListener(child.getlName(), lastNameMatches));
         nickNameInput.textProperty().addListener(matchingListener(child.getNickname(), nickNameMatches));
-        birthPlaceInput.textProperty().addListener(matchingListener(child.getBirthDate(), birthPlaceMatches));
-        birthDateInput.valueProperty().addListener(matchingListener(child.getfName(), birthDateMatches));
-        admissionDateInput.valueProperty().addListener(matchingListener(child.getAdmission_date(), admissionDateMatches));
+        birthPlaceInput.textProperty().addListener(matchingListener(child.getPlace_of_birth(), birthPlaceMatches));
+        birthDateInput.valueProperty().addListener(matchingListener(LocalDate.parse(child.getBirth_date()), birthDateMatches));
+        admissionDateInput.valueProperty().addListener(matchingListener(LocalDate.parse(child.getAdmission_date()), admissionDateMatches));
         childDescInput.textProperty().addListener(matchingListener(child.getDescription(), descriptionMatches));
         referrerInput.textProperty().addListener(matchingListener(child.getReferrer(), referrerMatches));
         genderToggleGroup.selectedToggleProperty().addListener(matchingListener(child.getGender().equalsIgnoreCase("male") ? 0 : 1, genderMatches));
         childStatus.getSelectionModel().selectedItemProperty().addListener(matchingListener(child.getStatus(), statusMatches));
-
+        childImage.imageProperty().addListener(matchingListener(new Image("file:///" + ((File) child.getImage()).getAbsolutePath()), imageMatches));
         matches = new SimpleBooleanProperty[]{firstNameMatches, lastNameMatches, nickNameMatches, birthPlaceMatches, birthDateMatches, admissionDateMatches, descriptionMatches, referrerMatches, genderMatches, statusMatches};
 
         BooleanBinding nothingEdited = new BooleanBinding() {
@@ -394,7 +400,7 @@ public class ChildFormController extends FormHelper {
                 return true;
             }
         };
-        nothingEdited.addListener(((observable, oldValue, newValue) -> System.out.println("FUCK")));
+        nothingEdited.addListener(((observable, oldValue, newValue) -> submitBtn.setDisable(newValue)));
     }
 
     //black magic
@@ -402,8 +408,14 @@ public class ChildFormController extends FormHelper {
         return new ChangeListener<T>() {
             @Override
             public void changed(ObservableValue<? extends T> observable, T oldValue, T newValue) {
-                boolean fuck = newValue.equals(toMatch);
-                matcher.set(newValue.equals(fuck));
+                if (newValue instanceof Toggle)  {
+                    matcher.set(((Object) genderToggleGroup.getToggles().indexOf(newValue)).equals(toMatch));
+                } else if (newValue instanceof Image) {
+                    matcher.set(ImageUtils.equals(((Image) newValue), ((Image) toMatch)));
+                } else {
+                    boolean matches = newValue.equals(toMatch);
+                    matcher.set(matches);
+                }
             }
 
         };
