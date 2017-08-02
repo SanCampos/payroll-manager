@@ -91,6 +91,7 @@ public class ChildFormController extends FormHelper {
     private Child child;
     private SimpleBooleanProperty[] matches;
     private boolean edit;
+    private File updatedImage;
     
     @FXML
     public void initialize() throws FileNotFoundException {
@@ -210,8 +211,13 @@ public class ChildFormController extends FormHelper {
         try {
             //Add record for child and retrieve its id
             db.init();
-            db.addNewChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
-           
+            
+            if (child == null) {
+                db.addNewChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
+            } else {
+                db.updateChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate, child.getId());
+                slctdImgStrm = new FileInputStream(updatedImage);
+            }
             //Retrieve id for use in storing img
             id = db.getChildIDOf(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
             if (id == -89) throw new SQLException();
@@ -307,6 +313,7 @@ public class ChildFormController extends FormHelper {
     }
     
     private void updateChosenImage(File chosen) throws FileNotFoundException {
+        updatedImage = chosen;
         slctdImgStrm = new FileInputStream(chosen);
         childImage.setImage(new Image(slctdImgStrm));
         imageName.setText(chosen.getName());
@@ -319,6 +326,9 @@ public class ChildFormController extends FormHelper {
             listController.initTable();
         } catch (SQLException e) {
             DialogUtils.displayError("Synchronization error!", "There was an error synchronizing the data of the new child!");
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            DialogUtils.displayError("Update error!", "Your change has been saved but the applicatoin cannot update, please restart!");
             e.printStackTrace();
         }
     }

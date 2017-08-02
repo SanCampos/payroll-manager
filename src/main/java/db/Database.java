@@ -370,4 +370,15 @@ public class Database {
 
         return parentAdded && relationshipAdded;
     }
+    
+    public boolean updateChild(String firstName, String lastName, String nickName, String place_of_birth, LocalDate birthDate, String childDesc, int gender, String referrer, int status, LocalDate admissionDate, int id) throws SQLException {
+        addSingleUniqueData(place_of_birth, table_locations.name);
+        addSingleUniqueData(referrer, table_referrers.name);
+        
+        String sql = String.format("UPDATE %s SET %s = ?, %s = ?, %s = ?, %s = ?, %s = STR_TO_DATE(?, '%%Y-%%m-%%d'), %s = ?, %s = ?, %s = ?, %s = ?, %s = STR_TO_DATE(?, '%%Y-%%m-%%d') WHERE %s = ? ",
+                                    table_children.name, table_children.cols.fname,table_children.cols.lname, table_children.cols.nickname, table_children.cols.place_of_birth, table_children.cols.birth_date, table_children.cols.description, table_children.cols.gender, table_children.cols.referrer_id, table_children.cols.status, table_children.cols.admission_date, table_children.cols.id);
+        PreparedStatement FUUUCK = stmntWithAllChildProperties(sql, firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
+        FUUUCK.setInt(11, id);
+        return FUUUCK.executeUpdate() != 0;
+    }
 }
