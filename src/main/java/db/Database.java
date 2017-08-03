@@ -243,7 +243,7 @@ public class Database {
             String fname = children.getString(table_children.cols.fname);
             String lname = children.getString(table_children.cols.lname);
             String nickname = children.getString(table_children.cols.nickname);
-            String place_of_birth = children.getString(table_children.cols.place_of_birth);
+            String place_of_birth = (String) getUniqueRowData(table_locations.name, table_locations.cols.id, children.getInt(table_children.cols.place_of_birth), table_locations.cols.location).get(0);
             String description = children.getString(table_children.cols.description);
             String referrer = (String) getUniqueRowData(table_referrers.name, table_referrers.cols.id, children.getInt(table_children.cols.referrer_id), table_referrers.cols.referrer).get(0);
             String gender = WordUtils.capitalize((String) getUniqueRowData(table_genders.name, table_genders.cols.id, children.getInt(table_children.cols.gender), table_genders.cols.gender).get(0));
@@ -264,8 +264,8 @@ public class Database {
                 if (parent.next()) {
                     String fName = parent.getString(table_parents.cols.first_name);
                     String lName = parent.getString(table_parents.cols.last_name);
-                    String location = parent.getString(table_parents.cols.location_id);
-                    String phoneNo = parent.getString(table_parents.cols.phone_number_id);
+                    String location = (String) getUniqueRowData(table_locations.name, table_locations.cols.id, parent.getInt(table_parents.cols.location_id), table_locations.cols.location).get(0);
+                    String phoneNo = (String) getUniqueRowData(table_phone_numbers.name, table_phone_numbers.cols.id, parent.getInt(table_parents.cols.phone_number_id), table_phone_numbers.cols.number).get(0);
                     parents.add(new Child.Parent(fName, lName, phoneNo, location, parentID));
                 }
             }
