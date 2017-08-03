@@ -2,12 +2,16 @@ package main.java.controllers;
 
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import main.java.customNodes.PersistentPromptTextField;
@@ -61,6 +65,11 @@ public class ChildParentsController extends FormHelper {
     private Scene thisScene;
     private List<Child.Parent> parents;
     
+    private ListController listController;
+    @FXML private Button backBtn;
+    
+    private Integer childID;
+    private ChildDisplayController displayController;
     //For form validation
     
     @FXML
@@ -75,15 +84,15 @@ public class ChildParentsController extends FormHelper {
         });
         noFirstParentCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> setDisableTo("first", newValue)));
         noSecondParentCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> setDisableTo("second", newValue)));
-    
+        
         bothParentsDisabled = noSecondParentCheckBox.selectedProperty().and(noFirstParentCheckBox.selectedProperty());
         bothParentsDisabled.addListener(((observable, oldValue, newValue) -> {
             boolean bothDisabled = newValue;
-
+            
             //block user from submitting form and inform him or her of the nuaghty thing he/she had done
             //do vice versa if the naughty thing has been undone
             submit.setDisable(bothDisabled);
-
+            
             if (bothDisabled) {
                 errorBox.getStyleClass().add("error");
                 noParentsError.getStyleClass().add("error");
@@ -93,7 +102,7 @@ public class ChildParentsController extends FormHelper {
                 noParentsError.getStyleClass().remove("error");
             }
         }));
-
+        
         firstParentAddressInput.textProperty().addListener(((observable, oldValue, newValue) -> {
             if (!secondParentAddressInput.isDisabled()) {
                 secondParentAddressInput.setText(newValue);
@@ -121,16 +130,25 @@ public class ChildParentsController extends FormHelper {
     
     public void submit() {
         if (isIncomplete()) return;
-
-        int childID = childFormController.submit(false);
+    
+        childID = childID == null ? childFormController.submit(false) : childID;
 
         try {
             Database db = new Database();
             db.init();
-
-            addParent(childID, db, "first");
-            addParent(childID, db, "second");
-
+            int i;
+            for (i = 0; i < parents.size(); i++) {
+                updateParent(parents.get(i).getId(), db, getOrdinal(i+1));
+            }
+            
+            for (; i < 2; i++) {
+                addParent(childID, db, getOrdinal(i+1));
+            }
+            if (displayController != null) {
+                displayController.childParents.getChildren().clear();
+                listController.initTable();
+                listController.updateChildOf(displayController);
+            }
         } catch (SQLException e) {
             DialogUtils.displayError("Parent registration error!", "There was an error registering the parent data, please try again!");
             e.printStackTrace();
@@ -140,18 +158,30 @@ public class ChildParentsController extends FormHelper {
     }
 
     private void addParent(int childID, Database db, String parent) throws SQLException {
-            TextInputControl addressInput = getTextInputOf(parent, "ParentAddressInput");
+        TextInputControl addressInput = getTextInputOf(parent, "ParentAddressInput");
 
         if (!addressInput.isDisabled()) {
             String fName = getTextInputTextOf(parent, "ParentFirstNameInput");
             String lName = getTextInputTextOf(parent, "ParentLastNameInput");
             String address = addressInput.getText();
             String phoneNumber = getTextInputTextOf(parent, "ParentPhoneNumberInput");
-
             db.addNewParent(fName, lName, address, phoneNumber, childID);
         }
     }
-
+    
+    
+    private void updateParent(int parentID, Database db, String parent) throws SQLException {
+        TextInputControl addressInput = getTextInputOf(parent, "ParentAddressInput");
+    
+        if (!addressInput.isDisabled()) {
+            String fName = getTextInputTextOf(parent, "ParentFirstNameInput");
+            String lName = getTextInputTextOf(parent, "ParentLastNameInput");
+            String address = addressInput.getText();
+            String phoneNumber = getTextInputTextOf(parent, "ParentPhoneNumberInput");
+            db.updateParent(fName, lName, address, phoneNumber, parentID);
+        }
+    }
+    
     private TextInputControl getTextInputOf(String parent, String input) {
         return (TextInputControl) firstParentAddressInput.getParent().lookup(String.format("#%s%s", parent, input));
     }
@@ -185,7 +215,7 @@ public class ChildParentsController extends FormHelper {
         return false;
     }
     
-    public void setParents(List<Child.Parent> parents) {
+    public void setParents(List<Child.Parent> parents, Integer id) {
         Platform.runLater(() -> {
             this.parents = parents;
             noFirstParentCheckBox.setSelected(true);
@@ -193,6 +223,21 @@ public class ChildParentsController extends FormHelper {
             for (int i = 0; i < parents.size(); i++) {
                 setParentInfoOf(parents.get(i), getOrdinal(i+1));
             }
+    
+            AnchorPane.setLeftAnchor(submit, AnchorPane.getLeftAnchor(backBtn));
+            AnchorPane.setTopAnchor(submit, AnchorPane.getTopAnchor(backBtn));
+            AnchorPane.setBottomAnchor(submit, AnchorPane.getBottomAnchor(backBtn));
+            AnchorPane.setRightAnchor(submit, AnchorPane.getRightAnchor(backBtn));
+    
+            childID = id;
+            backBtn.setDisable(true);
+            backBtn.setVisible(false);
+    
+            submit.setDisable(true);
+    
+            initFirstParentMatchers();
+            initSecondParentMatchers();
+            firstParentAddressInput.textProperty().addListener((ChangeListener<? super String>) null);
         });
     }
     
@@ -200,7 +245,6 @@ public class ChildParentsController extends FormHelper {
         TextInputControl addressInput = getTextInputOf(parentKind, "ParentAddressInput");
         TextInputControl fName = getTextInputOf(parentKind, "ParentFirstNameInput");
         TextInputControl lName = getTextInputOf(parentKind, "ParentLastNameInput");
-       
         TextInputControl phoneNumber = getTextInputOf(parentKind, "ParentPhoneNumberInput");
         CheckBox disableParent = (CheckBox) firstParentPhoneNumberInput.getParent().lookup(String.format("#no%sParentCheckBox", WordUtils.capitalize(parentKind)));
         disableParent.setSelected(false);
@@ -220,33 +264,97 @@ public class ChildParentsController extends FormHelper {
             return "second";
     }
     
-    public boolean hasBeenEdited() {
-        boolean firstParentFirstNameMatch = firstParentFirstNameInput.getText().equals(parents.get(0).getfName()) ||
-                                   firstParentFirstNameInput.getText().equals(parents.get(1).getfName());
-       
-        boolean firstParentLastNameMatch = firstParentLastNameInput.getText().equals(parents.get(0).getlName()) ||
-                firstParentLastNameInput.getText().equals(parents.get(1).getlName());
+    public void initFirstParentMatchers() {
+        SimpleBooleanProperty firstParentFirstNameMatch = new SimpleBooleanProperty(true);
+        setListener(firstParentFirstNameInput, firstParentFirstNameMatch);
     
-        boolean firstParentAddressMatch = firstParentAddressInput.getText().equals(parents.get(0).getAddress()) ||
-                firstParentAddressInput.getText().equals(parents.get(1).getAddress());
+        SimpleBooleanProperty firstParentLastNameMatch = new SimpleBooleanProperty(true);
+        setListener(firstParentLastNameInput, firstParentLastNameMatch);
     
-        boolean firstParentPhoneNumberMatch = firstParentPhoneNumberInput.getText().equals(parents.get(0).getPhoneNo()) ||
-                firstParentPhoneNumberInput.getText().equals(parents.get(1).getPhoneNo());
+        SimpleBooleanProperty firstParentAddressMatch = new SimpleBooleanProperty(true);
+        setListener(firstParentAddressInput, firstParentAddressMatch);
     
-        boolean secondParentFirstNameMatch = secondParentFirstNameInput.getText().equals(parents.get(0).getfName()) ||
-                secondParentFirstNameInput.getText().equals(parents.get(1).getfName());
+        SimpleBooleanProperty firstParentPhoneNumberMatch = new SimpleBooleanProperty(true);
+        setListener(firstParentPhoneNumberInput, firstParentPhoneNumberMatch);
+        
+        SimpleBooleanProperty[] matches = new SimpleBooleanProperty[] {firstParentAddressMatch, firstParentFirstNameMatch,firstParentLastNameMatch, firstParentPhoneNumberMatch};
     
-        boolean secondParentLastNameMatch = secondParentLastNameInput.getText().equals(parents.get(0).getlName()) ||
-                secondParentLastNameInput.getText().equals(parents.get(1).getlName());
+        BooleanBinding firstMatches = new BooleanBinding() {
+            {
+                super.bind(matches);
+            }
+            @Override
+            protected boolean computeValue() {
+                for (SimpleBooleanProperty booleanProperty : matches) {
+                    if (!booleanProperty.get()) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        };
+        firstMatches.addListener(editListener());
+    }
     
-        boolean secondParentAddressMatch = secondParentAddressInput.getText().equals(parents.get(0).getAddress()) ||
-                secondParentAddressInput.getText().equals(parents.get(1).getAddress());
+    private void setListener(TextInputControl textInputControl, SimpleBooleanProperty matcher) {
+        textInputControl.textProperty().addListener(matchListener(textInputControl.getText(), matcher));
+    }
     
-        boolean secondParentPhoneNumberMatch = secondParentPhoneNumberInput.getText().equals(parents.get(0).getPhoneNo()) ||
-                secondParentPhoneNumberInput.getText().equals(parents.get(1).getPhoneNo());
+    private ChangeListener<Boolean> editListener() {
+        return new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                submit.setDisable(newValue);
+            }
+        };
+    }
     
-        return !(firstParentFirstNameMatch && firstParentLastNameMatch && firstParentAddressMatch && firstParentPhoneNumberMatch &&
-                secondParentFirstNameMatch && secondParentLastNameMatch && secondParentAddressMatch && secondParentPhoneNumberMatch);
-         
+    private <T> ChangeListener<T> matchListener(T toMatch, SimpleBooleanProperty matcher) {
+        return new ChangeListener<T>() {
+            @Override
+            public void changed(ObservableValue<? extends T> observable, T oldValue, T newValue) {
+                matcher.set(newValue.equals(toMatch));
+            }
+        };
+    }
+    
+    public void initSecondParentMatchers() {
+        SimpleBooleanProperty secondParentFirstNameMatch = new SimpleBooleanProperty(true);
+        setListener(secondParentFirstNameInput, secondParentFirstNameMatch);
+        
+        SimpleBooleanProperty secondParentLastNameMatch = new SimpleBooleanProperty(true);
+        setListener(secondParentLastNameInput, secondParentLastNameMatch);
+        
+        SimpleBooleanProperty secondParentAddressMatch = new SimpleBooleanProperty(true);
+        setListener(secondParentAddressInput, secondParentAddressMatch);
+        
+        SimpleBooleanProperty secondParentPhoneNumberMatch = new SimpleBooleanProperty(true);
+        setListener(secondParentPhoneNumberInput, secondParentPhoneNumberMatch);
+        
+        SimpleBooleanProperty[] matches = new SimpleBooleanProperty[] {secondParentAddressMatch, secondParentFirstNameMatch,secondParentLastNameMatch, secondParentPhoneNumberMatch};
+        
+        BooleanBinding secondMatches = new BooleanBinding() {
+            {
+                super.bind(matches);
+            }
+            @Override
+            protected boolean computeValue() {
+                for (SimpleBooleanProperty booleanProperty : matches) {
+                    if (!booleanProperty.get()) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        };
+        secondMatches.addListener(editListener());
+    }
+    
+    public void setListController(ListController listController) {
+        this.listController = listController;
+    }
+    
+    public void setDisplayController(ChildDisplayController displayController) {
+        this.displayController = displayController;
     }
 }

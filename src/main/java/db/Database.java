@@ -266,7 +266,7 @@ public class Database {
                     String lName = parent.getString(table_parents.cols.last_name);
                     String location = parent.getString(table_parents.cols.location_id);
                     String phoneNo = parent.getString(table_parents.cols.phone_number_id);
-                    parents.add(new Child.Parent(fName, lName, phoneNo, location));
+                    parents.add(new Child.Parent(fName, lName, phoneNo, location, parentID));
                 }
             }
             
@@ -369,6 +369,24 @@ public class Database {
         relationshipAdded = preparedStatement.executeUpdate() != 0;
 
         return parentAdded && relationshipAdded;
+    }
+    
+    public boolean updateParent(String fName, String lName, String address, String phoneNumber, int id) throws SQLException {
+        addSingleUniqueData(address, table_locations.name);
+        addSingleUniqueData(phoneNumber, table_phone_numbers.name);
+    
+        int locationID = getSingleDataIDOf(address, table_locations.name);
+        int phoneNumberID = getSingleDataIDOf(phoneNumber, table_phone_numbers.name);
+        
+        String sql = String.format("UPDATE %s SET %s = ?, %s = ?, %s = ?, %s = ? WHERE %s = ?", table_parents.name, table_parents.cols.first_name, table_parents.cols.last_name, table_parents.cols.location_id, table_parents.cols.phone_number_id, table_parents.cols.id);
+        PreparedStatement preparedStatement = con.prepareStatement(sql);
+        preparedStatement.setString(1, fName);
+        preparedStatement.setString(2, lName);
+        preparedStatement.setInt(3, locationID);
+        preparedStatement.setInt(4, phoneNumberID);
+        preparedStatement.setInt(5, id);
+        
+        return preparedStatement.executeUpdate() != 0;
     }
     
     public boolean updateChild(String firstName, String lastName, String nickName, String place_of_birth, LocalDate birthDate, String childDesc, int gender, String referrer, int status, LocalDate admissionDate, int id) throws SQLException {

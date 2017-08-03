@@ -93,6 +93,8 @@ public class ChildFormController extends FormHelper {
     private boolean edit;
     private File updatedImage;
     
+    private ChildDisplayController displayController;
+    
     @FXML
     public void initialize() throws FileNotFoundException {
         //Init gender choice buttons and scene ref
@@ -216,7 +218,11 @@ public class ChildFormController extends FormHelper {
                 db.addNewChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
             } else {
                 db.updateChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate, child.getId());
-                  slctdImgStrm = new FileInputStream(updatedImage);
+                slctdImgStrm = new FileInputStream(updatedImage);
+                displayController.childParents.getChildren().clear();
+                listController.initTable();
+                listController.updateChildOf(displayController);
+                
         }
         //Retrieve id for use in storing img
         id = db.getChildIDOf(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
@@ -365,7 +371,7 @@ public class ChildFormController extends FormHelper {
         Parent root = loader.load();
         childParentsController = loader.getController();
         setNextParent(root);
-        childParentsController.setParents(child.getParents());
+        childParentsController.setParents(child.getParents(), null);
         initSubmitBtn();
         edit = true;
         submitBtn.setDisable(true);
@@ -429,6 +435,10 @@ public class ChildFormController extends FormHelper {
             }
 
         };
+    }
+    
+    public void setDisplayController(ChildDisplayController displayController) {
+        this.displayController = displayController;
     }
 }
 

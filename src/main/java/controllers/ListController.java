@@ -89,6 +89,7 @@ public class ListController {
                                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/childDisplay.fxml"));
                                     currentLoadedChildSceneRoot = loader.load();
                                     ChildDisplayController controller = loader.getController();
+                                    controller.setChildIndex(table.getItems().indexOf(row.getItem()));
                                     controller.setChild(row.getItem());
                                     controller.setListController(itself);
                                     controller.setListRoot(table.getParent());
@@ -203,5 +204,10 @@ public class ListController {
         stage.initModality(Modality.APPLICATION_MODAL);
 
         stage.showAndWait();
+    }
+    
+    public void updateChildOf(ChildDisplayController displayController) {
+        int index = displayController.getChildIndex();
+        displayController.setChild(table.getItems().get(index));
     }
 }

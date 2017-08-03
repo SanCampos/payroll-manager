@@ -37,14 +37,28 @@ public class Child {
         private SimpleStringProperty lName;
         private SimpleStringProperty phoneNo;
         private SimpleStringProperty address;
+        private SimpleIntegerProperty id;
 
-        public Parent(String fName, String lName, String phoneNo, String address) {
+        public Parent(String fName, String lName, String phoneNo, String address, int id) {
             this.fName = new SimpleStringProperty(fName);
             this.lName = new SimpleStringProperty(lName);
             this.phoneNo = new SimpleStringProperty(phoneNo);
             this.address = new SimpleStringProperty(address);
+            this.id = new SimpleIntegerProperty(id);
         }
-
+    
+        public int getId() {
+            return id.get();
+        }
+    
+        public SimpleIntegerProperty idProperty() {
+            return id;
+        }
+    
+        public void setId(int id) {
+            this.id.set(id);
+        }
+    
         public String getfName() {
             return fName.get();
         }

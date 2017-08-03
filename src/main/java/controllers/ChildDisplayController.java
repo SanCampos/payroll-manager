@@ -73,15 +73,11 @@ public class ChildDisplayController {
     
     private Child child;
     
+    private int childIndex;
+    
     @FXML
     public void initialize() {
-        Platform.runLater(() -> {
-            double topAnchor = AnchorPane.getTopAnchor(childName);
-            double leftAnchor = AnchorPane.getLeftAnchor(childName) + 5;
-            double length = childName.getWidth();
-            AnchorPane.setTopAnchor(editPane, topAnchor);
-            AnchorPane.setLeftAnchor(editPane, leftAnchor + length);
-        });
+        moveEditButttonRightOfName();
         changeMade = false;
         childImage.setClip(ImageUtils.getAvatarCircle(childImage.getFitHeight()));
         bannerRect.widthProperty().bind(anchorPane.widthProperty());
@@ -98,6 +94,16 @@ public class ChildDisplayController {
                 }
         });
         DragResizerXY.makeResizable(issuePlaceHolder, true);
+    }
+    
+    private void moveEditButttonRightOfName() {
+        Platform.runLater(() -> {
+            double topAnchor = AnchorPane.getTopAnchor(childName);
+            double leftAnchor = AnchorPane.getLeftAnchor(childName) + 5;
+            double length = childName.getWidth();
+            AnchorPane.setTopAnchor(editPane, topAnchor);
+            AnchorPane.setLeftAnchor(editPane, leftAnchor + length);
+        });
     }
     
     public void setChild(Child child) {
@@ -120,11 +126,11 @@ public class ChildDisplayController {
         childReferrer.setText(child.getReferrer());
         
         for (Child.Parent parent : child.getParents()) {
-            Text parentName = new Text(parent.getfName() + " "  + parent.getlName() + " \n");
+            Text parentName = new Text(parent.getfName() + " " + parent.getlName() + " \n");
             childParents.getChildren().add(parentName);
         }
         
-        
+        moveEditButttonRightOfName();
     }
     
     public void setListRoot(Parent listRoot) {
@@ -156,11 +162,41 @@ public class ChildDisplayController {
             ChildFormController controller = loader.getController();
             controller.setListController(listController);
             controller.setChild(child);
+            controller.setDisplayController(this);
             stage.setScene(scene);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //temp fix until we can figure out what happensw
+       //moveEditButttonRightOfName();
+    }
+    
+    public void showParentInfo(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/childParentsForm.fxml"));
+            Parent root = loader.load();
+            ChildParentsController controller = loader.getController();
+            controller.setParents(child.getParents(), child.getId());
+            controller.setListController(listController);
+            Stage fuck = new Stage();
+            Scene ffuuuuuucckk = new Scene(root, 575, 675);
+            fuck.setScene(ffuuuuuucckk);
+            controller.setDisplayController(this);
+            fuck.initModality(Modality.APPLICATION_MODAL);
+            fuck.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    
+    }
+    
+    public void setChildIndex(int childIndex) {
+        this.childIndex = childIndex;
+    }
+    
+    public int getChildIndex() {
+        return childIndex;
     }
 }

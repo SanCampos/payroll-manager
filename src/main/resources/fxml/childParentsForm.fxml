@@ -54,8 +54,8 @@
     </StackPane>
 
 
+    <Button fx:id="backBtn" layoutX="361.0" layoutY="651.0" onAction="#goToPrevRoot" prefHeight="25" prefWidth="75" text="Back" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="140.0" />
     <Button fx:id="submit" layoutX="257.0" layoutY="651.0" onAction="#submit" prefHeight="25" prefWidth="75" text="Submit" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="239.0" />
-    <Button layoutX="361.0" layoutY="651.0" onAction="#goToPrevRoot" prefHeight="25" prefWidth="75" text="Back" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="140.0" />
     <Button layoutX="463.0" layoutY="651.0" onAction="#cancel" prefHeight="25" prefWidth="75" text="Cancel" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="41.0" />
 
     <stylesheets>
