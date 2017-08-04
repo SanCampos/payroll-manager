@@ -30,3 +30,9 @@
     -fx-fill: transparent;
     -fx-text-fill: transparent;
 }
+
+
+.mark_delete {
+    -fx-control-inner-background: pink;
+    -fx-text-fill: red;
+}

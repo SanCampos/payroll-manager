@@ -169,8 +169,6 @@ public class ChildDisplayController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //temp fix until we can figure out what happensw
-       //moveEditButttonRightOfName();
     }
     
     public void showParentInfo(ActionEvent actionEvent) {

@@ -132,7 +132,6 @@ public class ChildFormController extends FormHelper {
                 }
             }
         }));
-        Platform.runLater(this::initMatchers);
     }
     
     private void initNextBtn() {
@@ -366,7 +365,7 @@ public class ChildFormController extends FormHelper {
             }
         }
         childDescInput.setText(child.getDescription());
-    
+        Platform.runLater(this::initMatchers);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/childParentsForm.fxml"));
         Parent root = loader.load();
         childParentsController = loader.getController();

@@ -24,20 +24,23 @@ import org.apache.commons.text.WordUtils;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by thedr on 7/16/2017.
  */
 public class ChildParentsController extends FormHelper {
 
+    @FXML private AnchorPane anchorPane;
 
+    //MULTIDIMENSIONAL ARRRAY LISTSS
 
     //Inputs for  first Parent information
     @FXML private PersistentPromptTextField firstParentFirstNameInput;
     @FXML private PersistentPromptTextField firstParentLastNameInput;
     @FXML private PersistentPromptTextField firstParentAddressInput;
     @FXML private PersistentPromptTextField firstParentPhoneNumberInput;
-    
+
     //Inputs for  second Parent information
     @FXML private PersistentPromptTextField secondParentFirstNameInput;
     @FXML private PersistentPromptTextField secondParentLastNameInput;
@@ -46,7 +49,7 @@ public class ChildParentsController extends FormHelper {
 
     @FXML private CheckBox noFirstParentCheckBox;
     @FXML private CheckBox noSecondParentCheckBox;
-    
+
     @FXML private Button submit;
 
     //Error box and messages
@@ -57,21 +60,21 @@ public class ChildParentsController extends FormHelper {
     private BooleanBinding bothParentsDisabled;
 
     private ChildFormController childFormController;
-    
+
     private List<Node> inputNodes;
-    
+
     private Parent prevRoot;
-    
+
     private Scene thisScene;
     private List<Child.Parent> parents;
-    
+
     private ListController listController;
     @FXML private Button backBtn;
-    
+
     private Integer childID;
     private ChildDisplayController displayController;
     //For form validation
-    
+
     @FXML
     public void initialize() {
         Platform.runLater(() -> {
@@ -84,15 +87,15 @@ public class ChildParentsController extends FormHelper {
         });
         noFirstParentCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> setDisableTo("first", newValue)));
         noSecondParentCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> setDisableTo("second", newValue)));
-        
+
         bothParentsDisabled = noSecondParentCheckBox.selectedProperty().and(noFirstParentCheckBox.selectedProperty());
         bothParentsDisabled.addListener(((observable, oldValue, newValue) -> {
             boolean bothDisabled = newValue;
-            
+
             //block user from submitting form and inform him or her of the nuaghty thing he/she had done
             //do vice versa if the naughty thing has been undone
             submit.setDisable(bothDisabled);
-            
+
             if (bothDisabled) {
                 errorBox.getStyleClass().add("error");
                 noParentsError.getStyleClass().add("error");
@@ -102,15 +105,14 @@ public class ChildParentsController extends FormHelper {
                 noParentsError.getStyleClass().remove("error");
             }
         }));
-        
-        firstParentAddressInput.textProperty().addListener(((observable, oldValue, newValue) -> {
-            if (!secondParentAddressInput.isDisabled()) {
-                secondParentAddressInput.setText(newValue);
+        secondParentAddressInput.focusedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!firstParentAddressInput.getText().isEmpty() && secondParentAddressInput.getText().isEmpty()) {
+                secondParentAddressInput.setText(firstParentAddressInput.getText());
             }
         }));
     }
-    
-    
+
+
     private void setDisableTo(String parent, boolean disableValue) {
         for (Node n : inputNodes) {
             TextInputControl textInput = ((TextInputControl) n);
@@ -119,28 +121,31 @@ public class ChildParentsController extends FormHelper {
             }
         }
     }
-    
+
     public void cancel(ActionEvent actionEvent) {
         FormHelper.cancel(actionEvent, ((Stage) firstParentAddressInput.getScene().getWindow()));
     }
-    
+
     public void setPrevRoot(Parent root) {
         prevRoot = root;
     }
-    
+
     public void submit() {
         if (isIncomplete()) return;
-    
+
         childID = childID == null ? childFormController.submit(false) : childID;
 
         try {
             Database db = new Database();
             db.init();
-            int i;
-            for (i = 0; i < parents.size(); i++) {
-                updateParent(parents.get(i).getId(), db, getOrdinal(i+1));
+            int i = 0;
+
+            if (parents != null) {
+                for (; i < parents.size(); i++) {
+                    updateParent(parents.get(i).getId(), db, getOrdinal(i + 1));
+                }
             }
-            
+
             for (; i < 2; i++) {
                 addParent(childID, db, getOrdinal(i+1));
             }
@@ -168,11 +173,11 @@ public class ChildParentsController extends FormHelper {
             db.addNewParent(fName, lName, address, phoneNumber, childID);
         }
     }
-    
-    
+
+
     private void updateParent(int parentID, Database db, String parent) throws SQLException {
         TextInputControl addressInput = getTextInputOf(parent, "ParentAddressInput");
-    
+
         if (!addressInput.isDisabled()) {
             String fName = getTextInputTextOf(parent, "ParentFirstNameInput");
             String lName = getTextInputTextOf(parent, "ParentLastNameInput");
@@ -181,7 +186,7 @@ public class ChildParentsController extends FormHelper {
             db.updateParent(fName, lName, address, phoneNumber, parentID);
         }
     }
-    
+
     private TextInputControl getTextInputOf(String parent, String input) {
         return (TextInputControl) firstParentAddressInput.getParent().lookup(String.format("#%s%s", parent, input));
     }
@@ -214,7 +219,7 @@ public class ChildParentsController extends FormHelper {
         }
         return false;
     }
-    
+
     public void setParents(List<Child.Parent> parents, Integer id) {
         Platform.runLater(() -> {
             this.parents = parents;
@@ -222,40 +227,77 @@ public class ChildParentsController extends FormHelper {
             noSecondParentCheckBox.setSelected(true);
             for (int i = 0; i < parents.size(); i++) {
                 setParentInfoOf(parents.get(i), getOrdinal(i+1));
+                setDeleteCheckBoxes(getOrdinal(i+1));
             }
-    
+
             AnchorPane.setLeftAnchor(submit, AnchorPane.getLeftAnchor(backBtn));
             AnchorPane.setTopAnchor(submit, AnchorPane.getTopAnchor(backBtn));
             AnchorPane.setBottomAnchor(submit, AnchorPane.getBottomAnchor(backBtn));
             AnchorPane.setRightAnchor(submit, AnchorPane.getRightAnchor(backBtn));
-    
+
             childID = id;
             backBtn.setDisable(true);
             backBtn.setVisible(false);
-    
+
             submit.setDisable(true);
-    
+
             initFirstParentMatchers();
             initSecondParentMatchers();
             firstParentAddressInput.textProperty().addListener((ChangeListener<? super String>) null);
         });
     }
-    
+
+    private void setDeleteCheckBoxes(String parent) {
+        CheckBox noParentCheckBox = (CheckBox) firstParentAddressInput.getParent().lookup(String.format("#no%sParentCheckBox", WordUtils.capitalize(parent)));
+
+        CheckBox deleteCheckBox = new CheckBox("Delete parent");
+        deleteCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            boolean toBeDeleted = newValue;
+
+            if (toBeDeleted) {
+                //multideimensionl array lists will fix this abominatino
+                TextInputControl addressInput = getTextInputOf(parent, "ParentAddressInput");
+                TextInputControl fName = getTextInputOf(parent, "ParentFirstNameInput");
+                TextInputControl lName = getTextInputOf(parent, "ParentLastNameInput");
+                TextInputControl phoneNumber = getTextInputOf(parent, "ParentPhoneNumberInput");
+                markForDeletion(new TextInputControl[] {addressInput, fName, lName, phoneNumber});
+            } else {
+                setParentInfoOf(parents.get(getInt(parent)-1), parent);
+            }
+        }));
+        anchorPane.getChildren().add(deleteCheckBox);
+        AnchorPane.setLeftAnchor(deleteCheckBox, 385.0);
+        AnchorPane.setTopAnchor(deleteCheckBox, AnchorPane.getTopAnchor(noParentCheckBox));
+    }
+
+    private void markForDeletion(TextInputControl[] inputs) {
+        for (TextInputControl input: inputs) {
+            input.getStyleClass().add("mark_delete");
+            input.setText("-- TO BE DELETED --");
+            input.setDisable(true);
+        }
+    }
+
     private void setParentInfoOf(Child.Parent parent, String parentKind) {
         TextInputControl addressInput = getTextInputOf(parentKind, "ParentAddressInput");
         TextInputControl fName = getTextInputOf(parentKind, "ParentFirstNameInput");
         TextInputControl lName = getTextInputOf(parentKind, "ParentLastNameInput");
         TextInputControl phoneNumber = getTextInputOf(parentKind, "ParentPhoneNumberInput");
-        CheckBox disableParent = (CheckBox) firstParentPhoneNumberInput.getParent().lookup(String.format("#no%sParentCheckBox", WordUtils.capitalize(parentKind)));
-        disableParent.setSelected(false);
-        
+        CheckBox disableCheckBox = (CheckBox) firstParentPhoneNumberInput.getParent().lookup(String.format("#no%sParentCheckBox", WordUtils.capitalize(parentKind)));
+        disableCheckBox.setSelected(false);
+
         fName.setText(parent.getfName());
         lName.setText(parent.getlName());
         addressInput.setText(parent.getAddress());
         phoneNumber.setText(parent.getPhoneNo());
+
+        fName.getStyleClass().remove("mark_delete");
+        lName.getStyleClass().remove("mark_delete");
+        addressInput.getStyleClass().remove("mark_delete");
+        phoneNumber.getStyleClass().remove("mark_delete");
     }
-    
-    
+
+
     //temporary
     private String getOrdinal(int i) {
         if (i == 1)
@@ -263,22 +305,30 @@ public class ChildParentsController extends FormHelper {
         else
             return "second";
     }
-    
+
+    private int getInt(String ordinal) {
+        if (ordinal.equals("first")) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
+
     public void initFirstParentMatchers() {
         SimpleBooleanProperty firstParentFirstNameMatch = new SimpleBooleanProperty(true);
         setListener(firstParentFirstNameInput, firstParentFirstNameMatch);
-    
+
         SimpleBooleanProperty firstParentLastNameMatch = new SimpleBooleanProperty(true);
         setListener(firstParentLastNameInput, firstParentLastNameMatch);
-    
+
         SimpleBooleanProperty firstParentAddressMatch = new SimpleBooleanProperty(true);
         setListener(firstParentAddressInput, firstParentAddressMatch);
-    
+
         SimpleBooleanProperty firstParentPhoneNumberMatch = new SimpleBooleanProperty(true);
         setListener(firstParentPhoneNumberInput, firstParentPhoneNumberMatch);
-        
+
         SimpleBooleanProperty[] matches = new SimpleBooleanProperty[] {firstParentAddressMatch, firstParentFirstNameMatch,firstParentLastNameMatch, firstParentPhoneNumberMatch};
-    
+
         BooleanBinding firstMatches = new BooleanBinding() {
             {
                 super.bind(matches);
@@ -295,11 +345,11 @@ public class ChildParentsController extends FormHelper {
         };
         firstMatches.addListener(editListener());
     }
-    
+
     private void setListener(TextInputControl textInputControl, SimpleBooleanProperty matcher) {
         textInputControl.textProperty().addListener(matchListener(textInputControl.getText(), matcher));
     }
-    
+
     private ChangeListener<Boolean> editListener() {
         return new ChangeListener<Boolean>() {
             @Override
@@ -308,7 +358,7 @@ public class ChildParentsController extends FormHelper {
             }
         };
     }
-    
+
     private <T> ChangeListener<T> matchListener(T toMatch, SimpleBooleanProperty matcher) {
         return new ChangeListener<T>() {
             @Override
@@ -317,22 +367,22 @@ public class ChildParentsController extends FormHelper {
             }
         };
     }
-    
+
     public void initSecondParentMatchers() {
         SimpleBooleanProperty secondParentFirstNameMatch = new SimpleBooleanProperty(true);
         setListener(secondParentFirstNameInput, secondParentFirstNameMatch);
-        
+
         SimpleBooleanProperty secondParentLastNameMatch = new SimpleBooleanProperty(true);
         setListener(secondParentLastNameInput, secondParentLastNameMatch);
-        
+
         SimpleBooleanProperty secondParentAddressMatch = new SimpleBooleanProperty(true);
         setListener(secondParentAddressInput, secondParentAddressMatch);
-        
+
         SimpleBooleanProperty secondParentPhoneNumberMatch = new SimpleBooleanProperty(true);
         setListener(secondParentPhoneNumberInput, secondParentPhoneNumberMatch);
-        
+
         SimpleBooleanProperty[] matches = new SimpleBooleanProperty[] {secondParentAddressMatch, secondParentFirstNameMatch,secondParentLastNameMatch, secondParentPhoneNumberMatch};
-        
+
         BooleanBinding secondMatches = new BooleanBinding() {
             {
                 super.bind(matches);
@@ -349,11 +399,11 @@ public class ChildParentsController extends FormHelper {
         };
         secondMatches.addListener(editListener());
     }
-    
+
     public void setListController(ListController listController) {
         this.listController = listController;
     }
-    
+
     public void setDisplayController(ChildDisplayController displayController) {
         this.displayController = displayController;
     }
