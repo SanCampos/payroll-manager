@@ -4,9 +4,17 @@
 }
 
 .box {
-    -fx-padding: 15;
+    -fx-padding: 12;
     -fx-spacing: 15;
     -fx-alignment: center-left;
+}
+
+.menu_bar {
+    -fx-padding: 7 12 7 12;
+    -fx-alignment: center-left;
+    -fx-border-width: 0.5;
+    -fx-border-color: grey transparent transparent transparent;
+    -fx-spacing: 10;
 }
 
 .divider {
@@ -63,4 +71,5 @@
     -fx-font-weight: bold;
     -fx-font-size: 165%;
 }
+
 

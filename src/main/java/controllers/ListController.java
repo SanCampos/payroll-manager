@@ -17,7 +17,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -38,8 +41,12 @@ import java.util.List;
  */
 public class ListController {
 
+    @FXML private TextField searchBar;
+    @FXML private VBox vBox;
     @FXML private ImageView profImg;
     @FXML private Button logout_button;
+
+    @FXML private BorderPane borderPane;
 
     @FXML private TableView<Child> table;
     @FXML private TableColumn col_name;
@@ -57,6 +64,7 @@ public class ListController {
     public void initialize() {
         db = new Database();
         try {
+            initMenuBar();
             initTable();
         } catch (SQLException e){
             System.out.println("loading  failed");
@@ -66,6 +74,10 @@ public class ListController {
         disablePictureSort();
         currentLoadedChild = -1;
         itself = this;
+    }
+
+    private void initMenuBar() {
+
     }
 
     private void initAvatar() {
@@ -156,6 +168,7 @@ public class ListController {
                 };
             }
         });
+        table.prefHeightProperty().bind(borderPane.heightProperty());
     }
 
     private void disablePictureSort() {
