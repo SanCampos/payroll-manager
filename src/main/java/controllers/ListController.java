@@ -63,6 +63,7 @@ public class ListController {
         }
         initAvatar();
         disableReorder();
+        disablePictureSort();
         currentLoadedChild = -1;
         itself = this;
     }
@@ -75,6 +76,8 @@ public class ListController {
 
     public void initTable() throws SQLException {
         db.init();
+
+        table.setItems(db.getChildren());
 
         table.setRowFactory(new Callback<TableView<Child>, TableRow<Child>>() {
             @Override
@@ -104,7 +107,6 @@ public class ListController {
                 return row;
             }});
 
-        table.setItems(db.getChildren());
         col_picture.setCellValueFactory(new PropertyValueFactory<Child, File>("image"));
         col_picture.setCellFactory(new Callback<TableColumn<Child, File>, TableCell<Child, File>>() {
             @Override
@@ -156,11 +158,17 @@ public class ListController {
         });
     }
 
+    private void disablePictureSort() {
+        col_picture.setSortable(false);
+    }
+
     private void disableReorder() {
-        table.widthProperty().addListener((observable, oldValue, newValue) -> {
-            TableHeaderRow row = ((TableHeaderRow) table.lookup("TableHeaderRow"));
-            row.reorderingProperty().addListener((observable1, oldValue1, newValue1) -> row.setReordering(false));
-        }); //Fuck you oracle
+        table.skinProperty().addListener(((observable, oldValue, newValue) -> {
+            TableHeaderRow header = (TableHeaderRow)table.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((observable1, oldValue1, newValue1) -> {
+                header.setReordering(false);
+            });
+        }));//Fuck you oracle
     }
 
 
@@ -189,21 +197,24 @@ public class ListController {
     }
 
     @FXML
-    public void showChildForm(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/childForm.fxml"));
-        Parent root = loader.load();
-        ChildFormController controller = loader.getController();
-        controller.setListController(this);
-        Scene scene = new Scene(root, 575, 675);
-        scene.getStylesheets().add(getClass().getResource("/css/persistent-prompt.css").toExternalForm());
-
-        Stage stage = new Stage();
-        stage.setResizable(false);
-        stage.setScene(scene);
-        stage.setTitle("Add child");
-        stage.initModality(Modality.APPLICATION_MODAL);
-
-        stage.showAndWait();
+    public void showChildForm(ActionEvent actionEvent)  {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/childForm.fxml"));
+            Parent root = loader.load();
+            ChildFormController controller = loader.getController();
+            controller.setListController(this);
+            Scene scene = new Scene(root, 575, 675);
+            scene.getStylesheets().add(getClass().getResource("/css/persistent-prompt.css").toExternalForm());
+            Stage stage = new Stage();
+            stage.setResizable(false);
+            stage.setScene(scene);
+            stage.setTitle("Add child");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+            table.setItems(db.getChildren());
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
     }
     
     public void updateChildOf(ChildDisplayController displayController) {

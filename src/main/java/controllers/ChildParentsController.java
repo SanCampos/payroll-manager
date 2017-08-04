@@ -24,7 +24,6 @@ import org.apache.commons.text.WordUtils;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by thedr on 7/16/2017.
@@ -96,13 +95,15 @@ public class ChildParentsController extends FormHelper {
             //do vice versa if the naughty thing has been undone
             submit.setDisable(bothDisabled);
 
-            if (bothDisabled) {
-                errorBox.getStyleClass().add("error");
-                noParentsError.getStyleClass().add("error");
-                incompleteError.getStyleClass().remove("error");
-            } else {
-                errorBox.getStyleClass().removeAll("error");
-                noParentsError.getStyleClass().remove("error");
+            if (parents == null) {
+                if (bothDisabled) {
+                    errorBox.getStyleClass().add("error");
+                    noParentsError.getStyleClass().add("error");
+                    incompleteError.getStyleClass().remove("error");
+                } else {
+                    errorBox.getStyleClass().removeAll("error");
+                    noParentsError.getStyleClass().remove("error");
+                }
             }
         }));
         secondParentAddressInput.focusedProperty().addListener(((observable, oldValue, newValue) -> {
@@ -142,7 +143,7 @@ public class ChildParentsController extends FormHelper {
 
             if (parents != null) {
                 for (; i < parents.size(); i++) {
-                    updateParent(parents.get(i).getId(), db, getOrdinal(i + 1));
+                    updateOrDeleteParent(parents.get(i).getId(), db, getOrdinal(i + 1));
                 }
             }
 
@@ -175,7 +176,7 @@ public class ChildParentsController extends FormHelper {
     }
 
 
-    private void updateParent(int parentID, Database db, String parent) throws SQLException {
+    private void updateOrDeleteParent(int parentID, Database db, String parent) throws SQLException {
         TextInputControl addressInput = getTextInputOf(parent, "ParentAddressInput");
 
         if (!addressInput.isDisabled()) {
@@ -184,6 +185,8 @@ public class ChildParentsController extends FormHelper {
             String address = addressInput.getText();
             String phoneNumber = getTextInputTextOf(parent, "ParentPhoneNumberInput");
             db.updateParent(fName, lName, address, phoneNumber, parentID);
+        } else if (addressInput.getText().contains("-- TO BE DELETED --")) {
+            db.deleteParent(parentID);
         }
     }
 
@@ -243,7 +246,6 @@ public class ChildParentsController extends FormHelper {
 
             initFirstParentMatchers();
             initSecondParentMatchers();
-            firstParentAddressInput.textProperty().addListener((ChangeListener<? super String>) null);
         });
     }
 

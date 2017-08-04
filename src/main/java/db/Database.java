@@ -399,4 +399,21 @@ public class Database {
         FUUUCK.setInt(11, id);
         return FUUUCK.executeUpdate() != 0;
     }
+
+    public boolean deleteParent(int parentID) throws SQLException {
+        boolean parentRelationshipDeleted;
+        boolean parentDeleted;
+
+        String deleteRelationshipSQL = String.format("DELETE FROM %s WHERE %s = ?", table_parent_child_relationships.name, table_parent_child_relationships.cols.parent_id);
+        PreparedStatement preparedStatement = con.prepareStatement(deleteRelationshipSQL);
+        preparedStatement.setInt(1, parentID);
+        parentRelationshipDeleted = preparedStatement.executeUpdate() != 0;
+
+        String deleteParentSQL = String.format("DELETE FROM %s WHERE %s = ?", table_parents.name, table_parents.cols.id);
+        preparedStatement = con.prepareStatement(deleteParentSQL);
+        preparedStatement.setInt(1, parentID);
+        parentDeleted = preparedStatement.executeUpdate() != 0;
+
+        return parentDeleted && parentRelationshipDeleted;
+    }
 }
