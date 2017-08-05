@@ -258,18 +258,26 @@ public class ChildParentsController extends FormHelper {
 
             if (toBeDeleted) {
                 //multideimensionl array lists will fix this abominatino
-                TextInputControl addressInput = getTextInputOf(parent, "ParentAddressInput");
-                TextInputControl fName = getTextInputOf(parent, "ParentFirstNameInput");
-                TextInputControl lName = getTextInputOf(parent, "ParentLastNameInput");
-                TextInputControl phoneNumber = getTextInputOf(parent, "ParentPhoneNumberInput");
-                markForDeletion(new TextInputControl[] {addressInput, fName, lName, phoneNumber});
+                TextInputControl[] inputs = getInputs(parent);
+                markForDeletion(inputs);
             } else {
+                for (TextInputControl input: getInputs(parent)) {
+                    input.setDisable(false);
+                }
                 setParentInfoOf(parents.get(getInt(parent)-1), parent);
             }
         }));
         anchorPane.getChildren().add(deleteCheckBox);
         AnchorPane.setLeftAnchor(deleteCheckBox, 385.0);
         AnchorPane.setTopAnchor(deleteCheckBox, AnchorPane.getTopAnchor(noParentCheckBox));
+    }
+
+    private TextInputControl[] getInputs(String parent) {
+        TextInputControl addressInput = getTextInputOf(parent, "ParentAddressInput");
+        TextInputControl fName = getTextInputOf(parent, "ParentFirstNameInput");
+        TextInputControl lName = getTextInputOf(parent, "ParentLastNameInput");
+        TextInputControl phoneNumber = getTextInputOf(parent, "ParentPhoneNumberInput");
+        return new TextInputControl[]{addressInput, fName, lName, phoneNumber};
     }
 
     private void markForDeletion(TextInputControl[] inputs) {
