@@ -31,7 +31,7 @@ public class Database {
     private Connection con;
 
     public void init() throws SQLException {
-        String url = "jdbc:mysql://localhost:3306/tset?verifyServerCertificate=false&useSSL=true";
+        String url = "jdbc:mysql://localhost:3306/test?verifyServerCertificate=false&useSSL=true";
         String user = "root";
         String pass = "root";
 

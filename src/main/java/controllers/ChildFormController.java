@@ -352,6 +352,7 @@ public class ChildFormController extends FormHelper {
         lastNameInput.setText(child.getlName());
         nickNameInput.setText(child.getNickname());
         childImage.setImage(new Image("file:///" + ((File) child.getImage()).getAbsolutePath()));
+        imageName.setText(((File) child.getImage()).getName());
         
         birthDateInput.setValue(LocalDate.parse(child.getBirth_date()));
         admissionDateInput.setValue(LocalDate.parse(child.getAdmission_date()));

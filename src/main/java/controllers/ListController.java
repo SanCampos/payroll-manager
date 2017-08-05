@@ -3,6 +3,9 @@ package main.java.controllers;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -17,7 +20,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -30,11 +32,12 @@ import main.java.db.Database;
 import main.java.globalInfo.GlobalInfo;
 import main.java.models.Child;
 import main.java.utils.ImageUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Created by thedr on 6/6/2017.
@@ -51,6 +54,8 @@ public class ListController {
     @FXML private TableView<Child> table;
     @FXML private TableColumn col_name;
     @FXML private TableColumn col_picture;
+    
+    private ObservableList<Child> masterList;
 
     //TO BE MOVED TO EXTERNAL CLASS
     private static Database db;
@@ -59,13 +64,15 @@ public class ListController {
     private Parent currentLoadedChildSceneRoot;
     
     private ListController itself;
-
+    
+    private FilteredList<Child> filteredChildren;
+    
     @FXML
     public void initialize() {
         db = new Database();
         try {
-            initMenuBar();
             initTable();
+            initMenuBar();
         } catch (SQLException e){
             System.out.println("loading  failed");
         }
@@ -75,9 +82,23 @@ public class ListController {
         currentLoadedChild = -1;
         itself = this;
     }
-
+    
+    private void initMasterChildrenList() throws SQLException {
+        db.init();
+        masterList = db.getChildren();
+    }
+    
     private void initMenuBar() {
-
+        //init search bar functionality
+        
+        searchBar.textProperty().addListener(((observable, oldValue, newValue) -> {
+            String query = searchBar.getText();
+            
+            filteredChildren.setPredicate(child -> (query == null || query.isEmpty()) ||
+                        (StringUtils.containsIgnoreCase(child.getCompleteName(), query))
+            );
+            table.setItems(filteredChildren);
+        }));
     }
 
     private void initAvatar() {
@@ -89,8 +110,10 @@ public class ListController {
     public void initTable() throws SQLException {
         db.init();
 
+        
         table.setItems(db.getChildren());
-
+        filteredChildren = new FilteredList<>(table.getItems(), p -> false);
+        
         table.setRowFactory(new Callback<TableView<Child>, TableRow<Child>>() {
             @Override
             public TableRow<Child> call(TableView<Child> param) {
@@ -107,7 +130,7 @@ public class ListController {
                                     controller.setChildIndex(table.getItems().indexOf(row.getItem()));
                                     controller.setChild(row.getItem());
                                     controller.setListController(itself);
-                                    controller.setListRoot(table.getParent());
+                                    controller.setListRoot(vBox.getParent());
                                 }
                                     profImg.getScene().setRoot(currentLoadedChildSceneRoot);
                             } catch (IOException e) {
