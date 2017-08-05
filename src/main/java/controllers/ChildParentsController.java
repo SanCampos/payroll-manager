@@ -72,10 +72,12 @@ public class ChildParentsController extends FormHelper {
 
     private Integer childID;
     private ChildDisplayController displayController;
+    private List<CheckBox> deleteCheckBoxes;
     //For form validation
 
     @FXML
     public void initialize() {
+        deleteCheckBoxes = new ArrayList<>();
         Platform.runLater(() -> {
             try {
                 inputNodes = NodeUtils.getAllNodesOf(secondParentAddressInput.getParent(), new ArrayList<>(), "javafx.scene.control.TextInputControl");
@@ -246,6 +248,7 @@ public class ChildParentsController extends FormHelper {
 
             initFirstParentMatchers();
             initSecondParentMatchers();
+
         });
     }
 
@@ -257,19 +260,33 @@ public class ChildParentsController extends FormHelper {
             boolean toBeDeleted = newValue;
 
             if (toBeDeleted) {
-                //multideimensionl array lists will fix this abominatino
+                //multideimensionl array lists will fix this abomination
                 TextInputControl[] inputs = getInputs(parent);
                 markForDeletion(inputs);
+                submitDisabled();
             } else {
                 for (TextInputControl input: getInputs(parent)) {
                     input.setDisable(false);
                 }
                 setParentInfoOf(parents.get(getInt(parent)-1), parent);
+                submitDisabled();
             }
         }));
+        deleteCheckBoxes.add(deleteCheckBox);
         anchorPane.getChildren().add(deleteCheckBox);
         AnchorPane.setLeftAnchor(deleteCheckBox, 385.0);
         AnchorPane.setTopAnchor(deleteCheckBox, AnchorPane.getTopAnchor(noParentCheckBox));
+    }
+
+    //BINDINGS ARE BETTER WHAT THE FUCKAHKAFJSDKLJsj BECAUASE THERE S NO OTHER REFERNCE
+    private void submitDisabled() {
+        for (CheckBox box : deleteCheckBoxes) {
+            if (box.selectedProperty().get()) {
+                submit.setDisable(false);
+                return;
+            }
+        }
+        submit.setDisable(true);
     }
 
     private TextInputControl[] getInputs(String parent) {
