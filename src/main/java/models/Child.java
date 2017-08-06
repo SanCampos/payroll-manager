@@ -264,24 +264,15 @@ public class Child {
         this.image = image;
     }
 
+    
     public String getCompleteName() {
-        String firstName = getfName();
-        String lastName = getlName();
-        String nickname = getNickname();
-
-        String placeholder = "PLACEHOLDER"; //Place holder for adding nickname if exists
-        String complete = firstName + placeholder + lastName;
-
-        //place nickname between first and last name if exists
-        if (nickname.length() != 0){
-            String nicknameString = " \"" + nickname + "\" ";
-            complete =  complete.replace(placeholder, nicknameString);
-
-        //if nickname does not exist
-        } else {
-            complete = complete.replace(placeholder, " ");
-        }
-        return complete;
+        return getCompleteName(getfName(), getlName(), getNickname());
+    }
+    
+    public static String getCompleteName(String firstName, String lastName, String nickname) {
+        StringBuilder completeName = nickname.length() == 0 ? new StringBuilder(firstName + " " + lastName) :
+                                                              new StringBuilder(firstName + " \"" + nickname + "\" " + lastName);
+        return completeName.toString();
     }
     
     public String getPlace_of_birth() {
