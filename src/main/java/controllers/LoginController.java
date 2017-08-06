@@ -76,12 +76,10 @@ public class LoginController {
             listStage.show();
             inputPass.clear();
             Main.loginStage.close();
-
         } catch (SQLException e) {
             loginFailNotif.setStyle("-fx-text-fill: red");
             loginFailNotif.setText("Error connecting to the server, please try again!");
             e.printStackTrace();
-
         } catch (IOException e) {
             loginFailNotif.setStyle("-fx-text-fill: red");
             loginFailNotif.setText("An error has occurred, please try again!");

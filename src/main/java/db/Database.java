@@ -11,6 +11,7 @@ import java.security.SecureRandom;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import main.java.db.DbSchema.*;
@@ -34,17 +35,23 @@ public class Database {
         String url = "jdbc:mysql://localhost:3306/test?verifyServerCertificate=false&useSSL=true";
         String user = "root";
         String pass = "root";
-
+        
         con = DriverManager.getConnection(url, user, pass);
     }
-
+    
+    /**
+     * Registers new user and and stores their username and (hashed) password into database
+     * Hashed user password is stored by (roughly) halving the salt and placing the first
+     * half in front of the hashed pw and the second half after the hashed pw
+     * EXAMPLE: salt = SALT, hash_pw  =  HASH
+     *          password in database = SAHASHLT
+     * Salt retrieval for verification is also done through this salt and password mix
+     * @param username username
+     * @param password unhashed password
+     * @return returns true if user is successfully registered
+     * @throws SQLException in case of connection failure
+     */
     public boolean registerUser(String username, String password) throws SQLException {
-        // Hashed user password is stored by (roughly) halving the salt and placing the first
-        // half in front of the hashed pw and the second half after the hashed pw
-        // EXAMPLE: salt = SALT, hash_pw  =  HASH
-        //          password in database = SAHASHLT
-        //Salt retrieval for verification is also done through this salt and password mix
-
         //Insert row for user info
         String user_row = String.format("INSERT INTO %s (%s, %s) VALUES (?, ?)",
                 table_users.name, table_users.cols.username, table_users.cols.hash_pw);
@@ -63,32 +70,29 @@ public class Database {
         prepStmnt.setString(1, username);
         prepStmnt.setString(2, hash_pw.toString());
         int user_cols_changed = prepStmnt.executeUpdate();
-
         return user_cols_changed != 0;
     }
-
+    
+    /**
+     * Logs the user in, please refer to {@link #registerUser(String, String) registerUser()} method
+     * for hash algorithm
+     * @param username
+     * @param password un hashed password
+     * @return
+     * @throws SQLException
+     */
     public boolean loginUser(String username, String password) throws SQLException /*REDUNDANT?*/ {
-        // Hashed user password is stored by (roughly) halving the salt and placing the first
-        // half in front of the hashed pw and the second half after the hashed pw
-        // EXAMPLE: salt = SALT, hash_pw  =  HASH
-        //          password in database = SAHASHLT
-        //Salt retrieval for verification is also done through this salt and password mix
-
-        //Prep the prepared statement
-
-        //Basically fetch the user (if there is one)
         ResultSet user = getSingleRow(table_users.name, table_users.cols.username, username);
 
         if (!user.next())
             return false;
-
-        //Fetch stored hash
+        
         String hashed_pw = user.getString(table_users.cols.hash_pw);
 
         //Assemble salt from stored hash
         String salt = hashed_pw.substring(0, FHALF_LENGTH) + hashed_pw.substring(hashed_pw.length() - (FHALF_LENGTH - 1), hashed_pw.length());
 
-        //Fetch misc user info
+        //misc user info
         int user_prvlg = user.getInt(table_users.cols.prvlg_lvl);
         int userID = user.getInt(table_users.cols.id);
 

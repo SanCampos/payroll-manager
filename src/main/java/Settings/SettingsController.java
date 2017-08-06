@@ -161,6 +161,7 @@ public class SettingsController {
     }
     
     private void applyImgChange() {
+        Database db = new Database();
         try {
             if (!(strgRef.exists() && strgRef.isFile())) {
                 strgRef.getParentFile().mkdirs();
@@ -169,10 +170,9 @@ public class SettingsController {
             
             
             Files.copy(slctdImgStrm, Paths.get(strgRef.getPath()), StandardCopyOption.REPLACE_EXISTING);
-    
-            Database database = new Database();
-            database.init();
-            database.updateImageOf(GlobalInfo.getUserID(), strgRef.getAbsolutePath().replace("\\", "\\\\"), table_users.name);
+            
+            db.init();
+            db.updateImageOf(GlobalInfo.getUserID(), strgRef.getAbsolutePath().replace("\\", "\\\\"), table_users.name);
             
             GlobalInfo.setCurrProfImg(strgRef);
         } catch (IOException e) {

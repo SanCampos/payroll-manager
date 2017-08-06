@@ -67,7 +67,9 @@ public class ListController {
     @FXML
     public void initialize() {
         db = new Database();
+        
         try {
+            db.init();
             initTable();
             initSearchFunctionality();
         } catch (SQLException e){

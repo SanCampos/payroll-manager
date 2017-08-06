@@ -202,40 +202,40 @@ public class ChildFormController extends FormHelper {
         LocalDate birthDate = birthDateInput.getValue();
         LocalDate admissionDate = admissionDateInput.getValue();
         
-        //Fire up db helper and insert new child record
-        Database db = new Database();
-        
         //Retrieve record's ID for later use
         int id;
         
-    
         try {
-            //Add record for child and retrieve its id
+            //Fire up db helper and insert new child record
+            Database db = new Database();
             db.init();
             
+            
+            //Add record for child and retrieve its id
             if (child == null) {
                 db.addNewChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
             } else {
                 db.updateChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate, child.getId());
-                slctdImgStrm = new FileInputStream(updatedImage);
-                displayController.childParents.getChildren().clear();
-                listController.setQuery(Child.getCompleteName(firstName, lastName, nickName));
-                listController.loadChildren();
-                displayController.setChild(listController.getChildren().get(0));
             }
-        //Retrieve id for use in storing img
-        id = db.getChildIDOf(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
-        if (id == -89) throw new SQLException();
-        File strgReg = new File(pathRef.replace("id", String.valueOf(id)));
+            id = db.getChildIDOf(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
+            if (id == -89) throw new SQLException();
+            
+            //Retrieve id for use in storing img
+            File strgReg = new File(pathRef.replace("id", String.valueOf(id)));
     
-        //Store img file for child avatar
+            //Store img file for child avatar
             if (!(strgReg.exists() && strgReg.isFile())) {
                 strgReg.getParentFile().mkdirs();
                 strgReg.createNewFile();
             }
-            
             Files.copy(slctdImgStrm, Paths.get(strgReg.getPath()), StandardCopyOption.REPLACE_EXISTING);
             db.updateImageOf(id, strgReg.getPath(), table_children.name);
+    
+            slctdImgStrm = new FileInputStream(updatedImage);
+            displayController.childParents.getChildren().clear();
+            listController.setQuery(Child.getCompleteName(firstName, lastName, nickName));
+            listController.loadChildren();
+            displayController.setChild(listController.getChildren().get(0));
         } catch (SQLException e) {
             e.printStackTrace();
             DialogUtils.displayError("Error saving child data", "There was an error in saving all child data. Please try again!");
@@ -246,7 +246,6 @@ public class ChildFormController extends FormHelper {
                     "All other data besides the image has been saved. Please attempt to add the child image in its own page.");
             return -1;
         }
-
         refreshList();
         if (active) {
             firstNameInput.getScene().getWindow().hide();
@@ -371,7 +370,7 @@ public class ChildFormController extends FormHelper {
         Parent root = loader.load();
         childParentsController = loader.getController();
         setNextParent(root);
-        childParentsController.setParents(child.getParents(), null);
+        childParentsController.setParents(child.getParents(), child.getId());
         initSubmitBtn();
         edit = true;
         submitBtn.setDisable(true);

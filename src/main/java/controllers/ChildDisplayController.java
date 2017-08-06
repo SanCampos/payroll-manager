@@ -178,6 +178,7 @@ public class ChildDisplayController {
             ChildParentsController controller = loader.getController();
             controller.setParents(child.getParents(), child.getId());
             controller.setListController(listController);
+            controller.setChildName(child.getCompleteName());
             Stage fuck = new Stage();
             Scene ffuuuuuucckk = new Scene(root, 575, 675);
             fuck.setScene(ffuuuuuucckk);

@@ -73,6 +73,8 @@ public class ChildParentsController extends FormHelper {
     private Integer childID;
     private ChildDisplayController displayController;
     private List<CheckBox> deleteCheckBoxes;
+    
+    private String childName;
     //For form validation
 
     @FXML
@@ -92,10 +94,19 @@ public class ChildParentsController extends FormHelper {
         bothParentsDisabled = noSecondParentCheckBox.selectedProperty().and(noFirstParentCheckBox.selectedProperty());
         bothParentsDisabled.addListener(((observable, oldValue, newValue) -> {
             boolean bothDisabled = newValue;
-
+            
+            boolean willDelete = false;
+            
+            for (CheckBox checkBox : deleteCheckBoxes) {
+                if (checkBox.selectedProperty().get()) {
+                    willDelete = true;
+                    break;
+                }
+            }
+            
             //block user from submitting form and inform him or her of the nuaghty thing he/she had done
             //do vice versa if the naughty thing has been undone
-            submit.setDisable(bothDisabled);
+            submit.setDisable(bothDisabled && !willDelete);
 
             if (parents == null) {
                 if (bothDisabled) {
@@ -109,7 +120,7 @@ public class ChildParentsController extends FormHelper {
             }
         }));
         secondParentAddressInput.focusedProperty().addListener(((observable, oldValue, newValue) -> {
-            if (!firstParentAddressInput.getText().isEmpty() && secondParentAddressInput.getText().isEmpty()) {
+            if (!firstParentAddressInput.getText().isEmpty() && secondParentAddressInput.getText().isEmpty() && newValue) {
                 secondParentAddressInput.setText(firstParentAddressInput.getText());
             }
         }));
@@ -137,7 +148,7 @@ public class ChildParentsController extends FormHelper {
         if (isIncomplete()) return;
 
         childID = childID == null ? childFormController.submit(false) : childID;
-
+        
         try {
             Database db = new Database();
             db.init();
@@ -154,6 +165,7 @@ public class ChildParentsController extends FormHelper {
             }
             if (displayController != null) {
                 displayController.childParents.getChildren().clear();
+                listController.setQuery(childName);
                 listController.loadChildren();
                 displayController.setChild(listController.getChildren().get(0));
             }
@@ -254,11 +266,11 @@ public class ChildParentsController extends FormHelper {
 
     private void setDeleteCheckBoxes(String parent) {
         CheckBox noParentCheckBox = (CheckBox) firstParentAddressInput.getParent().lookup(String.format("#no%sParentCheckBox", WordUtils.capitalize(parent)));
-
         CheckBox deleteCheckBox = new CheckBox("Delete parent");
         deleteCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             boolean toBeDeleted = newValue;
-
+            noParentCheckBox.setSelected(newValue);
+            
             if (toBeDeleted) {
                 //multideimensionl array lists will fix this abomination
                 TextInputControl[] inputs = getInputs(parent);
@@ -433,5 +445,9 @@ public class ChildParentsController extends FormHelper {
 
     public void setDisplayController(ChildDisplayController displayController) {
         this.displayController = displayController;
+    }
+    
+    public void setChildName(String childName) {
+        this.childName = childName;
     }
 }
