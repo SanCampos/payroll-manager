@@ -219,10 +219,10 @@ public class ChildFormController extends FormHelper {
                 db.updateChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate, child.getId());
                 slctdImgStrm = new FileInputStream(updatedImage);
                 displayController.childParents.getChildren().clear();
-                listController.initTable();
-                listController.updateChildOf(displayController);
-                
-        }
+                listController.setQuery(Child.getCompleteName(firstName, lastName, nickName));
+                listController.loadChildren();
+                displayController.setChild(listController.getChildren().get(0));
+            }
         //Retrieve id for use in storing img
         id = db.getChildIDOf(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
         if (id == -89) throw new SQLException();

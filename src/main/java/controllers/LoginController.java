@@ -62,6 +62,7 @@ public class LoginController {
             //Notify login failure
             if (!db.loginUser(user, pass)) {
                 inputPass.clear();
+                loginFailNotif.setStyle("-fx-text-fill: red");
                 db.closeConnection();
                 return;
             }

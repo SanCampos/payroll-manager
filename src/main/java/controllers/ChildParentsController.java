@@ -154,8 +154,8 @@ public class ChildParentsController extends FormHelper {
             }
             if (displayController != null) {
                 displayController.childParents.getChildren().clear();
-                listController.initTable();
-                listController.updateChildOf(displayController);
+                listController.loadChildren();
+                displayController.setChild(listController.getChildren().get(0));
             }
         } catch (SQLException e) {
             DialogUtils.displayError("Parent registration error!", "There was an error registering the parent data, please try again!");

@@ -35,6 +35,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Created by thedr on 6/6/2017.
@@ -97,10 +99,7 @@ public class ListController {
     }
 
     public void initTable() throws SQLException {
-        db.init();
-
-        filteredChildren = new FilteredList<>(db.getChildren(), null);
-        table.setItems(filteredChildren);
+        loadChildren();
         
         table.setRowFactory(new Callback<TableView<Child>, TableRow<Child>>() {
             @Override
@@ -186,7 +185,14 @@ public class ListController {
         });
         table.prefHeightProperty().bind(borderPane.heightProperty());
     }
-
+    
+    public void loadChildren() throws SQLException {
+        db.init();
+        Predicate<? super Child> filterPredicate = filteredChildren == null ? null : filteredChildren.getPredicate();
+        filteredChildren = new FilteredList<>(db.getChildren(), filterPredicate);
+        table.setItems(filteredChildren);
+    }
+    
     private void disablePictureSort() {
         col_picture.setSortable(false);
     }
@@ -246,8 +252,11 @@ public class ListController {
         }
     }
     
-    public void updateChildOf(ChildDisplayController displayController) {
-        int index = displayController.getChildIndex();
-        displayController.setChild(table.getItems().get(index));
+    public List<Child> getChildren() {
+        return table.getItems();
+    }
+    
+    public void setQuery(String query) {
+        searchBar.setText(query);
     }
 }
