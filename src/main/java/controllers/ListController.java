@@ -147,7 +147,7 @@ public class ListController {
                             imageView.setImage(null);
 
                         } else if (item != null) {
-                            childImage = new Image("file:///" + item.getAbsolutePath());
+                            childImage = new Image("file:///" + ((File) child.getImage()).getAbsolutePath());
 
                             imageView.setImage(childImage);
                             imageView.setFitHeight(65);
