@@ -109,7 +109,7 @@ public class ChildDisplayController {
     public void setChild(Child child) {
         this.child = child;
         
-        childImage.setImage(new Image("file:///" + ((File) child.getImage()).getAbsoluteFile()));
+        childImage.setImage(((Image) child.getImage()));
         childName.setText(child.getCompleteName());
         
         childFirstName.setText(child.getfName());

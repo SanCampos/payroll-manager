@@ -2,6 +2,7 @@ package main.java.db;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.image.Image;
 import main.java.globalInfo.GlobalInfo;
 import main.java.models.Child;
 import main.java.models.Employee;
@@ -32,9 +33,9 @@ public class Database {
     private Connection con;
 
     public void init() throws SQLException {
-        String url = "jdbc:mysql://192.168.111.67:3306/child_tracker_test?verifyServerCertificate=false&useSSL=true";
-        String user = "application_user";
-        String pass = "Matti12345678!";
+        String url = "jdbc:mysql://localhost:3306/tset?verifyServerCertificate=false&useSSL=true";
+        String user = "root";
+        String pass = "root";
         
         con = DriverManager.getConnection(url, user, pass);
     }
@@ -173,7 +174,9 @@ public class Database {
 
     public String getAvatarPathOf(int id, String tableName) throws SQLException {
         int avatarID = (int) getUniqueRowData(tableName, table_users.cols.id, id, "avatar_id").get(0);
-        return (String) getUniqueRowData(tableName + "_avatars", table_userAvatars.cols.id, avatarID, table_userAvatars.cols.path).get(0);
+        List<Object> uniqueRowData = getUniqueRowData(tableName + "_avatars", "id", avatarID, "path");
+        if (uniqueRowData.size() > 0) return (String) uniqueRowData.get(0);
+        else return "src\\main\\resources\\imgs\\default_avatar.png";
     }
 
     /**
@@ -256,7 +259,7 @@ public class Database {
             //fetch image of child
             int id = (int) children.getInt(table_children.cols.id);
             String avatarPath = getAvatarPathOf(id, table_children.name);
-            File avatar = new File(avatarPath);
+            Image avatar = new Image("file:///" + new File(avatarPath).getAbsolutePath());
 
             //fetch parents
             List<Object> parentIDs = getUniqueRowData(table_parent_child_relationships.name, table_parent_child_relationships.cols.child_id, id, table_parent_child_relationships.cols.parent_id);
@@ -318,15 +321,18 @@ public class Database {
         boolean isEmpty = !users.next();
         
         System.out.println(isEmpty);
-        if (isEmpty) {
-            String oldAvatarPath = (String) getUniqueRowData(tableName + "_avatars", table_userAvatars.cols.id, oldAvatarID, table_userAvatars.cols.path).get(0);
-            System.out.println(oldAvatarPath);
-            System.out.println(new File(oldAvatarPath).delete());
-            
-            String deleteOldAvatarRow = String.format("DELETE FROM %s WHERE %s = ?", tableName + "_avatars", table_userAvatars.cols.path);
-            PreparedStatement statement = con.prepareStatement(deleteOldAvatarRow);
-            statement.setString(1, oldAvatarPath);
-            statement.execute();
+        if (!isEmpty) {
+            List<Object> uniqueRowData = getUniqueRowData(tableName + "_avatars", table_userAvatars.cols.id, oldAvatarID, table_userAvatars.cols.path);
+            if (uniqueRowData.size() > 0) {
+                String oldAvatarPath = (String) uniqueRowData.get(0);
+                System.out.println(oldAvatarPath);
+                System.out.println(new File(oldAvatarPath).delete());
+
+                String deleteOldAvatarRow = String.format("DELETE FROM %s WHERE %s = ?", tableName + "_avatars", table_userAvatars.cols.path);
+                PreparedStatement statement = con.prepareStatement(deleteOldAvatarRow);
+                statement.setString(1, oldAvatarPath);
+                statement.execute();
+            }
         }
         return updatedIDs;
     }

@@ -28,7 +28,7 @@ public class Child {
     private SimpleStringProperty referrer;
     private SimpleIntegerProperty id;
 
-    private SimpleObjectProperty<File> image;
+    private SimpleObjectProperty<Image> image;
 
     private List<Parent> parents;
 
@@ -108,7 +108,7 @@ public class Child {
         }
     }
     
-    public Child(String fName, String lName, String nickname, String place_of_birth, String description, String gender, String birth_date, String admission_date, String status, String referrer, int id, File avatar, List<Parent> parents) {
+    public Child(String fName, String lName, String nickname, String place_of_birth, String description, String gender, String birth_date, String admission_date, String status, String referrer, int id, Image avatar, List<Parent> parents) {
         this.fName = new SimpleStringProperty(fName);
         this.lName = new SimpleStringProperty(lName);
         this.nickname = new SimpleStringProperty(nickname);
@@ -260,7 +260,7 @@ public class Child {
         return image.get();
     }
 
-    public void setImage(SimpleObjectProperty<File> image) {
+    public void setImage(SimpleObjectProperty<Image> image) {
         this.image = image;
     }
 
@@ -286,11 +286,11 @@ public class Child {
         return admission_date.get();
     }
     
-    public SimpleObjectProperty<File> imageProperty() {
+    public SimpleObjectProperty<Image> imageProperty() {
         return image;
     }
     
-    public void setImage(File image) {
+    public void setImage(Image image) {
         this.image.set(image);
     }
     

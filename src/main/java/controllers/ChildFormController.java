@@ -18,6 +18,7 @@ import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 import main.java.customNodes.PersistentPromptTextField;
 import main.java.db.Database;
+import main.java.db.DbSchema;
 import main.java.db.DbSchema.*;
 import main.java.globalInfo.GlobalInfo;
 import main.java.models.Child;
@@ -94,7 +95,8 @@ public class ChildFormController extends FormHelper {
     private File updatedImage;
     
     private ChildDisplayController displayController;
-    
+    private SimpleBooleanProperty imageMatches;
+
     @FXML
     public void initialize() throws FileNotFoundException {
         //Init gender choice buttons and scene ref
@@ -209,33 +211,31 @@ public class ChildFormController extends FormHelper {
             //Fire up db helper and insert new child record
             Database db = new Database();
             db.init();
-            
-            
             //Add record for child and retrieve its id
             if (child == null) {
                 db.addNewChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
+                id = updateImage(firstName, lastName, nickName, place_of_birth, childDesc, referrer, gender, status, birthDate, admissionDate, db);
+                if (active) {
+                    firstNameInput.getScene().getWindow().hide();
+                }
+                listController.setQuery(Child.getCompleteName(firstName, lastName, nickName));
+                listController.loadChildren();
+                return id;
             } else {
                 db.updateChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate, child.getId());
+                id = getId(firstName, lastName, nickName, place_of_birth, childDesc, referrer, gender, status, birthDate, admissionDate, db);
+                if (!imageMatches.getValue()) {
+                    updateImage(firstName, lastName, nickName, place_of_birth, childDesc, referrer, gender, status, birthDate, admissionDate, db);
+                }
+                if (active) {
+                    firstNameInput.getScene().getWindow().hide();
+                }
+                listController.setQuery(Child.getCompleteName(firstName, lastName, nickName));
+                listController.loadChildren();
+                displayController.setChild(listController.getChildren().get(0));
+                return id;
             }
-            id = db.getChildIDOf(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
-            if (id == -89) throw new SQLException();
-            
-            //Retrieve id for use in storing img
-            File strgReg = new File(pathRef.replace("id", String.valueOf(id)));
-    
-            //Store img file for child avatar
-            if (!(strgReg.exists() && strgReg.isFile())) {
-                strgReg.getParentFile().mkdirs();
-                strgReg.createNewFile();
-            }
-            Files.copy(slctdImgStrm, Paths.get(strgReg.getPath()), StandardCopyOption.REPLACE_EXISTING);
-            db.updateImageOf(id, strgReg.getPath(), table_children.name);
-    
-            slctdImgStrm = new FileInputStream(updatedImage);
-            displayController.childParents.getChildren().clear();
-            listController.setQuery(Child.getCompleteName(firstName, lastName, nickName));
-            listController.loadChildren();
-            displayController.setChild(listController.getChildren().get(0));
+
         } catch (SQLException e) {
             e.printStackTrace();
             DialogUtils.displayError("Error saving child data", "There was an error in saving all child data. Please try again!");
@@ -246,13 +246,34 @@ public class ChildFormController extends FormHelper {
                     "All other data besides the image has been saved. Please attempt to add the child image in its own page.");
             return -1;
         }
-        refreshList();
-        if (active) {
-            firstNameInput.getScene().getWindow().hide();
+        //refreshList();
+    }
+
+    private int updateImage(String firstName, String lastName, String nickName, String place_of_birth, String childDesc, String referrer, int gender, int status, LocalDate birthDate, LocalDate admissionDate, Database db) throws SQLException, IOException {
+        int id = getId(firstName, lastName, nickName, place_of_birth, childDesc, referrer, gender, status, birthDate, admissionDate, db);
+        if (id == -89) throw new SQLException();
+
+        //Retrieve id for use in storing img
+        File strgReg = new File(pathRef.replace("id", String.valueOf(id)));
+
+        //Store img file for child avatar
+        if (!(strgReg.exists() && strgReg.isFile())) {
+            strgReg.getParentFile().mkdirs();
+            strgReg.createNewFile();
         }
+        Files.copy(slctdImgStrm, Paths.get(strgReg.getPath()), StandardCopyOption.REPLACE_EXISTING);
+        db.updateImageOf(id, strgReg.getPath(), table_children.name);
+
+        slctdImgStrm = new FileInputStream(updatedImage);
         return id;
     }
-    
+
+    private int getId(String firstName, String lastName, String nickName, String place_of_birth, String childDesc, String referrer, int gender, int status, LocalDate birthDate, LocalDate admissionDate, Database db) throws SQLException {
+        int id;
+        id = db.getChildIDOf(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
+        return id;
+    }
+
     private boolean formIsIncomplete() {
         //Clear warning labels
         warnEmptyLabel.setStyle("-fx-text-fill: transparent");
@@ -350,8 +371,7 @@ public class ChildFormController extends FormHelper {
         firstNameInput.setText(child.getfName());
         lastNameInput.setText(child.getlName());
         nickNameInput.setText(child.getNickname());
-        childImage.setImage(new Image("file:///" + ((File) child.getImage()).getAbsolutePath()));
-        imageName.setText(((File) child.getImage()).getName());
+        childImage.setImage(((Image) child.getImage()));
         
         birthDateInput.setValue(LocalDate.parse(child.getBirth_date()));
         admissionDateInput.setValue(LocalDate.parse(child.getAdmission_date()));
@@ -387,7 +407,7 @@ public class ChildFormController extends FormHelper {
         SimpleBooleanProperty referrerMatches = new SimpleBooleanProperty(true);
         SimpleBooleanProperty genderMatches = new SimpleBooleanProperty(true);
         SimpleBooleanProperty statusMatches = new SimpleBooleanProperty(true);
-        SimpleBooleanProperty imageMatches = new SimpleBooleanProperty(true);
+        imageMatches = new SimpleBooleanProperty(true);
         
         firstNameInput.textProperty().addListener(matchingListener(child.getfName(), firstNameMatches));
         lastNameInput.textProperty().addListener(matchingListener(child.getlName(), lastNameMatches));
@@ -399,7 +419,7 @@ public class ChildFormController extends FormHelper {
         referrerInput.textProperty().addListener(matchingListener(child.getReferrer(), referrerMatches));
         genderToggleGroup.selectedToggleProperty().addListener(matchingListener(child.getGender().equalsIgnoreCase("male") ? 0 : 1, genderMatches));
         childStatus.getSelectionModel().selectedItemProperty().addListener(matchingListener(child.getStatus(), statusMatches));
-        childImage.imageProperty().addListener(matchingListener(new Image("file:///" + ((File) child.getImage()).getAbsolutePath()), imageMatches));
+        childImage.imageProperty().addListener(matchingListener(((Image) child.getImage()), imageMatches));
         matches = new SimpleBooleanProperty[]{firstNameMatches, lastNameMatches, nickNameMatches, birthPlaceMatches, birthDateMatches, admissionDateMatches, descriptionMatches, referrerMatches, genderMatches, statusMatches, imageMatches};
 
         BooleanBinding nothingEdited = new BooleanBinding() {

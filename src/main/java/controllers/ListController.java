@@ -131,23 +131,23 @@ public class ListController {
                 return row;
             }});
 
-        col_picture.setCellValueFactory(new PropertyValueFactory<Child, File>("image"));
-        col_picture.setCellFactory(new Callback<TableColumn<Child, File>, TableCell<Child, File>>() {
+        col_picture.setCellValueFactory(new PropertyValueFactory<Child, Image>("image"));
+        col_picture.setCellFactory(new Callback<TableColumn<Child, Image>, TableCell<Child, Image>>() {
             @Override
             public TableCell call(TableColumn param) {
-                return new TableCell<Child, File>() {
+                return new TableCell<Child, Image>() {
                     ImageView imageView = new ImageView();
                     Image childImage;
 
                     @Override
-                    protected void updateItem(File item, boolean empty) {
+                    protected void updateItem(Image item, boolean empty) {
                         Child child = (Child) getTableRow().getItem();
 
                         if (child == null || !StringUtils.containsIgnoreCase(child.getCompleteName(), searchBar.getText())) {
                             imageView.setImage(null);
 
                         } else if (item != null) {
-                            childImage = new Image("file:///" + ((File) child.getImage()).getAbsolutePath());
+                            childImage = ((Image) child.getImage());
 
                             imageView.setImage(childImage);
                             imageView.setFitHeight(65);
@@ -179,8 +179,8 @@ public class ListController {
                 return new TableCell<Child, String>() {
                     @Override
                     protected void updateItem(String item, boolean empty) {
-                        setText(item);
-                        setAlignment(Pos.CENTER);
+                            setText(item);
+                            setAlignment(Pos.CENTER);
                     }
                 };
             }
@@ -248,8 +248,7 @@ public class ListController {
             stage.setTitle("Add child");
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
-            table.setItems(db.getChildren());
-        } catch (SQLException | IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
