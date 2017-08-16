@@ -17,7 +17,6 @@ import java.security.SecureRandom;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import main.java.db.DbSchema.*;
@@ -120,7 +119,7 @@ public class Database {
                 return true;
             }
 
-            try (Socket socket = new Socket(ServerInfo.serverIP, ServerInfo.imageLoginPort);
+            try (Socket socket = new Socket(ServerInfo.serverIP, ServerInfo.USER_IMAGE_LOGIN_PORT);
                  DataInputStream in = new DataInputStream(socket.getInputStream());
                  DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
 

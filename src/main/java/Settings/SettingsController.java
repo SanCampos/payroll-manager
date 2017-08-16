@@ -17,13 +17,10 @@ import main.java.utils.ImageUtils;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 
 import main.java.db.DbSchema.*;
-import org.apache.commons.io.FileUtils;
+import main.java.utils.SocketUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import static java.lang.Math.toIntExact;
@@ -167,66 +164,11 @@ public class SettingsController {
     }
     
     private void applyImgChange() {
-        try (Socket imageDeliverySocket = new Socket(ServerInfo.serverIP, ServerInfo.userImagePort);
-             DataInputStream in = new DataInputStream(imageDeliverySocket.getInputStream());
-             DataOutputStream out = new DataOutputStream(imageDeliverySocket.getOutputStream())) {
-
-            long imageSize = selected.length();
-
-            if (imageSize > Integer.MAX_VALUE) {
-                DialogUtils.displayError("Image upload error!", "Your image size is too large! Please choose an image smaller than 2GB");
-                return;
-            }
-
-            //write ID
-            out.write(GlobalInfo.getUserID());
-
-            //length of extension
-            char[] extensionChars = FilenameUtils.getExtension(selected.getAbsolutePath()).toCharArray();
-            out.write(extensionChars.length);
-
-            //actual extension
-            for (char c : extensionChars) {
-                out.write((int) c);
-            }
-
-            out.writeUTF(String.valueOf(imageSize));
-
-            //actual image data
-            byte[] bytes = new byte[toIntExact(imageSize)];
-            int read;
-            while ((read = slctdImgStrm.read(bytes)) > 0) {
-                out.write(bytes, 0, read);
-            }
-
-            String filePath = in.readUTF();
-
-            Database db = new Database();
-
-            if (!(strgRef.exists() && strgRef.isFile())) {
-                strgRef.getParentFile().mkdirs();
-                strgRef.createNewFile();
-            }
-
-            Files.copy(slctdImgStrm, Paths.get(strgRef.getPath()), StandardCopyOption.REPLACE_EXISTING);
-
-            db.init();
-            db.updateImageOf(GlobalInfo.getUserID(), filePath.replace("\\", "\\\\"), table_users.name);
-
-            GlobalInfo.setCurrProfImg(new Image("file:///" + selected.getAbsolutePath()));
-
-            } catch(IOException e){
-                DialogUtils.displayError("Settings error", "There was an error moving your image file, please try again!");
-                e.printStackTrace();
-            } catch(SQLException e){
-                DialogUtils.displayError("Database error", "There was an error uploading your changes to the server, please try again!");
-                e.printStackTrace();
-            } finally {
-                Image setImage = GlobalInfo.getCurrProfImg();
-                updateAvatar(setImage);
-                resetChanges();
-                ok_btn.requestFocus();
-            }
+        GlobalInfo.setCurrProfImg(new Image("file:///" + SocketUtils.uploadImageto(ServerInfo.USER_IMAGE_REGISTER_PORT, selected, table_users.name, GlobalInfo.getUserID())));
+        Image setImage = GlobalInfo.getCurrProfImg();
+        updateAvatar(setImage);
+        resetChanges();
+        ok_btn.requestFocus();
     }
 
 

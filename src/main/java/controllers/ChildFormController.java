@@ -18,18 +18,16 @@ import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 import main.java.customNodes.PersistentPromptTextField;
 import main.java.db.Database;
-import main.java.db.DbSchema;
 import main.java.db.DbSchema.*;
 import main.java.globalInfo.GlobalInfo;
+import main.java.globalInfo.ServerInfo;
 import main.java.models.Child;
 import main.java.utils.DialogUtils;
 import main.java.utils.ImageUtils;
 import main.java.utils.NodeUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -252,6 +250,21 @@ public class ChildFormController extends FormHelper {
     private int updateImage(String firstName, String lastName, String nickName, String place_of_birth, String childDesc, String referrer, int gender, int status, LocalDate birthDate, LocalDate admissionDate, Database db) throws SQLException, IOException {
         int id = getId(firstName, lastName, nickName, place_of_birth, childDesc, referrer, gender, status, birthDate, admissionDate, db);
         if (id == -89) throw new SQLException();
+
+        try (Socket socket = new Socket(ServerInfo.serverIP, ServerInfo.CHILD_IMAGE_REGISTER_PORT);
+             DataInputStream in = new DataInputStream(socket.getInputStream());
+             DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
+
+             //send id
+             out.write(id);
+
+
+        }
+
+
+
+
+
 
         //Retrieve id for use in storing img
         File strgReg = new File(pathRef.replace("id", String.valueOf(id)));
