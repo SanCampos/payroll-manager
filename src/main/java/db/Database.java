@@ -353,7 +353,7 @@ public class Database {
         boolean isEmpty = !users.next();
         
         System.out.println(isEmpty);
-        if (!isEmpty) {
+        if (isEmpty) {
             List<Object> uniqueRowData = getUniqueRowData(tableName + "_avatars", table_userAvatars.cols.id, oldAvatarID, table_userAvatars.cols.path);
             if (uniqueRowData.size() > 0) {
                 String oldAvatarPath = (String) uniqueRowData.get(0);
