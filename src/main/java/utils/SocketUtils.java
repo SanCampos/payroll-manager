@@ -1,8 +1,9 @@
 package main.java.utils;
 
+import javafx.scene.image.Image;
 import main.java.db.Database;
-import main.java.db.DbSchema;
 import main.java.globalInfo.GlobalInfo;
+import main.java.globalInfo.ServerInfo;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.*;
@@ -17,8 +18,11 @@ import static java.lang.Math.toIntExact;
  */
 public class SocketUtils {
 
+    private static String HOST = "127.0.0.1";
+
     public static File uploadImageto(int portNumber, File image, String tableName, int entityID) {
-        try (Socket socket = new Socket("127.0.0.1", portNumber);
+
+        try (Socket socket = new Socket(HOST, portNumber);
              DataInputStream in = new DataInputStream(socket.getInputStream());
              DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
 
@@ -65,5 +69,30 @@ public class SocketUtils {
             e.printStackTrace();
         }
         return image;
+    }
+
+    public static Image receiveImageFrom(int portNumber, int entityID) {
+        try (Socket socket = new Socket(HOST, portNumber);
+             DataInputStream in = new DataInputStream(socket.getInputStream());
+             DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
+
+            //send user info
+            out.write(entityID);
+
+            //error handling (???)
+            if (in.available() == 1) {
+                System.err.println("ERROR RETRIEVING USER IMAGE");
+                return null;
+            }
+
+            //int fileSize = Integer.parseInt(in.readUTF());
+
+            Image deliveredImage = new Image(in);
+            GlobalInfo.setCurrProfImg(deliveredImage);
+            return deliveredImage;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
