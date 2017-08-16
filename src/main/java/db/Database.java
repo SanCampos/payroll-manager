@@ -33,9 +33,9 @@ public class Database {
     private Connection con;
 
     public void init() throws SQLException {
-        String url = "jdbc:mysql://localhost:3306/tset?verifyServerCertificate=false&useSSL=true";
-        String user = "root";
-        String pass = "root";
+        String url = "jdbc:mysql://192.168.111.56:3306/child_tracker_test?verifyServerCertificate=false&useSSL=true";
+        String user = "application_user";
+        String pass = "Matti12345678!";
         
         con = DriverManager.getConnection(url, user, pass);
     }
@@ -110,7 +110,7 @@ public class Database {
 
             //Attempt to retrieve user avatar as a File, assign default value if failure
             File profImg= new File(getAvatarPathOf(GlobalInfo.getUserID(), table_users.name));
-            GlobalInfo.setCurrProfImg(profImg);
+            GlobalInfo.setCurrProfImg(new Image("file:///" + profImg.getAbsolutePath()));
             
             return true;
         }

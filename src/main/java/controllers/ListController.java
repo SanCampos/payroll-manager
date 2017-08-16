@@ -96,7 +96,7 @@ public class ListController {
 
     private void initAvatar() {
         profImg.setClip(ImageUtils.getAvatarCircle(profImg.getFitHeight()));
-        Image value = new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath());
+        Image value = GlobalInfo.getCurrProfImg();
         profImg.setImage(value);
     }
 

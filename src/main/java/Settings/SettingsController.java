@@ -11,16 +11,22 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import main.java.db.Database;
 import main.java.globalInfo.GlobalInfo;
+import main.java.globalInfo.ServerInfo;
 import main.java.utils.DialogUtils;
 import main.java.utils.ImageUtils;
 
 import java.io.*;
+import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 
 import main.java.db.DbSchema.*;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+
+import static java.lang.Math.toIntExact;
 
 /**
  * Created by thedr on 6/14/2017.
@@ -52,7 +58,8 @@ public class SettingsController {
 
     //Reference to stage
     private SettingsStage stage;
-   
+    private File selected;
+
 
     @FXML
     public void initialize() {
@@ -67,9 +74,8 @@ public class SettingsController {
     }
     
     private void initAvatar() {
-        Image get = new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath());
+        updateAvatar(GlobalInfo.getCurrProfImg());
         prof_img.setClip(ImageUtils.getAvatarCircle(prof_img.getFitHeight()));
-        updateAvatar(GlobalInfo.getCurrProfImg().getName(), get);
     }
 
     private void initChangeDetectors() {
@@ -107,7 +113,7 @@ public class SettingsController {
                                                                          "*.png", "*.jpg", "*.gif")); // possible refactor?
         try {
             //Reference to selected picture
-            File selected = chooser.showOpenDialog(prof_img.getScene().getWindow());
+            selected = chooser.showOpenDialog(prof_img.getScene().getWindow());
 
             //Return if user closes dialog w/o selection
             if (selected == null)
@@ -126,12 +132,13 @@ public class SettingsController {
             slctdImgStrm = new FileInputStream(selected);
 
             //Flags no image change if user selects his current profile picture
-            if (GlobalInfo.getCurrProfImg().getName().equals(strgRef.getName()) && ImageUtils.equals(new Image("file:///"  + GlobalInfo.getCurrProfImg().getAbsolutePath()), slctdImg)) {
-                updateAvatar(selected.getName(), slctdImg);
-                pictureChanged.set(false);
-                return;
+            if (GlobalInfo.getCurrProfImg().getHeight() > 0.0) {
+                if (ImageUtils.equals(GlobalInfo.getCurrProfImg(), slctdImg)) {
+                    updateAvatar(slctdImg);
+                    pictureChanged.set(false);
+                    return;
+                }
             }
-            
             boolean confirm = DialogUtils.getConfirm("Confirm picture change", "Are you sure you want to change your profile picture?");
            
             if (!confirm) {
@@ -139,7 +146,7 @@ public class SettingsController {
             }
 
             //Show preview of new avatar
-            updateAvatar(selected.getName(), slctdImg);
+            updateAvatar(slctdImg);
             pictureChanged.set(true);
         } catch (IOException e) {
             e.printStackTrace();
@@ -149,9 +156,8 @@ public class SettingsController {
         }
     }
 
-    private void updateAvatar(String fileName, Image slctdImg) {
+    private void updateAvatar(Image slctdImg) {
         prof_img.setImage(slctdImg);
-        img_name.setText(fileName);
     }
     
     @FXML
@@ -161,35 +167,69 @@ public class SettingsController {
     }
     
     private void applyImgChange() {
-        Database db = new Database();
-        try {
+        try (Socket imageDeliverySocket = new Socket(ServerInfo.serverIP, ServerInfo.userImagePort);
+             DataInputStream in = new DataInputStream(imageDeliverySocket.getInputStream());
+             DataOutputStream out = new DataOutputStream(imageDeliverySocket.getOutputStream())) {
+
+            long imageSize = selected.length();
+
+            if (imageSize > Integer.MAX_VALUE) {
+                DialogUtils.displayError("Image upload error!", "Your image size is too large! Please choose an image smaller than 2GB");
+                return;
+            }
+
+            //write ID
+            out.write(GlobalInfo.getUserID());
+
+            //length of extension
+            char[] extensionChars = FilenameUtils.getExtension(selected.getAbsolutePath()).toCharArray();
+            out.write(extensionChars.length);
+
+            //actual extension
+            for (char c : extensionChars) {
+                out.write((int) c);
+            }
+
+            out.writeUTF(String.valueOf(imageSize));
+
+            //actual image data
+            byte[] bytes = new byte[toIntExact(imageSize)];
+            int read;
+            while ((read = slctdImgStrm.read(bytes)) > 0) {
+                out.write(bytes, 0, read);
+            }
+
+            String filePath = in.readUTF();
+
+            Database db = new Database();
+
             if (!(strgRef.exists() && strgRef.isFile())) {
                 strgRef.getParentFile().mkdirs();
                 strgRef.createNewFile();
             }
-            
-            
+
             Files.copy(slctdImgStrm, Paths.get(strgRef.getPath()), StandardCopyOption.REPLACE_EXISTING);
-            
+
             db.init();
-            db.updateImageOf(GlobalInfo.getUserID(), strgRef.getAbsolutePath().replace("\\", "\\\\"), table_users.name);
-            
-            GlobalInfo.setCurrProfImg(strgRef);
-        } catch (IOException e) {
-            DialogUtils.displayError("Settings error", "There was an error moving your image file, please try again!");
-            e.printStackTrace();
-        } catch (SQLException e) {
-            DialogUtils.displayError("Database error", "There was an error uploading your changes to the server, please try again!");
-            e.printStackTrace();
-        } finally {
-            Image setImage = new Image("file:///" + GlobalInfo.getCurrProfImg().getAbsolutePath());
-            String name = GlobalInfo.getCurrProfImg().getName();
-            updateAvatar(name, setImage);
-            resetChanges();
-            ok_btn.requestFocus();
-        }
+            db.updateImageOf(GlobalInfo.getUserID(), filePath.replace("\\", "\\\\"), table_users.name);
+
+            GlobalInfo.setCurrProfImg(new Image("file:///" + selected.getAbsolutePath()));
+
+            } catch(IOException e){
+                DialogUtils.displayError("Settings error", "There was an error moving your image file, please try again!");
+                e.printStackTrace();
+            } catch(SQLException e){
+                DialogUtils.displayError("Database error", "There was an error uploading your changes to the server, please try again!");
+                e.printStackTrace();
+            } finally {
+                Image setImage = GlobalInfo.getCurrProfImg();
+                updateAvatar(setImage);
+                resetChanges();
+                ok_btn.requestFocus();
+            }
     }
-    
+
+
     private void resetChanges() {
         for (SimpleBooleanProperty s : changeList)
             s.set(false);

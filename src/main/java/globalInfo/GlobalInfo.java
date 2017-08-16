@@ -1,5 +1,6 @@
 package main.java.globalInfo;
 
+import javafx.scene.image.Image;
 import main.java.db.Database;
 
 import java.io.File;
@@ -12,7 +13,7 @@ public class GlobalInfo {
     //Globally needed user info
     //IS THIS IMPORTANT I  WISH I HAD SOFTWARE ENGINEER TO  TALK TO
     private static String employeesImgDir = "C:\\imgs\\employees";
-    private static File currProfImg;
+    private static Image currProfImg;
 
     private static String childrenImgDir = "C:\\imgs\\children";
 
@@ -43,11 +44,11 @@ public class GlobalInfo {
         GlobalInfo.employeesImgDir = employeesImgDir;
     }
 
-    public static File getCurrProfImg() {
+    public static Image getCurrProfImg() {
         return currProfImg;
     }
 
-    public static void setCurrProfImg(File currProfImg) {
+    public static void setCurrProfImg(Image currProfImg) {
         GlobalInfo.currProfImg = currProfImg;
     }
 
