@@ -4,10 +4,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import main.java.globalInfo.GlobalInfo;
+import main.java.globalInfo.ServerInfo;
 import main.java.models.Child;
 import main.java.models.Employee;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.net.Socket;
 import java.security.SecureRandom;
 import java.sql.*;
 import java.time.LocalDate;
@@ -109,6 +114,34 @@ public class Database {
             GlobalInfo.setPrvlg_lvl(user_prvlg);
 
             //Attempt to retrieve user avatar as a File, assign default value if failure
+            String filePath = getAvatarPathOf(GlobalInfo.getUserID(), table_users.name);
+            if (filePath == null) {
+                GlobalInfo.setCurrProfImg(new Image("file:///" + new File("src\\main\\resources\\imgs\\default_avatar.png").getAbsolutePath()));
+                return true;
+            }
+
+            try (Socket socket = new Socket(ServerInfo.serverIP, ServerInfo.imageLoginPort);
+                 DataInputStream in = new DataInputStream(socket.getInputStream());
+                 DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
+
+                 //send user info
+                 out.write(GlobalInfo.getUserID());
+
+                 //error handling (???)
+                 if (in.available() == 1) {
+                     System.err.println("ERROR RETRIEVING USER IMAGE");
+                 }
+
+                 //int fileSize = Integer.parseInt(in.readUTF());
+
+                 Image deliveredImage = new Image(in);
+                 GlobalInfo.setCurrProfImg(deliveredImage);
+
+                 return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             File profImg= new File(getAvatarPathOf(GlobalInfo.getUserID(), table_users.name));
             GlobalInfo.setCurrProfImg(new Image("file:///" + profImg.getAbsolutePath()));
             
@@ -119,7 +152,7 @@ public class Database {
     
     public int getChildIDOf(String fName, String lName, String nickname, String birthPlace, LocalDate birthDate, String description, int gender, String referrer, int status, LocalDate admissionDate) throws SQLException {
         String dateFormatString = "'%%Y-%%m-%%d'";
-        String insertChild = String.format("SELECT * FROM %s WHERE %s = ? AND %s = ? AND %s = ? AND %s = ? AND %s = STR_TO_DATE(?, " + dateFormatString + ") AND %s = ? AND %s = ? AND %s = ? AND %s = ? AND %s = STR_TO_DATE(?," + dateFormatString + ")",
+        String insertChild = String.format("SELECT * FROM %s WHERE %4s = ? AND %s = ? AND %s = ? AND %s = ? AND %s = STR_TO_DATE(?, " + dateFormatString + ") AND %s = ? AND %s = ? AND %s = ? AND %s = ? AND %s = STR_TO_DATE(?," + dateFormatString + ")",
                 table_children.name, table_children.cols.fname, table_children.cols.lname, table_children.cols.nickname, table_children.cols.place_of_birth, table_children.cols.birth_date,
                 table_children.cols.description, table_children.cols.gender, table_children.cols.referrer_id, table_children.cols.status, table_children.cols.admission_date);
         
@@ -176,7 +209,7 @@ public class Database {
         int avatarID = (int) getUniqueRowData(tableName, table_users.cols.id, id, "avatar_id").get(0);
         List<Object> uniqueRowData = getUniqueRowData(tableName + "_avatars", "id", avatarID, "path");
         if (uniqueRowData.size() > 0) return (String) uniqueRowData.get(0);
-        else return "src\\main\\resources\\imgs\\default_avatar.png";
+        else return null;
     }
 
     /**
