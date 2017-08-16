@@ -25,6 +25,7 @@ import main.java.models.Child;
 import main.java.utils.DialogUtils;
 import main.java.utils.ImageUtils;
 import main.java.utils.NodeUtils;
+import main.java.utils.SocketUtils;
 
 import java.io.*;
 import java.net.Socket;
@@ -251,20 +252,7 @@ public class ChildFormController extends FormHelper {
         int id = getId(firstName, lastName, nickName, place_of_birth, childDesc, referrer, gender, status, birthDate, admissionDate, db);
         if (id == -89) throw new SQLException();
 
-        try (Socket socket = new Socket(ServerInfo.serverIP, ServerInfo.CHILD_IMAGE_REGISTER_PORT);
-             DataInputStream in = new DataInputStream(socket.getInputStream());
-             DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
-
-             //send id
-             out.write(id);
-
-
-        }
-
-
-
-
-
+        SocketUtils.uploadImageto(50015, updatedImage, table_children.name, id);
 
         //Retrieve id for use in storing img
         File strgReg = new File(pathRef.replace("id", String.valueOf(id)));
