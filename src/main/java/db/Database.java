@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.java.db.DbSchema.*;
+import main.java.utils.SocketUtils;
 import org.apache.commons.text.WordUtils;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -119,27 +120,7 @@ public class Database {
                 return true;
             }
 
-            try (Socket socket = new Socket(ServerInfo.serverIP, ServerInfo.USER_IMAGE_LOGIN_PORT);
-                 DataInputStream in = new DataInputStream(socket.getInputStream());
-                 DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
-
-                 //send user info
-                 out.write(GlobalInfo.getUserID());
-
-                 //error handling (???)
-                 if (in.available() == 1) {
-                     System.err.println("ERROR RETRIEVING USER IMAGE");
-                 }
-
-                 //int fileSize = Integer.parseInt(in.readUTF());
-
-                 Image deliveredImage = new Image(in);
-                 GlobalInfo.setCurrProfImg(deliveredImage);
-
-                 return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            if (!SocketUtils.receiveImageFrom(ServerInfo.USER_IMAGE_LOGIN_PORT, GlobalInfo.getUserID())) return false;
 
             File profImg= new File(getAvatarPathOf(GlobalInfo.getUserID(), table_users.name));
             GlobalInfo.setCurrProfImg(new Image("file:///" + profImg.getAbsolutePath()));

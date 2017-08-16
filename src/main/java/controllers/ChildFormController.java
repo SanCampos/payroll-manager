@@ -254,16 +254,6 @@ public class ChildFormController extends FormHelper {
 
         SocketUtils.uploadImageto(50015, updatedImage, table_children.name, id);
 
-        //Retrieve id for use in storing img
-        File strgReg = new File(pathRef.replace("id", String.valueOf(id)));
-
-        //Store img file for child avatar
-        if (!(strgReg.exists() && strgReg.isFile())) {
-            strgReg.getParentFile().mkdirs();
-            strgReg.createNewFile();
-        }
-        Files.copy(slctdImgStrm, Paths.get(strgReg.getPath()), StandardCopyOption.REPLACE_EXISTING);
-        db.updateImageOf(id, strgReg.getPath(), table_children.name);
 
         slctdImgStrm = new FileInputStream(updatedImage);
         return id;
