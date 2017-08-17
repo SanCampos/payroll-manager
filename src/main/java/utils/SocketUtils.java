@@ -61,11 +61,7 @@ public class SocketUtils {
             Database db = new Database();
             db.init();
             db.updateImageOf(entityID, filePath.replace("\\", "\\\\"), tableName);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
         return image;
@@ -87,9 +83,7 @@ public class SocketUtils {
 
             //int fileSize = Integer.parseInt(in.readUTF());
 
-            Image deliveredImage = new Image(in);
-            GlobalInfo.setCurrProfImg(deliveredImage);
-            return deliveredImage;
+            return new Image(in);
         } catch (IOException e) {
             e.printStackTrace();
         }

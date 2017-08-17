@@ -252,7 +252,7 @@ public class ChildFormController extends FormHelper {
         int id = getId(firstName, lastName, nickName, place_of_birth, childDesc, referrer, gender, status, birthDate, admissionDate, db);
         if (id == -89) throw new SQLException();
 
-        SocketUtils.uploadImageto(50015, updatedImage, table_children.name, id);
+        SocketUtils.uploadImageto(ServerInfo.CHILD_IMAGE_REGISTER_PORT, updatedImage, table_children.name, id);
 
 
         slctdImgStrm = new FileInputStream(updatedImage);

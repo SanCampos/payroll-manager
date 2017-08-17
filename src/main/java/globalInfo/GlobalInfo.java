@@ -13,6 +13,7 @@ public class GlobalInfo {
     //Globally needed user info
     //IS THIS IMPORTANT I  WISH I HAD SOFTWARE ENGINEER TO  TALK TO
     private static String employeesImgDir = "C:\\imgs\\employees";
+    private static String userName;
     private static Image currProfImg;
 
     private static String childrenImgDir = "C:\\imgs\\children";
@@ -54,5 +55,13 @@ public class GlobalInfo {
 
     public static String getChildrenImgDir() {
         return childrenImgDir;
+    }
+
+    public static void setUserName(String userName) {
+        GlobalInfo.userName = userName;
+    }
+
+    public static String getUserName() {
+        return userName;
     }
 }

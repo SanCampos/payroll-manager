@@ -21,6 +21,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -29,6 +30,7 @@ import main.java.Settings.SettingsStage;
 import main.java.db.Database;
 import main.java.globalInfo.GlobalInfo;
 import main.java.models.Child;
+import main.java.utils.DialogUtils;
 import main.java.utils.ImageUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -43,6 +45,7 @@ import java.util.function.Predicate;
  */
 public class ListController {
 
+    @FXML private Text userName;
     @FXML private TextField searchBar;
     @FXML private VBox vBox;
     @FXML private ImageView profImg;
@@ -64,6 +67,8 @@ public class ListController {
 
     private FilteredList<Child> filteredChildren;
 
+    @FXML private Button delete;
+
     @FXML
     public void initialize() {
         db = new Database();
@@ -79,6 +84,7 @@ public class ListController {
         disableReorder();
         disablePictureSort();
         currentLoadedChild = -1;
+        userName.setText(GlobalInfo.getUserName());
         itself = this;
     }
 
@@ -193,6 +199,8 @@ public class ListController {
         Predicate<? super Child> filterPredicate = filteredChildren == null ? null : filteredChildren.getPredicate();
         filteredChildren = new FilteredList<>(db.getChildren(), filterPredicate);
         table.setItems(filteredChildren);
+        delete.setDisable(table.getItems().size() <= 0);
+        table.getSelectionModel().select(0);
     }
     
     private void disablePictureSort() {
@@ -259,5 +267,18 @@ public class ListController {
     
     public void setQuery(String query) {
         searchBar.setText(query);
+    }
+
+    public void deleteChild(ActionEvent actionEvent) {
+        if (DialogUtils.getConfirm("Child deletion confirmation", "Are you sure you want to delete this child? This cannot be undone"))
+        {
+            int id = table.getSelectionModel().getSelectedItem().getId();
+            try {
+                db.deleteChild(id);
+                loadChildren();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

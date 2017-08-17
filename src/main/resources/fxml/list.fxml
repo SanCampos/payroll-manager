@@ -20,7 +20,7 @@
         <HBox styleClass="box" >
             <ImageView fx:id="profImg" fitHeight="65" fitWidth="65" />
 
-            <Text text="Ligaya Abelarde" />
+            <Text fx:id="userName" />
 
             <Region styleClass="divider" HBox.hgrow="ALWAYS" />
 
@@ -42,6 +42,8 @@
                 <Image url="/imgs/search_icon.png"/>
             </ImageView>
             <TextField fx:id="searchBar"  prefHeight="25.0" prefWidth="231.0" />
+            <Region prefWidth="699" HBox.hgrow="ALWAYS"/>
+            <Button text="Delete" fx:id="delete" prefHeight="25" prefWidth="75" onAction="#deleteChild"/>
         </HBox>
         <TableView fx:id="table" prefHeight="651.0" prefWidth="1030.0">
                 <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>

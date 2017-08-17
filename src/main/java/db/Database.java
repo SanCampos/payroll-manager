@@ -13,6 +13,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.security.SecureRandom;
 import java.sql.*;
 import java.time.LocalDate;
@@ -24,6 +25,7 @@ import main.java.utils.SocketUtils;
 import org.apache.commons.text.WordUtils;
 import org.mindrot.jbcrypt.BCrypt;
 
+import static java.lang.Math.incrementExact;
 import static java.lang.Math.toIntExact;
 
 /**
@@ -57,10 +59,10 @@ public class Database {
      * @return returns true if user is successfully registered
      * @throws SQLException in case of connection failure
      */
-    public boolean registerUser(String username, String password) throws SQLException {
+    public boolean registerUser(String username, String password, String name) throws SQLException {
         //Insert row for user info
-        String user_row = String.format("INSERT INTO %s (%s, %s) VALUES (?, ?)",
-                table_users.name, table_users.cols.username, table_users.cols.hash_pw);
+        String user_row = String.format("INSERT INTO %s (%s, %s, %s) VALUES (?, ?, ?)",
+                table_users.name, table_users.cols.username, table_users.cols.hash_pw, "name");
 
         //Encrypt password
         String salt = BCrypt.gensalt(FHALF_LENGTH, new SecureRandom());
@@ -75,6 +77,7 @@ public class Database {
         PreparedStatement prepStmnt = con.prepareStatement(user_row);
         prepStmnt.setString(1, username);
         prepStmnt.setString(2, hash_pw.toString());
+        prepStmnt.setString(3, name);
         int user_cols_changed = prepStmnt.executeUpdate();
         return user_cols_changed != 0;
     }
@@ -117,12 +120,16 @@ public class Database {
             String filePath = getAvatarPathOf(GlobalInfo.getUserID(), table_users.name);
             if (filePath == null) {
                 GlobalInfo.setCurrProfImg(new Image("file:///" + new File("src\\main\\resources\\imgs\\default_avatar.png").getAbsolutePath()));
+                String name = user.getString(6);
+                GlobalInfo.setUserName(name);
+
                 return true;
             }
 
             Image receivedImage = SocketUtils.receiveImageFrom(ServerInfo.USER_IMAGE_LOGIN_PORT, GlobalInfo.getUserID());
-            if (receivedImage == null) return false;
             GlobalInfo.setCurrProfImg(receivedImage);
+            String name = user.getString(6);
+            GlobalInfo.setUserName(name);
             
             return true;
         }
@@ -270,8 +277,8 @@ public class Database {
 
             //fetch image of child
             int id = (int) children.getInt(table_children.cols.id);
-            String avatarPath = getAvatarPathOf(id, table_children.name);
-            Image avatar = new Image("file:///" + new File(avatarPath).getAbsolutePath());
+            Image avatar = SocketUtils.receiveImageFrom(ServerInfo.CHILD_IMAGE_LOGIN_PORT, id);
+            if (avatar == null) avatar = new Image("src\\main\\resources\\default_avatar.png");
 
             //fetch parents
             List<Object> parentIDs = getUniqueRowData(table_parent_child_relationships.name, table_parent_child_relationships.cols.child_id, id, table_parent_child_relationships.cols.parent_id);
@@ -431,11 +438,68 @@ public class Database {
         preparedStatement.setInt(1, parentID);
         parentRelationshipDeleted = preparedStatement.executeUpdate() != 0;
 
+
+        List<Object> locationIDs = getUniqueRowData(table_parents.name, table_parents.cols.id, parentID, table_parents.cols.location_id);
+        List<Object> phoneNumberIDs = getUniqueRowData(table_parents.name, table_parents.cols.id, parentID, table_parents.cols.phone_number_id);
+
         String deleteParentSQL = String.format("DELETE FROM %s WHERE %s = ?", table_parents.name, table_parents.cols.id);
         preparedStatement = con.prepareStatement(deleteParentSQL);
         preparedStatement.setInt(1, parentID);
         parentDeleted = preparedStatement.executeUpdate() != 0;
 
+
+        con.createStatement().execute(String.format("DELETE IGNORE FROM %s WHERE %s = %s", table_locations.name, table_locations.cols.id, locationIDs.get(0)));
+        con.createStatement().execute(String.format("DELETE IGNORE FROM %s WHERE %s = %s", table_phone_numbers.name, table_phone_numbers.cols.id, phoneNumberIDs.get(0)));
+
         return parentDeleted && parentRelationshipDeleted;
+    }
+
+    public void deleteChild(int childID) throws SQLException {
+        List<Object> parentIDs = getUniqueRowData(table_parent_child_relationships.name, table_parent_child_relationships.cols.child_id, childID, table_parent_child_relationships.cols.parent_id);
+        List<Object> locationIDs = new ArrayList<>();
+        locationIDs.addAll(getUniqueRowData(table_children.name, table_children.cols.id, childID, table_children.cols.place_of_birth));
+
+        List<Object> referrerIDs = new ArrayList<>();
+        referrerIDs.addAll(getUniqueRowData(table_children.name, table_children.cols.id, childID, table_children.cols.referrer_id));
+
+        List<Object> avatarIDs = new ArrayList<>();
+        avatarIDs.addAll(getUniqueRowData(table_children.name, table_children.cols.id, childID, "avatar_id"));
+
+        List<Object> avatarPaths = new ArrayList<>();
+        for (Object o : avatarIDs) {
+            avatarPaths.addAll(getUniqueRowData("children_avatars", "id", o, "path"));
+        }
+
+        try (Socket socket = new Socket(ServerInfo.serverIP, ServerInfo.CHILD_DELETE_IMAGE_PORT);
+             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+             DataInputStream in = new DataInputStream(socket.getInputStream())) {
+
+             if (avatarPaths.size() > 0) {
+                 out.writeUTF(((String) avatarPaths.get(0)));
+             }
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        for (int i = 0; i < parentIDs.size(); i++) {
+            deleteParent(((int) parentIDs.get(0)));
+        }
+
+        for (Object o : locationIDs) {
+            con.createStatement().execute(String.format("DELETE IGNORE FROM %s WHERE %s = %s", table_locations.name, table_locations.cols.id, o));
+        }
+
+        if (referrerIDs.size() > 0) {
+            con.createStatement().execute(String.format("DELETE IGNORE FROM %s WHERE %s = %s", table_referrers.name, table_referrers.cols.id, referrerIDs.get(0)));
+        }
+
+        if (avatarIDs.size() > 0) {
+            con.createStatement().execute(String.format("DELETE IGNORE FROM %s WHERE %s = %s", "children_avatars", "id", avatarIDs.get(0)));
+        }
+        con.createStatement().execute(String.format("DELETE IGNORE FROM %s WHERE %s = %s", table_children.name, table_children.cols.id, childID));
     }
 }
