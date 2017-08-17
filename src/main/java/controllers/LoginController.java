@@ -18,9 +18,12 @@ import javafx.stage.Stage;
 
 import javafx.scene.input.KeyEvent;
 import main.java.globalInfo.GlobalInfo;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 
 public class LoginController {
@@ -45,7 +48,7 @@ public class LoginController {
     }
 
     @FXML
-    protected void login() {
+    protected void login()  {
         //Get main.java.db helper
         Database db = new Database();
 

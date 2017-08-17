@@ -19,7 +19,7 @@ public class Main extends Application {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         /*Database db =  new Database();
         db.init();
-        db.registerUser("fuck", "fuck", "Gigi Campos"); */
+        db.registerUser("test", "tsety", "Santino F. Campos"); */
         launch(args);
     }
     

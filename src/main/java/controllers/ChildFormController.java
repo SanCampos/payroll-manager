@@ -104,8 +104,7 @@ public class ChildFormController extends FormHelper {
         childStatus.getSelectionModel().selectFirst();
         
         //Init default image for child
-        File defaultFile = new File("src\\main\\resources\\imgs\\default_avatar.png");
-        updateChosenImage(defaultFile);
+        updateChosenImage(null);
 
         //Init submit/next btn
         initNextBtn();
@@ -213,17 +212,19 @@ public class ChildFormController extends FormHelper {
             //Add record for child and retrieve its id
             if (child == null) {
                 db.addNewChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
-                id = updateImage(firstName, lastName, nickName, place_of_birth, childDesc, referrer, gender, status, birthDate, admissionDate, db);
+                if (updatedImage != null) {
+                    updateImage(firstName, lastName, nickName, place_of_birth, childDesc, referrer, gender, status, birthDate, admissionDate, db);
+                }
                 if (active) {
                     firstNameInput.getScene().getWindow().hide();
                 }
                 listController.setQuery(Child.getCompleteName(firstName, lastName, nickName));
                 listController.loadChildren();
-                return id;
+                return getId(firstName, lastName, nickName, place_of_birth, childDesc, referrer, gender, status, birthDate, admissionDate, db);
             } else {
                 db.updateChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate, child.getId());
                 id = getId(firstName, lastName, nickName, place_of_birth, childDesc, referrer, gender, status, birthDate, admissionDate, db);
-                if (!imageMatches.getValue()) {
+                if (!imageMatches.getValue() && updatedImage != null) {
                     updateImage(firstName, lastName, nickName, place_of_birth, childDesc, referrer, gender, status, birthDate, admissionDate, db);
                 }
                 if (active) {
@@ -332,11 +333,14 @@ public class ChildFormController extends FormHelper {
     
     private void updateChosenImage(File chosen) throws FileNotFoundException {
         updatedImage = chosen;
-        slctdImgStrm = new FileInputStream(chosen);
-        childImage.setImage(new Image(slctdImgStrm));
-        imageName.setText(chosen.getName());
-        pathRef = GlobalInfo.getChildrenImgDir() + "\\"+ chosen.getName();
-        slctdImgStrm = new FileInputStream(chosen);
+        if (chosen != null) {
+            slctdImgStrm = new FileInputStream(chosen);
+            imageName.setText(chosen.getName());
+            childImage.setImage(new Image(slctdImgStrm));
+            slctdImgStrm = new FileInputStream(chosen);
+        } else {
+            childImage.setImage(null);
+        }
     }
 
     private void refreshList() {

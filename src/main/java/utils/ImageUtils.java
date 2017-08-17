@@ -18,6 +18,8 @@ public class ImageUtils {
         PixelReader fReader = first.getPixelReader();
         PixelReader sReader = second.getPixelReader();
 
+        if (sReader == null || fReader == null) return false;
+
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
                 if (fReader.getArgb(j, i) != sReader.getArgb(j, i))

@@ -25,7 +25,7 @@
     <!-- Input for imimageatar -->
     <ImageView fx:id="childImage" fitHeight="97.0" fitWidth="88.0" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4" />
 
-    <Label fx:id="imageName" alignment="CENTER" prefWidth="88.0" text="FUCK.JPG" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.rowSpan="2" GridPane.valignment="TOP" />
+    <Label fx:id="imageName" alignment="CENTER" prefWidth="88.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.rowSpan="2" GridPane.valignment="TOP" />
 
     <Button onAction="#changeChildImg" prefHeight="57.0" prefWidth="93.0" text="Change image" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.rowSpan="2" />
 

@@ -164,7 +164,8 @@ public class SettingsController {
     }
     
     private void applyImgChange() {
-        GlobalInfo.setCurrProfImg(new Image("file:///" + SocketUtils.uploadImageto(ServerInfo.USER_IMAGE_REGISTER_PORT, selected, table_users.name, GlobalInfo.getUserID())));
+        SocketUtils.uploadImageto(ServerInfo.USER_IMAGE_REGISTER_PORT, selected, table_users.name, GlobalInfo.getUserID());
+        GlobalInfo.setCurrProfImg(new Image("file:///" + selected.getAbsolutePath()));
         Image setImage = GlobalInfo.getCurrProfImg();
         updateAvatar(setImage);
         resetChanges();
