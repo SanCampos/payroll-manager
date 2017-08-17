@@ -200,6 +200,7 @@ public class ListController {
         filteredChildren = new FilteredList<>(db.getChildren(), filterPredicate);
         table.setItems(filteredChildren);
         delete.setDisable(table.getItems().size() <= 0);
+        delete.setDisable(table.getItems().size() <= 0);
         table.getSelectionModel().select(0);
     }
     

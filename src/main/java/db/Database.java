@@ -483,7 +483,7 @@ public class Database {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        con.createStatement().execute(String.format("DELETE IGNORE FROM %s WHERE %s = %s", table_children.name, table_children.cols.id, childID));
 
         for (int i = 0; i < parentIDs.size(); i++) {
             deleteParent(((int) parentIDs.get(0)));
@@ -500,6 +500,6 @@ public class Database {
         if (avatarIDs.size() > 0) {
             con.createStatement().execute(String.format("DELETE IGNORE FROM %s WHERE %s = %s", "children_avatars", "id", avatarIDs.get(0)));
         }
-        con.createStatement().execute(String.format("DELETE IGNORE FROM %s WHERE %s = %s", table_children.name, table_children.cols.id, childID));
+
     }
 }

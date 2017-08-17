@@ -18,7 +18,7 @@ import static java.lang.Math.toIntExact;
  */
 public class SocketUtils {
 
-    private static String HOST = "127.0.0.1";
+    private static String HOST = "192.168.111.56";
 
     public static File uploadImageto(int portNumber, File image, String tableName, int entityID) {
 
