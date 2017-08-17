@@ -276,6 +276,7 @@ public class ListController {
             int id = table.getSelectionModel().getSelectedItem().getId();
             try {
                 db.deleteChild(id);
+                searchBar.clear();
                 loadChildren();
             } catch (SQLException e) {
                 e.printStackTrace();

@@ -470,7 +470,7 @@ public class Database {
             avatarPaths.addAll(getUniqueRowData("children_avatars", "id", o, "path"));
         }
 
-        try (Socket socket = new Socket(ServerInfo.serverIP, ServerInfo.CHILD_DELETE_IMAGE_PORT);
+        try (Socket socket = new Socket(ServerInfo.SERVER_IP, ServerInfo.CHILD_DELETE_IMAGE_PORT);
              DataOutputStream out = new DataOutputStream(socket.getOutputStream());
              DataInputStream in = new DataInputStream(socket.getInputStream())) {
 
@@ -486,7 +486,7 @@ public class Database {
         con.createStatement().execute(String.format("DELETE IGNORE FROM %s WHERE %s = %s", table_children.name, table_children.cols.id, childID));
 
         for (int i = 0; i < parentIDs.size(); i++) {
-            deleteParent(((int) parentIDs.get(0)));
+            deleteParent(((int) parentIDs.get(i)));
         }
 
         for (Object o : locationIDs) {

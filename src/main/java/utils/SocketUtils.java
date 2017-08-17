@@ -18,9 +18,9 @@ import static java.lang.Math.toIntExact;
  */
 public class SocketUtils {
 
-    private static String HOST = "127.0.0.1";
+    private static String HOST = "192.168.111.56";
 
-    public static File uploadImageto(int portNumber, File image, String tableName, int entityID) {
+    public static String uploadImageto(int portNumber, File image, String tableName, int entityID) {
 
         try (Socket socket = new Socket(HOST, portNumber);
              DataInputStream in = new DataInputStream(socket.getInputStream());
@@ -56,17 +56,15 @@ public class SocketUtils {
                 while ((read = imageStream.read(bytes)) > 0) {
                     imageOut.write(bytes, 0, read);
                 }
-            }
+
 
             String filePath = in.readUTF();
-
-            Database db = new Database();
-            db.init();
-            db.updateImageOf(entityID, filePath.replace("\\", "\\\\"), tableName);
-        } catch (IOException | SQLException e) {
+            return filePath;
+            }
+        } catch (IOException  e) {
             e.printStackTrace();
         }
-        return image;
+        return null;
     }
 
     public static Image receiveImageFrom(int portNumber, int entityID) {
