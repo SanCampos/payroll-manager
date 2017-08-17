@@ -18,7 +18,7 @@ import static java.lang.Math.toIntExact;
  */
 public class SocketUtils {
 
-    private static String HOST = "192.168.111.56";
+    private static String HOST = "127.0.0.1";
 
     public static File uploadImageto(int portNumber, File image, String tableName, int entityID) {
 
@@ -49,11 +49,13 @@ public class SocketUtils {
 
             FileInputStream imageStream = new FileInputStream(image);
 
-            //actual image data
-            byte[] bytes = new byte[toIntExact(imageSize)];
-            int read;
-            while ((read = imageStream.read(bytes)) > 0) {
-                out.write(bytes, 0, read);
+            try (OutputStream imageOut = socket.getOutputStream()) {
+                //actual image data
+                byte[] bytes = new byte[toIntExact(imageSize)];
+                int read;
+                while ((read = imageStream.read(bytes)) > 0) {
+                    imageOut.write(bytes, 0, read);
+                }
             }
 
             String filePath = in.readUTF();
@@ -83,7 +85,7 @@ public class SocketUtils {
 
             //int fileSize = Integer.parseInt(in.readUTF());
 
-            return new Image(in);
+            return new Image(socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
