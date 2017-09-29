@@ -18,6 +18,8 @@ import main.java.utils.ImageUtils;
 import java.io.*;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 
 import main.java.db.DbSchema.*;
 import main.java.utils.SocketUtils;
@@ -43,7 +45,7 @@ public class SettingsController {
     
     //For ease  of use  when affecting all changed
     private SimpleBooleanProperty[] changeList = new SimpleBooleanProperty[] {pictureChanged, testBooleanChanged};
-    
+
 
     private BooleanBinding changeMade;
 
