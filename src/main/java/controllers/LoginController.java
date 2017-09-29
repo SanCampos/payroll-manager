@@ -5,7 +5,6 @@ package main.java.controllers;
 
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
-import main.java.Main;
 import main.java.db.Database;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,17 +12,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import javafx.scene.input.KeyEvent;
-import main.java.globalInfo.GlobalInfo;
-import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.SQLException;
 
 public class LoginController {
@@ -31,6 +24,8 @@ public class LoginController {
     @FXML private Label loginFailNotif;
     @FXML private TextField inputUser;
     @FXML private PasswordField inputPass;
+
+    private Stage loginStage;
 
 
     @FXML
@@ -71,14 +66,17 @@ public class LoginController {
             }
 
             //Initiate list window
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/list.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/list.fxml"));
+            Parent root = loader.load();
             Scene scene = new Scene(root, 1030, 800);
             Stage listStage = new Stage();
+            ListController controller = loader.getController();
+            controller.setLoginStage(loginStage);
             listStage.setTitle("List");
             listStage.setScene(scene);
             listStage.show();
             inputPass.clear();
-            Main.loginStage.close();
+            loginStage.close();
         } catch (SQLException e) {
             loginFailNotif.setStyle("-fx-text-fill: red");
             loginFailNotif.setText("Error connecting to the server, please try again!");
@@ -88,5 +86,9 @@ public class LoginController {
             loginFailNotif.setText("An error has occurred, please try again!");
             e.printStackTrace();
         }
+    }
+
+    public void setLoginStage(Stage loginStage) {
+        this.loginStage = loginStage;
     }
 }

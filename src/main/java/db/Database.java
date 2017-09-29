@@ -40,7 +40,7 @@ public class Database {
     private Connection con;
 
     public void init() throws SQLException {
-        String url = "jdbc:mysql://192.168.111.56:3306/child_tracker_test?verifyServerCertificate=false&useSSL=true";
+        String url = "jdbc:mysql://192.168.254.56:3306/child_tracker_test?verifyServerCertificate=false&useSSL=true";
         String user = "application_user";
         String pass = "Matti12345678!";
         

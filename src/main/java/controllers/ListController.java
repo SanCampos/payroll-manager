@@ -25,7 +25,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import main.java.Main;
 import main.java.Settings.SettingsStage;
 import main.java.db.Database;
 import main.java.globalInfo.GlobalInfo;
@@ -34,7 +33,6 @@ import main.java.utils.DialogUtils;
 import main.java.utils.ImageUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -52,6 +50,8 @@ public class ListController {
     @FXML private Button logout_button;
 
     @FXML private BorderPane borderPane;
+
+    private Stage loginStage;
 
     @FXML private TableView<Child> table;
     @FXML private TableColumn col_name;
@@ -222,7 +222,7 @@ public class ListController {
     public void logout() throws SQLException {
         Stage stage = ((Stage) logout_button.getScene().getWindow());
         stage.close();
-        Main.loginStage.show();
+        loginStage.show();
     }
 
     @FXML
@@ -282,5 +282,9 @@ public class ListController {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void setLoginStage(Stage loginStage) {
+        this.loginStage = loginStage;
     }
 }

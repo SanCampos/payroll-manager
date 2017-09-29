@@ -1,15 +1,11 @@
 package main.java.utils;
 
 import javafx.scene.image.Image;
-import main.java.db.Database;
-import main.java.globalInfo.GlobalInfo;
 import main.java.globalInfo.ServerInfo;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.sql.SQLException;
 
 import static java.lang.Math.toIntExact;
 
@@ -18,11 +14,9 @@ import static java.lang.Math.toIntExact;
  */
 public class SocketUtils {
 
-    private static String HOST = "192.168.111.56";
-
     public static String uploadImageto(int portNumber, File image, String tableName, int entityID) {
 
-        try (Socket socket = new Socket(HOST, portNumber);
+        try (Socket socket = new Socket(ServerInfo.SERVER_IP, portNumber);
              DataInputStream in = new DataInputStream(socket.getInputStream());
              DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
 
@@ -68,7 +62,7 @@ public class SocketUtils {
     }
 
     public static Image receiveImageFrom(int portNumber, int entityID) {
-        try (Socket socket = new Socket(HOST, portNumber);
+        try (Socket socket = new Socket(ServerInfo.SERVER_IP, portNumber);
              DataInputStream in = new DataInputStream(socket.getInputStream());
              DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
 
