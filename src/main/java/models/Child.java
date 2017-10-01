@@ -270,8 +270,8 @@ public class Child {
     }
     
     public static String getCompleteName(String firstName, String lastName, String nickname) {
-        return nickname.length() == 0 ? firstName + " " + lastName :
-                                        firstName + " \"" + nickname + "\" " + lastName;
+        nickname = nickname.length() > 0 ? " \"" + nickname + "\" " : nickname;
+        return firstName + nickname + lastName;
     }
     
     public String getPlace_of_birth() {

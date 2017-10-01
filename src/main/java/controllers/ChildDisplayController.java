@@ -24,12 +24,10 @@ import main.java.models.Child;
 import main.java.utils.DragResizerXY;
 import main.java.utils.ImageUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.List;
 
 /**
  * Created by Santi on 7/27/2017.
@@ -140,7 +138,8 @@ public class ChildDisplayController {
     public void goBackToList() {
         if (changeMade)  {
             try {
-                listController.initTable();
+                listController.loadChildrenData();
+                listController.initTableUI();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

@@ -1,7 +1,6 @@
 package main.java.controllers;
 
 import javafx.application.Platform;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -12,14 +11,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
-import main.java.customNodes.PersistentPromptTextField;
+import main.java.customNodes.ChangeDetectingInputs.*;
 import main.java.db.Database;
 import main.java.db.DbSchema.*;
-import main.java.globalInfo.GlobalInfo;
 import main.java.globalInfo.ServerInfo;
 import main.java.models.Child;
 import main.java.utils.DialogUtils;
@@ -28,10 +25,6 @@ import main.java.utils.NodeUtils;
 import main.java.utils.SocketUtils;
 
 import java.io.*;
-import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -43,25 +36,25 @@ import java.util.List;
 public class ChildFormController extends FormHelper {
     
     @FXML
-    private ImageView childImage;
+    private FormImageView childImageView;
     @FXML
     private Label imageName;
     
     @FXML
-    private PersistentPromptTextField firstNameInput;
+    private FormTextField firstNameInput;
     @FXML
-    private PersistentPromptTextField lastNameInput;
+    private FormTextField lastNameInput;
     @FXML
-    private PersistentPromptTextField nickNameInput;
+    private FormTextField nickNameInput;
     @FXML
-    private PersistentPromptTextField birthPlaceInput;
+    private FormTextField birthPlaceInput;
     @FXML
-    private PersistentPromptTextField referrerInput;
+    private FormTextField referrerInput;
     
     @FXML
-    private DatePicker birthDateInput;
+    private FormDatePicker birthDateInput;
     @FXML
-    private DatePicker admissionDateInput;
+    private FormDatePicker admissionDateInput;
     
     @FXML
     private Button submitBtn;
@@ -74,7 +67,7 @@ public class ChildFormController extends FormHelper {
     private ToggleGroup genderToggleGroup;
     
     @FXML
-    private TextArea childDescInput;
+    private FormTextArea childDescInput;
     @FXML
     private Label warnEmptyLabel;
 
@@ -90,33 +83,21 @@ public class ChildFormController extends FormHelper {
     
     private Child child;
     private SimpleBooleanProperty[] matches;
-    private boolean edit;
-    private File updatedImage;
+    private File uploadedImage;
     
     private ChildDisplayController displayController;
     private SimpleBooleanProperty imageMatches;
 
     @FXML
     public void initialize() throws FileNotFoundException {
-        //Init gender choice buttons and scene ref
-        //OMG MY PATRIARCHY
-        genderToggleGroup.getToggles().get(0).setSelected(true);
-        childStatus.getSelectionModel().selectFirst();
-        
+        initGenderToggles();
+        initChildStatusSelector();
+        initDateValidationFor(birthDateInput, admissionDateInput);
+
         //Init default image for child
-        updateChosenImage(null);
-
-        //Init submit/next btn
+        //updateChosenImage(null);
+        /*Init submit/next btn
         initNextBtn();
-        
-        childStatus.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue.intValue() == 2) {
-                    initSubmitBtn();
-                } else if (newValue.intValue() != 2 && oldValue.intValue() == 2 && !edit) {
-                    initNextBtn();
-                }
-        });
-
         birthDateInput.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (admissionDateInput.getValue() != null) {
                 if (newValue.isAfter(admissionDateInput.getValue())) {
@@ -127,13 +108,44 @@ public class ChildFormController extends FormHelper {
 
         admissionDateInput.valueProperty().addListener(((observable, oldValue, newValue) -> {
             if (birthDateInput.getValue() != null) {
-                if (admissionDateInput.getValue().isBefore(birthDateInput.getValue())) {
+                if (newValue.isBefore(birthDateInput.getValue())) {
                     admissionDateInput.setValue(birthDateInput.getValue());
                 }
             }
-        }));
+        }));*/
     }
-    
+
+    private void initGenderToggles() {
+        genderToggleGroup.getToggles().get(0).setSelected(true);
+    }
+
+    private void initChildStatusSelector() {
+        childStatus.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() == 2) {
+                initSubmitBtn();
+            } else if (newValue.intValue() != 2 && oldValue.intValue() == 2 && child != null) {
+                initNextBtn();
+            }
+        });
+        childStatus.getSelectionModel().selectFirst();
+    }
+
+    private void initDateValidationFor(DatePicker older, DatePicker later) {
+        ChangeListener<LocalDate> dateListener = (observable, oldValue, newValue) -> {
+            if (later.getValue() != null) {
+                if (older.getValue().isAfter(later.getValue())) {
+                    older.setValue(later.getValue());
+                }
+            } else if (older.getValue() != null) {
+                if (later.getValue().isBefore(older.getValue())) {
+                    later.setValue(older.getValue());
+                }
+            }
+        };
+        older.valueProperty().addListener(dateListener);
+        later.valueProperty().addListener(dateListener);
+    }
+
     private void initNextBtn() {
         submitBtn.setText("Next");
         submitBtn.getStyleClass().remove("submit");
@@ -180,10 +192,10 @@ public class ChildFormController extends FormHelper {
 
     /**
      * Submits the child with all of its respecitve information
-     * @param active if this controller's scene is active
+     * @param notAddingParents if no parents will be added (i.e. only this form will be encountered)
      * @return id of child submitted, negative number if submission has failed
      */
-    public int submit(boolean active) {
+    public int submit(boolean notAddingParents) {
         if (formIsIncomplete())
             return -1;
         
@@ -194,6 +206,7 @@ public class ChildFormController extends FormHelper {
         String place_of_birth = birthPlaceInput.getText();
         String childDesc = childDescInput.getText();
         String referrer = referrerInput.getText();
+
         
         int gender = genderToggleGroup.getToggles().indexOf(genderToggleGroup.getSelectedToggle());
         int status = childStatus.getSelectionModel().getSelectedIndex();
@@ -201,39 +214,39 @@ public class ChildFormController extends FormHelper {
         //Get child's birthdate  and admission_date date
         LocalDate birthDate = birthDateInput.getValue();
         LocalDate admissionDate = admissionDateInput.getValue();
-        
+
         //Retrieve record's ID for later use
         int id;
         
         try {
-            //Fire up db helper and insert new child record
             Database db = new Database();
             db.init();
-            //Add record for child and retrieve its id
-            if (child == null) {
-                db.addNewChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
-                if (updatedImage != null) {
-                    updateImage(firstName, lastName, nickName, place_of_birth, childDesc, referrer, gender, status, birthDate, admissionDate, db);
+
+            if (child == null) { //add new child info
+                id = db.addNewChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
+
+                if (uploadedImage != null) {
+                    uploadImage(id, db);
                 }
-                if (active) {
-                    firstNameInput.getScene().getWindow().hide();
+
+            } else { //update info of old child
+                id = child.getId();
+                db.updateChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate, id);
+
+                if (!imageMatches.getValue() && uploadedImage != null) {
+                    uploadImage(id, db);
                 }
-                listController.setQuery(Child.getCompleteName(firstName, lastName, nickName));
-                listController.loadChildren();
-                return getId(firstName, lastName, nickName, place_of_birth, childDesc, referrer, gender, status, birthDate, admissionDate, db);
-            } else {
-                db.updateChild(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate, child.getId());
-                id = getId(firstName, lastName, nickName, place_of_birth, childDesc, referrer, gender, status, birthDate, admissionDate, db);
-                if (!imageMatches.getValue() && updatedImage != null) {
-                    updateImage(firstName, lastName, nickName, place_of_birth, childDesc, referrer, gender, status, birthDate, admissionDate, db);
-                }
-                if (active) {
-                    firstNameInput.getScene().getWindow().hide();
-                }
-                listController.setQuery(Child.getCompleteName(firstName, lastName, nickName));
-                listController.loadChildren();
-                displayController.setChild(listController.getChildren().get(0));
-                return id;
+            }
+
+            //make table in the listController of children search for the updated child
+            listController.setQuery(Child.getCompleteName(firstName, lastName, nickName));
+            listController.loadChildrenData();
+
+            //update child display info if updating old child
+            if (displayController != null) displayController.setChild(listController.getChildren().get(0));
+
+            if (notAddingParents) {
+                firstNameInput.getScene().getWindow().hide();
             }
 
         } catch (SQLException e) {
@@ -245,27 +258,18 @@ public class ChildFormController extends FormHelper {
             DialogUtils.displayError("Error saving image", "There was an error saving the image of the child. " +
                     "All other data besides the image has been saved. Please attempt to add the child image in its own page.");
             return -1;
+        } catch (Exception e) {
+            return 1;
         }
-        //refreshList();
+        return id;
     }
 
-    private int updateImage(String firstName, String lastName, String nickName, String place_of_birth, String childDesc, String referrer, int gender, int status, LocalDate birthDate, LocalDate admissionDate, Database db) throws SQLException, IOException {
-        int id = getId(firstName, lastName, nickName, place_of_birth, childDesc, referrer, gender, status, birthDate, admissionDate, db);
-        if (id == -89) throw new SQLException();
-
-        String path = SocketUtils.uploadImageto(ServerInfo.CHILD_IMAGE_REGISTER_PORT, updatedImage, table_children.name, id);
+    private void uploadImage(int id, Database db) throws SQLException, IOException {
+        String path = SocketUtils.uploadImageto(ServerInfo.CHILD_IMAGE_REGISTER_PORT, uploadedImage, table_children.name, id);
         if (path != null) {
-            db.updateImageOf(id, path, "children");
+            db.updateImagePathOf(id, path, "children");
         }
-
-        slctdImgStrm = new FileInputStream(updatedImage);
-        return id;
-    }
-
-    private int getId(String firstName, String lastName, String nickName, String place_of_birth, String childDesc, String referrer, int gender, int status, LocalDate birthDate, LocalDate admissionDate, Database db) throws SQLException {
-        int id;
-        id = db.getChildIDOf(firstName, lastName, nickName, place_of_birth, birthDate, childDesc, gender, referrer, status, admissionDate);
-        return id;
+        slctdImgStrm = new FileInputStream(uploadedImage);
     }
 
     private boolean formIsIncomplete() {
@@ -277,7 +281,7 @@ public class ChildFormController extends FormHelper {
         
         //Fetches textfield nodes from root
         try {
-            List<Node> textFields = NodeUtils.getAllNodesOf(childImage.getParent(), new ArrayList<>(),
+            List<Node> textFields = NodeUtils.getAllNodesOf(childImageView.getParent(), new ArrayList<>(),
                     "javafx.scene.control.TextInputControl");
     
             //Go mark each incomplete form
@@ -294,8 +298,8 @@ public class ChildFormController extends FormHelper {
         
                 //Manipulate warning label if current node is NOT nickname textfield
                 if (!ids[0].contains("nick")) {
-                    for (int i = 0; i < ids.length; i++) {
-                        Label warning = ((Label) childImage.getParent().lookup("#" + ids[i]));
+                    for (String id: ids) {
+                        Label warning = ((Label) childImageView.getParent().lookup("#" + id));
                         if (text.getText().isEmpty()) {
                             warning.setStyle("-fx-text-fill: red");
                             incomplete = true;
@@ -332,26 +336,14 @@ public class ChildFormController extends FormHelper {
     }
     
     private void updateChosenImage(File chosen) throws FileNotFoundException {
-        updatedImage = chosen;
+        uploadedImage = chosen;
         if (chosen != null) {
             slctdImgStrm = new FileInputStream(chosen);
             imageName.setText(chosen.getName());
-            childImage.setImage(new Image(slctdImgStrm));
+            childImageView.setImage(new Image(slctdImgStrm));
             slctdImgStrm = new FileInputStream(chosen);
         } else {
-            childImage.setImage(null);
-        }
-    }
-
-    private void refreshList() {
-        try {
-            listController.initTable();
-        } catch (SQLException e) {
-            DialogUtils.displayError("Synchronization error!", "There was an error synchronizing the data of the new child!");
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            DialogUtils.displayError("Update error!", "Your change has been saved but the applicatoin cannot update, please restart!");
-            e.printStackTrace();
+            childImageView.setImage(null);
         }
     }
     
@@ -365,15 +357,19 @@ public class ChildFormController extends FormHelper {
     
     public void setChild(Child child) throws IOException {
         this.child = child;
-        firstNameInput.setText(child.getfName());
-        lastNameInput.setText(child.getlName());
-        nickNameInput.setText(child.getNickname());
-        childImage.setImage(((Image) child.getImage()));
-        
-        birthDateInput.setValue(LocalDate.parse(child.getBirth_date()));
-        admissionDateInput.setValue(LocalDate.parse(child.getAdmission_date()));
-        birthPlaceInput.setText(child.getPlace_of_birth());
-        referrerInput.setText(child.getReferrer());
+
+        firstNameInput.setOrigValue(child.getfName());
+        lastNameInput.setOrigValue(child.getlName());
+        nickNameInput.setOrigValue(child.getNickname());
+
+        childImageView.setOrigValue(((Image) child.getImage()));
+        birthDateInput.setOrigValue(LocalDate.parse(child.getBirth_date()));
+        admissionDateInput.setOrigValue(LocalDate.parse(child.getAdmission_date()));
+
+        birthPlaceInput.setOrigValue(child.getPlace_of_birth());
+
+        referrerInput.setOrigValue(child.getReferrer());
+
         genderToggleGroup.getToggles().get(child.getGender().equalsIgnoreCase("male") ? 0 : 1);
         for (Object o : childStatus.getItems())  {
             if (o.equals(child.getStatus())) {
@@ -381,20 +377,36 @@ public class ChildFormController extends FormHelper {
                 break;
             }
         }
-        childDescInput.setText(child.getDescription());
-        Platform.runLater(this::initMatchers);
+        childDescInput.setOrigValue(child.getDescription());
+        Platform.runLater(this::initChangeDetection);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/childParentsForm.fxml"));
         Parent root = loader.load();
         childParentsController = loader.getController();
         setNextParent(root);
         childParentsController.setParents(child.getParents(), child.getId());
         initSubmitBtn();
-        edit = true;
         submitBtn.setDisable(true);
     }
     
-    public void initMatchers() {
-        SimpleBooleanProperty firstNameMatches = new SimpleBooleanProperty(true);
+    private void initChangeDetection() {
+        ChangeListener<Object> changeListener = new ChangeListener<Object>() {
+            @Override
+            public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+                submitBtn.setDisable(formIsEdited());
+            }
+
+            private boolean formIsEdited() {
+                for (Node n : firstNameInput.getParent().getChildrenUnmodifiable()) {
+                    if (n instanceof ChangeDetectingInput) {
+                        if (((ChangeDetectingInput) n).valueChanged())
+                            return true;
+                    }
+                }
+                return false;
+            }
+        };
+
+        /* SimpleBooleanProperty firstNameMatches = new SimpleBooleanProperty(true);
         SimpleBooleanProperty lastNameMatches = new SimpleBooleanProperty(true);
         SimpleBooleanProperty nickNameMatches = new SimpleBooleanProperty(true);
         SimpleBooleanProperty birthPlaceMatches = new SimpleBooleanProperty(true);
@@ -416,7 +428,7 @@ public class ChildFormController extends FormHelper {
         referrerInput.textProperty().addListener(matchingListener(child.getReferrer(), referrerMatches));
         genderToggleGroup.selectedToggleProperty().addListener(matchingListener(child.getGender().equalsIgnoreCase("male") ? 0 : 1, genderMatches));
         childStatus.getSelectionModel().selectedItemProperty().addListener(matchingListener(child.getStatus(), statusMatches));
-        childImage.imageProperty().addListener(matchingListener(((Image) child.getImage()), imageMatches));
+        childImageView.imageProperty().addListener(matchingListener(((Image) child.getImage()), imageMatches));
         matches = new SimpleBooleanProperty[]{firstNameMatches, lastNameMatches, nickNameMatches, birthPlaceMatches, birthDateMatches, admissionDateMatches, descriptionMatches, referrerMatches, genderMatches, statusMatches, imageMatches};
 
         BooleanBinding nothingEdited = new BooleanBinding() {
@@ -432,7 +444,7 @@ public class ChildFormController extends FormHelper {
                 return true;
             }
         };
-        nothingEdited.addListener(((observable, oldValue, newValue) -> submitBtn.setDisable(newValue)));
+        nothingEdited.addListener(((observable, oldValue, newValue) -> submitBtn.setDisable(newValue))); */
     }
 
     //black magic

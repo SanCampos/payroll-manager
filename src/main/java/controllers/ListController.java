@@ -72,71 +72,78 @@ public class ListController {
     @FXML
     public void initialize() {
         db = new Database();
-        
+
         try {
-            db.init();
-            initTable();
-            initSearchFunctionality();
+            loadChildrenData();
         } catch (SQLException e){
             System.out.println("loading  failed");
         }
-        initAvatar();
-        disableReorder();
-        disablePictureSort();
+        initUI();
         currentLoadedChild = -1;
-        userName.setText(GlobalInfo.getUserName());
         itself = this;
     }
 
-    
+    private void initUI() {
+        initTableUI();
+        initSearchFunctionality();
+        initAvatar();
+        userName.setText(GlobalInfo.getUserName());
+    }
+
+
+    public void initTableUI() {
+        initRowDoubleClick();
+        initChildImageColumn();
+        initChildNameColumn();
+        disableColumnReordering();
+        disablePictureColumnSorting();
+
+        //in case window is maximized
+        table.prefHeightProperty().bind(borderPane.heightProperty());
+    }
+
+    private void initAvatar() {
+        profImg.setClip(ImageUtils.getAvatarCircle(profImg.getFitHeight()));
+        profImg.setImage(GlobalInfo.getCurrProfImg());
+    }
+
     private void initSearchFunctionality() {
         //init search bar functionality
         searchBar.textProperty().addListener(((observable, oldValue, newValue) -> {
             String query = searchBar.getText();
 
             filteredChildren.setPredicate(child -> (query == null || query.isEmpty()) ||
-                        (StringUtils.containsIgnoreCase(child.getCompleteName(), query))
+                    (StringUtils.containsIgnoreCase(child.getCompleteName(), query))
             );
         }));
     }
 
-    private void initAvatar() {
-        profImg.setClip(ImageUtils.getAvatarCircle(profImg.getFitHeight()));
-        Image value = GlobalInfo.getCurrProfImg();
-        profImg.setImage(value);
+
+    private void initChildNameColumn() {
+        col_name.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Child, String>, ObservableValue>() {
+            @Override
+            public ObservableValue call(TableColumn.CellDataFeatures<Child, String> param) {
+                Child child = param.getValue();
+                String complete = child.getCompleteName();
+                return new SimpleStringProperty(complete);
+            }
+        });
+
+        col_name.setCellFactory(new Callback<TableColumn<Child, String>, TableCell<Child, String>>() {
+            @Override
+            public TableCell call(TableColumn<Child, String> param) {
+                return new TableCell<Child, String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                            setText(item);
+                            setAlignment(Pos.CENTER);
+                    }
+                };
+            }
+        });
     }
 
-    public void initTable() throws SQLException {
-        loadChildren();
-        
-        table.setRowFactory(new Callback<TableView<Child>, TableRow<Child>>() {
-            @Override
-            public TableRow<Child> call(TableView<Child> param) {
-                TableRow<Child> row = new TableRow<>();
-                row.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() >= 2) {
-                            try {
-                                if (currentLoadedChild != row.getItem().getId()) {
-                                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/childDisplay.fxml"));
-                                    currentLoadedChildSceneRoot = loader.load();
-                                    ChildDisplayController controller = loader.getController();
-                                    controller.setChildIndex(table.getItems().indexOf(row.getItem()));
-                                    controller.setChild(row.getItem());
-                                    controller.setListController(itself);
-                                    controller.setListRoot(vBox.getParent());
-                                }
-                                    profImg.getScene().setRoot(currentLoadedChildSceneRoot);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                });
-                return row;
-            }});
-
+    private void initChildImageColumn() {
         col_picture.setCellValueFactory(new PropertyValueFactory<Child, Image>("image"));
         col_picture.setCellFactory(new Callback<TableColumn<Child, Image>, TableCell<Child, Image>>() {
             @Override
@@ -167,34 +174,40 @@ public class ListController {
                 };
             }
         });
-
-
-
-        col_name.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Child, String>, ObservableValue>() {
-            @Override
-            public ObservableValue call(TableColumn.CellDataFeatures<Child, String> param) {
-                Child child = param.getValue();
-                String complete = child.getCompleteName();
-                return new SimpleStringProperty(complete);
-            }
-        });
-
-        col_name.setCellFactory(new Callback<TableColumn<Child, String>, TableCell<Child, String>>() {
-            @Override
-            public TableCell call(TableColumn<Child, String> param) {
-                return new TableCell<Child, String>() {
-                    @Override
-                    protected void updateItem(String item, boolean empty) {
-                            setText(item);
-                            setAlignment(Pos.CENTER);
-                    }
-                };
-            }
-        });
-        table.prefHeightProperty().bind(borderPane.heightProperty());
     }
-    
-    public void loadChildren() throws SQLException {
+
+    private void initRowDoubleClick() {
+        table.setRowFactory(new Callback<TableView<Child>, TableRow<Child>>() {
+            @Override
+            public TableRow<Child> call(TableView<Child> param) {
+                TableRow<Child> row = new TableRow<>();
+                row.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        //event to access individual child data
+                        if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() >= 2) {
+                            try {
+                                if (currentLoadedChild != row.getItem().getId()) {
+                                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/childDisplay.fxml"));
+                                    currentLoadedChildSceneRoot = loader.load();
+                                    ChildDisplayController controller = loader.getController();
+                                    controller.setChildIndex(table.getItems().indexOf(row.getItem()));
+                                    controller.setChild(row.getItem());
+                                    controller.setListController(itself);
+                                    controller.setListRoot(vBox.getParent());
+                                }
+                                    profImg.getScene().setRoot(currentLoadedChildSceneRoot);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+                return row;
+            }});
+    }
+
+    public void loadChildrenData() throws SQLException {
         db.init();
         Predicate<? super Child> filterPredicate = filteredChildren == null ? null : filteredChildren.getPredicate();
         filteredChildren = new FilteredList<>(db.getChildren(), filterPredicate);
@@ -203,12 +216,12 @@ public class ListController {
         delete.setDisable(table.getItems().size() <= 0);
         table.getSelectionModel().select(0);
     }
-    
-    private void disablePictureSort() {
+
+    private void disablePictureColumnSorting() {
         col_picture.setSortable(false);
     }
 
-    private void disableReorder() {
+    private void disableColumnReordering() {
         table.skinProperty().addListener(((observable, oldValue, newValue) -> {
             TableHeaderRow header = (TableHeaderRow)table.lookup("TableHeaderRow");
             header.reorderingProperty().addListener((observable1, oldValue1, newValue1) -> {
@@ -232,7 +245,7 @@ public class ListController {
         stage.setOnHidden((event) -> {
             SettingsStage settingsStage = ((SettingsStage) event.getSource());
             if (settingsStage.getChange()) {
-                initialize();
+                initUI(); //get rid of stupid stage code
             }
         });
         Scene scene = new Scene(root, 600, 400);
@@ -261,7 +274,7 @@ public class ListController {
             e.printStackTrace();
         }
     }
-    
+
     public List<Child> getChildren() {
         return table.getItems();
     }
@@ -277,7 +290,7 @@ public class ListController {
             try {
                 db.deleteChild(id);
                 searchBar.clear();
-                loadChildren();
+                loadChildrenData();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

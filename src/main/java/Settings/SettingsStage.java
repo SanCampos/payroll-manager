@@ -18,7 +18,7 @@ public class SettingsStage extends Stage {
     public void setChange(boolean changed) {
         settingsChanged.set(changed);
     }
-    
+
     public boolean getChange() {
         return settingsChanged.getValue();
     }

@@ -136,27 +136,11 @@ public class Database {
         return false;
     }
     
-    public int getChildIDOf(String fName, String lName, String nickname, String birthPlace, LocalDate birthDate, String description, int gender, String referrer, int status, LocalDate admissionDate) throws SQLException {
-        String dateFormatString = "'%%Y-%%m-%%d'";
-        String insertChild = String.format("SELECT * FROM %s WHERE %4s = ? AND %s = ? AND %s = ? AND %s = ? AND %s = STR_TO_DATE(?, " + dateFormatString + ") AND %s = ? AND %s = ? AND %s = ? AND %s = ? AND %s = STR_TO_DATE(?," + dateFormatString + ")",
-                table_children.name, table_children.cols.fname, table_children.cols.lname, table_children.cols.nickname, table_children.cols.place_of_birth, table_children.cols.birth_date,
-                table_children.cols.description, table_children.cols.gender, table_children.cols.referrer_id, table_children.cols.status, table_children.cols.admission_date);
-        
-        PreparedStatement statement = stmntWithAllChildProperties(insertChild, fName, lName, nickname, birthPlace, birthDate, description, gender, referrer, status, admissionDate);
-        ResultSet child = statement.executeQuery();
-        
-        if (!child.next()) {
-            return -89; //Arbitrary  negative number to indicate retrieval failure
-        }
-        
-        return child.getInt(table_children.cols.id);
-    }
-    
     private PreparedStatement stmntWithAllChildProperties(String sql, String fName, String lName, String nickname, String birthPlace, LocalDate birthDate, String description, int gender, String referrer, int status, LocalDate admissionDate) throws SQLException {
         int birthPlaceID = getSingleDataIDOf(birthPlace, table_locations.name);
         int referrerID = getSingleDataIDOf(referrer, table_referrers.name);
         
-        PreparedStatement statement = con.prepareStatement(sql);
+        PreparedStatement statement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, fName);
         statement.setString(2, lName);
         statement.setString(3, nickname);
@@ -171,7 +155,7 @@ public class Database {
         return statement;
     }
 
-    public boolean addNewChild(String fName, String lName, String nickname, String birthPlace, LocalDate age, String description, int gender, String referrer, int status, LocalDate admissionDate) throws SQLException {
+    public int addNewChild(String fName, String lName, String nickname, String birthPlace, LocalDate age, String description, int gender, String referrer, int status, LocalDate admissionDate) throws SQLException {
         //Add birthplace and referrer record
         addSingleUniqueData(birthPlace, table_locations.name);
         addSingleUniqueData(referrer, table_referrers.name);
@@ -180,7 +164,10 @@ public class Database {
                 table_children.cols.description, table_children.cols.gender, table_children.cols.referrer_id, table_children.cols.status, table_children.cols.admission_date);
 
         PreparedStatement statement = stmntWithAllChildProperties(insertChild, fName, lName, nickname, birthPlace, age, description, gender, referrer, status, admissionDate);
-        return statement.executeUpdate() != 0;
+        statement.executeUpdate();
+
+        //return id of child for further use
+        return statement.getGeneratedKeys().getInt(1);
     }
     
     private int getSingleDataIDOf(String data, String tableName) throws SQLException {
@@ -307,7 +294,7 @@ public class Database {
 
 
 
-    public boolean updateImageOf(int userID, String path, String tableName) throws SQLException {
+    public boolean updateImagePathOf(int userID, String path, String tableName) throws SQLException {
         //Insert new  row for image path to avatar  table
         String insertAvatarRow = String.format("INSERT IGNORE INTO %s (%s) VALUES (?)", tableName + "_avatars", table_userAvatars.cols.path);
         PreparedStatement insertNewAvatar = con.prepareStatement(insertAvatarRow);

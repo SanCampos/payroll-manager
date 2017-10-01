@@ -1,8 +1,12 @@
 package main.java.Settings;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,6 +23,7 @@ import java.io.*;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.Observable;
 import java.util.Set;
 
 import main.java.db.DbSchema.*;
@@ -32,22 +37,28 @@ import static java.lang.Math.toIntExact;
  */
 public class SettingsController {
 
+    //The form checks if changes are made and greys out the apply button
+    // if no changes are made. This hashset acts as a counter for all
+    // changes the user has made. Each unique setting adds/removes a unique
+    // integer to this set to indicate a settings change. The integer is
+    // the ordinal value of the setting.
+
+    // There are currently '1' unique setting/s that can be changed, please
+    // use the integer '2' for the next setting to be changed and increment
+    // these two values upon addition of said setting
+
+    //for change of user picture
+    private static final int PICTURE_CHANGED = 0;
+
+
+
     @FXML private ImageView prof_img;
     @FXML private Label img_name;
 
     @FXML private Button ok_btn;
     @FXML private Button apply_btn;
-    @FXML private Button cancel_btn;
 
-    //Change states for each setting
-    private SimpleBooleanProperty  pictureChanged = new SimpleBooleanProperty(false);
-    private SimpleBooleanProperty testBooleanChanged = new SimpleBooleanProperty(false);
-    
-    //For ease  of use  when affecting all changed
-    private SimpleBooleanProperty[] changeList = new SimpleBooleanProperty[] {pictureChanged, testBooleanChanged};
-
-
-    private BooleanBinding changeMade;
+    private Set<Integer> changes = new HashSet<>();
 
     //Reference to strg dir of profile image
     private File strgRef;
@@ -63,7 +74,6 @@ public class SettingsController {
     @FXML
     public void initialize() {
         initAvatar();
-        initChangeDetectors();
         initButtons();
         initStageRef();
     }
@@ -77,29 +87,9 @@ public class SettingsController {
         prof_img.setClip(ImageUtils.getAvatarCircle(prof_img.getFitHeight()));
     }
 
-    private void initChangeDetectors() {
-        changeMade = new BooleanBinding() { //just add more bool properties  for each setting
-            {
-                  super.bind(changeList);
-            }
-
-            @Override
-            protected boolean computeValue() {
-                for (SimpleBooleanProperty s : changeList)
-                    if (s.getValue())
-                        return true;
-                
-                return false;
-            }
-        };
-        changeMade.addListener((observable, oldValue, newValue) -> {
-            apply_btn.setDisable(!observable.getValue());
-        });
-    }
-
     private void initButtons() {
         ok_btn.requestFocus();
-        apply_btn.setDisable(!changeMade.getValue());
+        //make hash set empty value observable
     }
 
     @FXML
@@ -134,7 +124,7 @@ public class SettingsController {
             if (GlobalInfo.getCurrProfImg().getHeight() > 0.0) {
                 if (ImageUtils.equals(GlobalInfo.getCurrProfImg(), slctdImg)) {
                     updateAvatar(slctdImg);
-                    pictureChanged.set(false);
+                    changes.remove(PICTURE_CHANGED);
                     return;
                 }
             }
@@ -146,7 +136,7 @@ public class SettingsController {
 
             //Show preview of new avatar
             updateAvatar(slctdImg);
-            pictureChanged.set(true);
+            changes.add(PICTURE_CHANGED);
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -162,27 +152,22 @@ public class SettingsController {
     @FXML
     public void applyChanges() {
         applyImgChange();
+        changes.clear();
         stage.setChange(true);
     }
     
     private void applyImgChange() {
         SocketUtils.uploadImageto(ServerInfo.USER_IMAGE_REGISTER_PORT, selected, table_users.name, GlobalInfo.getUserID());
+
         GlobalInfo.setCurrProfImg(new Image("file:///" + selected.getAbsolutePath()));
         Image setImage = GlobalInfo.getCurrProfImg();
         updateAvatar(setImage);
-        resetChanges();
         ok_btn.requestFocus();
-    }
-
-
-    private void resetChanges() {
-        for (SimpleBooleanProperty s : changeList)
-            s.set(false);
     }
     
     @FXML
     public void confirmChange() {
-        if (changeMade.getValue()) {
+        if (!changes.isEmpty()) {
             boolean confirm = DialogUtils.getConfirm("Settings", "Your settings have changed, would you like to save them?");
             if (confirm) {
                 applyChanges();

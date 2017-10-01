@@ -166,7 +166,7 @@ public class ChildParentsController extends FormHelper {
             if (displayController != null) {
                 displayController.childParents.getChildren().clear();
                 listController.setQuery(childName);
-                listController.loadChildren();
+                listController.loadChildrenData();
                 displayController.setChild(listController.getChildren().get(0));
             }
         } catch (SQLException e) {

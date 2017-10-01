@@ -14,8 +14,11 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import main.java.customNodes.PersistentPromptTextField?>
+<?import main.java.customNodes.ChangeDetectingInputs.FormTextField?>
 
+<?import main.java.customNodes.ChangeDetectingInputs.FormImageView?>
+<?import main.java.customNodes.ChangeDetectingInputs.FormDatePicker?>
+<?import main.java.customNodes.ChangeDetectingInputs.FormTextArea?>
 <GridPane alignment="TOP_CENTER" hgap="6" prefHeight="400.0" prefWidth="600.0" vgap="8" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.ChildFormController">
 
 
@@ -23,7 +26,7 @@
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
     <!-- Input for imimageatar -->
-    <ImageView fx:id="childImage" fitHeight="97.0" fitWidth="88.0" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4" />
+    <FormImageView fx:id="childImageView" fitHeight="97.0" fitWidth="88.0" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4" />
 
     <Label fx:id="imageName" alignment="CENTER" prefWidth="88.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.rowSpan="2" GridPane.valignment="TOP" />
 
@@ -32,16 +35,16 @@
     <!-- Input for first name of child -->
     <Label text="First name" GridPane.columnIndex="1" GridPane.rowIndex="0" />
     <Label fx:id="firstNameWarning" styleClass="notify-empty" text="This form is empty!" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-    <PersistentPromptTextField fx:id="firstNameInput" maxLength="30" promptText="Juan" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+    <FormTextField fx:id="firstNameInput" maxLength="30" promptText="Juan" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" />
 
     <!-- Input for last name of child -->
     <Label text="Last name" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
     <Label fx:id="lastNameWarning" styleClass="notify-empty" text="This form is empty!" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-    <PersistentPromptTextField fx:id="lastNameInput" maxLength="30" promptText="dela Cruz" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" />
+    <FormTextField fx:id="lastNameInput" maxLength="30" promptText="dela Cruz" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" />
 
     <!-- Input for nickname of child -->
     <Label text="Nickname (optional)" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-    <PersistentPromptTextField fx:id="nickNameInput" maxLength="15" promptText="John" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+    <FormTextField fx:id="nickNameInput" maxLength="15" promptText="John" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
 
     <!-- Input for gender of child -->
     <Label text="Gender" GridPane.columnIndex="3" GridPane.rowIndex="4" />
@@ -55,22 +58,22 @@
         <!-- Input for birth date of child -->
     <Label text="Birthdate" GridPane.columnIndex="1" GridPane.rowIndex="6" />
     <Label fx:id="birthDateWarning" styleClass="notify-empty" text="Date forms are empty" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-    <DatePicker fx:id="birthDateInput" prefHeight="25.0" prefWidth="231.0" promptText="Format - 06/12/2000" styleClass="date-input" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+    <FormDatePicker fx:id="birthDateInput" prefHeight="25.0" prefWidth="231.0" promptText="Format - 06/12/2000" styleClass="date-input" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
 
         <!-- Input for place of birth of child -->
     <Label text="Place of birth" GridPane.columnIndex="3" GridPane.rowIndex="6" />
     <Label fx:id="birthPlaceWarning" styleClass="notify-empty" text="This form is empty!" GridPane.columnIndex="4" GridPane.rowIndex="6" />
-    <PersistentPromptTextField fx:id="birthPlaceInput" maxLength="150" promptText="Negros Occ. Baco..." GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+    <FormTextField fx:id="birthPlaceInput" maxLength="150" promptText="Negros Occ. Baco..." GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="7" />
 
     <!-- Input admission_datesion date of child -->
     <Label text="Date of admission" GridPane.columnIndex="1" GridPane.rowIndex="8" />
     <Label fx:id="admissionDateWarning" styleClass="notify-empty" text="Date forms are empty" GridPane.columnIndex="2" GridPane.rowIndex="8" />
-    <DatePicker fx:id="admissionDateInput" prefHeight="25.0" prefWidth="230.0" promptText="Format - 06/12/2000" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9" />
+    <FormDatePicker fx:id="admissionDateInput" prefHeight="25.0" prefWidth="230.0" promptText="Format - 06/12/2000" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9" />
 
     <!-- Input for referrer of child -->
     <Label text="Referred by: " GridPane.columnIndex="3" GridPane.rowIndex="8" />
     <Label fx:id="referrerWarning" styleClass="notify-empty" text="This form is empty" GridPane.columnIndex="4" GridPane.rowIndex="8" />
-    <PersistentPromptTextField fx:id="referrerInput" maxLength="100" promptText="DSWD" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="9" />
+    <FormTextField fx:id="referrerInput" maxLength="100" promptText="DSWD" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="9" />
 
     <!--Input for Child Status -->
     <Label text="Status" GridPane.columnIndex="1" GridPane.rowIndex="10" />
@@ -89,7 +92,7 @@
     <!-- Input for child description -->
     <Label prefWidth="66.0" text="Description" GridPane.columnIndex="0" GridPane.rowIndex="12" />
     <Label fx:id="childDescWarning" styleClass="notify-empty" text="This form is empty!" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="13" />
-    <TextArea fx:id="childDescInput" prefHeight="391.0" prefWidth="432.0" wrapText="true" GridPane.columnIndex="0" GridPane.columnSpan="5" GridPane.rowIndex="13" />
+    <FormTextArea fx:id="childDescInput" prefHeight="391.0" prefWidth="432.0" wrapText="true" GridPane.columnIndex="0" GridPane.columnSpan="5" GridPane.rowIndex="13" />
 
         <!-- Submit and cancel buttons -->
     <Button fx:id="submitBtn" prefHeight="25.0" prefWidth="75.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="14" />
