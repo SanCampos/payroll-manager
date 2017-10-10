@@ -132,13 +132,14 @@ public class ChildFormController extends FormHelper {
 
     private void initDateValidationFor(DatePicker older, DatePicker later) {
         ChangeListener<LocalDate> dateListener = (observable, oldValue, newValue) -> {
-            if (later.getValue() != null) {
+            if (later.getValue() != null && older.getValue() != null) {
+
                 if (older.getValue().isAfter(later.getValue())) {
                     older.setValue(later.getValue());
                 }
-            } else if (older.getValue() != null) {
+
                 if (later.getValue().isBefore(older.getValue())) {
-                    later.setValue(older.getValue());
+                        later.setValue(older.getValue());
                 }
             }
         };
