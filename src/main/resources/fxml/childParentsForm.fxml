@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.geometry.Insets?>
 
-<?import main.java.customNodes.ChangeDetectingInputs.FormTextField?>
+<?import main.java.customNodes.FormTextField?>
 <AnchorPane fx:id="anchorPane" prefHeight="686.0" prefWidth="576.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.ChildParentsController">
 
     <Label styleClass="title" text="Parental information" AnchorPane.leftAnchor="12" AnchorPane.topAnchor="12" />

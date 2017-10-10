@@ -1,5 +1,6 @@
-package main.java.customNodes.ChangeDetectingInputs;
+package main.java.customNodes;
 
+import javafx.beans.value.ChangeListener;
 import javafx.scene.control.TextArea;
 
 public class FormTextArea extends TextArea implements ChangeDetectingInput<String> {
@@ -13,5 +14,10 @@ public class FormTextArea extends TextArea implements ChangeDetectingInput<Strin
     @Override
     public boolean valueChanged() {
         return getText().equals(origValue);
+    }
+
+    @Override
+    public void addOnChangeListener(ChangeListener<String> changeListener) {
+        textProperty().addListener(changeListener);
     }
 }

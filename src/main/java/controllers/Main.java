@@ -1,3 +1,5 @@
+package main.java.controllers;
+
 import javafx.application.Application;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
@@ -21,9 +23,9 @@ public class Main extends Application {
 
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        //Database db =  new Database();
-        //db.init();
-        //db.registerUser("kalipay", "negrensefoundation", "Kalipay Foundation");
+        /*Database db =  new Database();
+        db.init();
+        db.registerUser("root", "root", "Testy McTestingTon"); */
         launch(args);
     }
     

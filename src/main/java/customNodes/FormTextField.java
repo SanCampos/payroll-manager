@@ -1,6 +1,6 @@
-package main.java.customNodes.ChangeDetectingInputs;
+package main.java.customNodes;
 
-import main.java.customNodes.PersistentPromptTextField;
+import javafx.beans.value.ChangeListener;
 
 public class FormTextField extends PersistentPromptTextField implements ChangeDetectingInput<String> {
 
@@ -15,5 +15,10 @@ public class FormTextField extends PersistentPromptTextField implements ChangeDe
     @Override
     public boolean valueChanged() {
         return getText().equals(origText);
+    }
+
+    @Override
+    public void addOnChangeListener(ChangeListener<String> changeListener) {
+        textProperty().addListener(changeListener);
     }
 }

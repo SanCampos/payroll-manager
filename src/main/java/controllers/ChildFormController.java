@@ -14,7 +14,7 @@ import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
-import main.java.customNodes.ChangeDetectingInputs.*;
+import main.java.customNodes.*;
 import main.java.db.Database;
 import main.java.db.DbSchema.*;
 import main.java.globalInfo.ServerInfo;
@@ -123,7 +123,7 @@ public class ChildFormController extends FormHelper {
         childStatus.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() == 2) {
                 initSubmitBtn();
-            } else if (newValue.intValue() != 2 && oldValue.intValue() == 2 && child != null) {
+            } else if (child == null) {
                 initNextBtn();
             }
         });
@@ -391,7 +391,7 @@ public class ChildFormController extends FormHelper {
     private void initChangeDetection() {
         ChangeListener<Object> changeListener = new ChangeListener<Object>() {
             @Override
-            public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+            public void changed(ObservableValue<?> observable, Object oldValue,  Object newValue) {
                 submitBtn.setDisable(formIsEdited());
             }
 
@@ -405,6 +405,12 @@ public class ChildFormController extends FormHelper {
                 return false;
             }
         };
+
+        for (Node n : firstNameInput.getParent().getChildrenUnmodifiable()) {
+            if (n instanceof ChangeDetectingInput) {
+                ((ChangeDetectingInput) n).addOnChangeListener(changeListener);
+            }
+        }
 
         /* SimpleBooleanProperty firstNameMatches = new SimpleBooleanProperty(true);
         SimpleBooleanProperty lastNameMatches = new SimpleBooleanProperty(true);

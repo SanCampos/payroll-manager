@@ -5,7 +5,6 @@
       <element id="module-output" name="employee-database" />
       <element id="extracted-dir" path="C:/Java Libraries/Apache/commons/lang/commons-lang3-3.6/commons-lang3-3.6.jar" path-in-jar="/" />
       <element id="extracted-dir" path="C:/Java Libraries/Apache/commons/collections/commons-collections4-4.1/commons-collections4-4.1.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/Downloads/mysql-connector-java-5.1.43/mysql-connector-java-5.1.43-bin.jar" path-in-jar="/" />
       <element id="extracted-dir" path="C:/Java Libraries/Apache/commons/commons-io-2.5/commons-io-2.5/commons-io-2.5.jar" path-in-jar="/" />
       <element id="extracted-dir" path="C:/Java Libraries/Apache/commons/text/commons-text-1.1/commons-text-1.1.jar" path-in-jar="/" />
     </root>

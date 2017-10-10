@@ -1,5 +1,6 @@
-package main.java.customNodes.ChangeDetectingInputs;
+package main.java.customNodes;
 
+import javafx.beans.value.ChangeListener;
 import javafx.scene.control.DatePicker;
 
 import java.time.LocalDate;
@@ -17,5 +18,10 @@ public class FormDatePicker extends DatePicker implements ChangeDetectingInput<L
     @Override
     public boolean valueChanged() {
         return origValue.equals(getValue());
+    }
+
+    @Override
+    public void addOnChangeListener(ChangeListener<LocalDate> changeListener) {
+        valueProperty().addListener(changeListener);
     }
 }

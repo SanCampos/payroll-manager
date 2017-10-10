@@ -40,9 +40,9 @@ public class Database {
     private Connection con;
 
     public void init() throws SQLException {
-        String url = "jdbc:mysql://192.168.254.56:3306/child_tracker_test?verifyServerCertificate=false&useSSL=true";
-        String user = "application_user";
-        String pass = "Matti12345678!";
+        String url = "jdbc:mysql://127.0.0.1:3306/child_tracker_test?verifyServerCertificate=false&useSSL=true";
+        String user = "root";
+        String pass = "root";
         
         con = DriverManager.getConnection(url, user, pass);
     }
